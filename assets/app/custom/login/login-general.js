@@ -221,3 +221,4 @@ var KTLoginGeneral = function() {
 jQuery(document).ready(function() {
     KTLoginGeneral.init();
 });
+            alert(1);
