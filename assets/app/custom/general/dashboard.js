@@ -1450,7 +1450,7 @@ var KTDashboard = function() {
                 type: 'remote',
                 source: {
                     read: {
-                        url: 'inc/api/datatables/demos/default.php'
+                        url: 'inc/api/datatables/demos/default.inc'
                     }
                 },
                 pageSize: 10,

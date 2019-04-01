@@ -13,7 +13,7 @@ var KTDefaultDatatableDemo = function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: 'inc/api/datatables/demos/default.php',
+						url: 'inc/api/datatables/demos/default.inc',
 					},
 				},
 				pageSize: 5, // display 20 records per page

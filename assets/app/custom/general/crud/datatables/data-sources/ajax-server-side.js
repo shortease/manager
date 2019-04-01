@@ -10,7 +10,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
 			searchDelay: 500,
 			processing: true,
 			serverSide: true,
-			ajax: 'inc/api/datatables/demos/server.php',
+			ajax: 'inc/api/datatables/demos/server.inc',
 			columns: [
 				{data: 'OrderID'},
 				{data: 'Country'},

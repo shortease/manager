@@ -31,7 +31,7 @@
     <!-- end::Head -->
     <!-- begin::Body -->
     <body class="kt-header--fixed kt-header-mobile--fixed kt-subheader--light kt-aside--enabled kt-aside--fixed kt-page--loading" >
-        <?php include("_layout.php"); ?>
+        <?php include("_layout.inc"); ?>
         <!-- begin::Global Config(global config for global JS sciprts) -->
         <script>            var KTAppOptions = {
 "colors":{

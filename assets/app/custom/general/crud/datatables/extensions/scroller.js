@@ -7,7 +7,7 @@ var KTDatatablesExtensionsScroller = function() {
 		// begin first table
 		table.DataTable({
 			responsive: true,
-			ajax: 'inc/api/datatables/demos/server.php',
+			ajax: 'inc/api/datatables/demos/server.inc',
 			deferRender: true,
 			scrollY: '500px',
 			scrollCollapse: true,

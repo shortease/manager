@@ -367,7 +367,7 @@ var KTQuickSearch = function() {
 
         setTimeout(function() {
             $.ajax({
-                url: 'inc/api/quick_search.php',
+                url: 'inc/api/quick_search.inc',
                 data: {
                     query: query
                 },

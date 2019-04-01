@@ -8,7 +8,7 @@ var KTDatatablesDataSourceAjaxClient = function() {
 		table.DataTable({
 			responsive: true,
 			ajax: {
-				url: 'inc/api/datatables/demos/default.php',
+				url: 'inc/api/datatables/demos/default.inc',
 				type: 'POST',
 				data: {
 					pagination: {

@@ -161,7 +161,7 @@ var KTDatatableModal = function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: 'inc/api/datatables/demos/default.php',
+						url: 'inc/api/datatables/demos/default.inc',
 					},
 				},
 				pageSize: 10, // display 20 records per page
@@ -365,7 +365,7 @@ var KTDatatableModal = function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: 'inc/api/datatables/demos/customers.php',
+						url: 'inc/api/datatables/demos/customers.inc',
 					},
 				},
 				pageSize: 10, // display 20 records per page
@@ -488,7 +488,7 @@ var KTDatatableModal = function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: 'inc/api/datatables/demos/orders.php',
+						url: 'inc/api/datatables/demos/orders.inc',
 						params: {
 							query: {
 								generalSearch: '',

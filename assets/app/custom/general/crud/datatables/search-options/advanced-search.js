@@ -26,7 +26,7 @@ var KTDatatablesSearchOptionsAdvancedSearch = function() {
 			processing: true,
 			serverSide: true,
 			ajax: {
-				url: 'inc/api/datatables/demos/server.php',
+				url: 'inc/api/datatables/demos/server.inc',
 				type: 'POST',
 				data: {
 					// parameters for custom backend script demo
