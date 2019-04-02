@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <!-- begin:: Mycart -->
 <div class="kt-mycart">
     <div class="kt-mycart__head kt-head" style="background-image: url(./assets/media/misc/bg-1.jpg);">

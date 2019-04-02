@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <!-- begin::Demo Panel -->
 <div id="kt_demo_panel" class="kt-demo-panel">
     <div class="kt-demo-panel__head">

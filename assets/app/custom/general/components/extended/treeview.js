@@ -239,7 +239,7 @@ var KTTreeview = function () {
                 "check_callback" : true,
                 'data' : {
                     'url' : function (node) {
-                      return 'inc/api/jstree/ajax_data.inc';
+                      return 'inc/api/jstree/ajax_data.php';
                     },
                     'data' : function (node) {
                       return { 'parent' : node.id };

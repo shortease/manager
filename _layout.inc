@@ -7,7 +7,7 @@
             <?php include("partials/_header-base.inc"); ?>
             <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
                 <!-- begin:: Content -->
-                <?php include("partials/_content-base.inc"); ?>
+                <?php   Route::includeComponent(); ?>
                 <!-- end:: Content -->
             </div>
             <?php include("partials/_footer-base.inc"); ?>

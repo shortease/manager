@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <div class="kt-quick-search kt-quick-search--inline" id="kt_quick_search_inline">
     <form method="get" class="kt-quick-search__form">
         <div class="input-group">

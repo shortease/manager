@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <ul class="kt-nav kt-margin-t-10 kt-margin-b-10">
     <li class="kt-nav__item kt-nav__item--active">
         <a href="#" class="kt-nav__link">

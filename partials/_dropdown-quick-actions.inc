@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <!--begin: Head -->
 <div class="kt-head kt-head--skin-light">
     <h3 class="kt-head__title">

@@ -10,7 +10,7 @@ var KTDatatableRecordSelectionDemo = function() {
             type: 'remote',
             source: {
                 read: {
-                    url: 'inc/api/datatables/demos/default.inc',
+                    url: 'inc/api/datatables/demos/default.php',
                 },
             },
             pageSize: 10,

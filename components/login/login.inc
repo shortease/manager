@@ -1,17 +1,19 @@
 <?php
-defined("__NSS__") or die("Restrected Access.");
+defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
-if(is_post()){
+if(is_post()){ 
 	$username = Request::getString('username', '', 'POST');
 	$passwd = Request::getString('password', '', 'POST');
 	$remember = Request::getString('remember', false, 'POST');
-	Factory::getUser()->login($username, $passwd, $remember);
-	Response::redirect();
-}
-if(Request::getString("task", "", "get") == "logout") {
+	$user = Factory::getUser()->login($username, $passwd, $remember);
+	Response::redirect("/");
+} 
+
+if(Request::getString("action", "", "get") == "logout") {
 	Factory::getUser()->logout();
 	Response::redirect("/");
 }
+
 if(Factory::getUser()->isLoggedIn()) Response::redirect("/");
 
 ?>
@@ -21,7 +23,7 @@ if(Factory::getUser()->isLoggedIn()) Response::redirect("/");
 	<!-- begin::Head -->
 	<head>
 		<meta charset="utf-8" />
-		<title>Metronic | Login Page v4</title>
+		<title>Shortease | Login Page v4</title>
 		<meta name="description" content="Login page example">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -80,9 +82,9 @@ if(Factory::getUser()->isLoggedIn()) Response::redirect("/");
 								<div class="kt-login__head">
 									<h3 class="kt-login__title">Sign In To Admin</h3>
 								</div>
-								<form class="kt-form" action="">
+								<form class="kt-form" action="" method="POST">
 									<div class="input-group">
-										<input class="form-control" type="text" placeholder="Email" name="email" autocomplete="off">
+										<input class="form-control" type="text" placeholder="Username" name="username" autocomplete="off">
 									</div>
 									<div class="input-group">
 										<input class="form-control" type="password" placeholder="Password" name="password">
@@ -197,13 +199,13 @@ if(Factory::getUser()->isLoggedIn()) Response::redirect("/");
 		<!--end::Global Theme Bundle -->
 
 		<!--begin::Page Scripts(used by this page) -->
-
-		<script src="<?php echo(SH_ASSETS_URL); ?>app/custom/login/login-general.js?v1" type="text/javascript"></script>
+		<?php load_script(SH_ASSETS_URL."app/custom/login/login-general.js"); ?>
 
 		<!--end::Page Scripts -->
 
 		<!--begin::Global App Bundle(used by all pages) -->
-		<script src="<?php echo(SH_ASSETS_URL); ?>app/bundle/app.bundle.js?<?php echo(SH_VER); ?>" type="text/javascript"></script>
+
+		<?php load_script(SH_ASSETS_URL."app/bundle/app.bundle.js"); ?>
 
 		<!--end::Global App Bundle -->
 	</body>

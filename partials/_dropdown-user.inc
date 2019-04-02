@@ -1,3 +1,4 @@
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
 <!--begin: Head -->
 <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">
     <div class="kt-user-card__avatar">
@@ -39,6 +40,6 @@
             <div class="kt-notification__item-time"> latest tasks and projects </div>
         </div>
     </a>
-    <div class="kt-notification__custom"> <a href="?page=custom/user/login-v2" target="_blank" class="btn btn-label-brand btn-sm btn-bold">Sign Out</a> </div>
+    <div class="kt-notification__custom"> <a href="/?page=login&action=logout" target="_self" class="btn btn-label-brand btn-sm btn-bold">Sign Out</a> </div>
 </div>
 <!--end: Navigation -->
