@@ -7,7 +7,7 @@
             <span class="kt-header__topbar-icon" ><i class="flaticon2-search-1"></i></span>
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg">
-            <?php include("partials/_dropdown-search-inline.inc"); ?>
+            <?php require_once("layout/_dropdown-search-inline.inc"); ?>
         </div>
     </div>
     <!--end: Search -->
@@ -19,7 +19,7 @@
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-lg">
             <form>
-                <?php include("partials/_dropdown-notifications.inc"); ?>
+                <?php require_once("layout/_dropdown-notifications.inc"); ?>
             </form>
         </div>
     </div>
@@ -31,7 +31,7 @@
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
             <form>
-                <?php include("partials/_dropdown-quick-actions.inc"); ?>
+                <?php require_once("layout/_dropdown-quick-actions.inc"); ?>
             </form>
         </div>
     </div>
@@ -43,7 +43,7 @@
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
             <form>
-                <?php include("partials/_dropdown-my-cart.inc"); ?>
+                <?php require_once("layout/_dropdown-my-cart.inc"); ?>
             </form>
         </div>
     </div>
@@ -61,7 +61,7 @@
             </span>
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround">
-            <?php include("partials/_dropdown-languages.inc"); ?>
+            <?php require_once("layout/_dropdown-languages.inc"); ?>
         </div>
     </div>
     <!--end: Language bar -->
@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
-            <?php include("partials/_dropdown-user.inc"); ?>
+            <?php require_once("layout/_dropdown-user.inc"); ?>
         </div>
     </div>
     <!--end: User Bar -->
