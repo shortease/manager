@@ -7,11 +7,16 @@ class Route {
 		if (!$com){
 			$com = "dashboard";
 		}
-
+		$langPath = SH_COMPONENT_PATH . DS . $com;
+		$langPath .= DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
+		$lang = Factory::getLang();
+		$lang->rmLastLangFile();
+		$lang->loadLangFile($langPath);
+		po($lang->getTranslations());
+		echo ("<script> var t =  " . json_encode($lang->getTranslations()[0]) . "; </script>");
 		$target_path = SH_COMPONENT_PATH . $com."/".$com.".inc";
 		require_once($target_path);
 	}
-
 	public static function getLayout(){ 
 		$com = Request::getWord("com");
 		$page= Request::getWord("page");
@@ -23,9 +28,19 @@ class Route {
 		}
 
 		if (!$page) {
+			$langPath = SH_LAYOUT_PATH . DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
+	 		$lang = Factory::getLang();
+	 		$lang->loadLangFile($langPath);
+	 		$GLOBALS["layout_translations"] = $lang->getTranslations()[0];
 			require_once ("index.inc");
 		} else {
 			if (!$task) $task = $page;
+			$langPath = SH_COMPONENT_PATH . DS . $page;
+			$langPath .= DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
+			$lang->rmLastLangFile();
+			$lang = Factory::getLang();
+			$lang->loadLangFile($langPath);
+	 		$GLOBALS["translations"] = $lang->getTranslations()[0];
 			$target_path = SH_COMPONENT_PATH . $page."/".$task.".inc";
 			require_once($target_path);
 		}

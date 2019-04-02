@@ -34,7 +34,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
     <!-- end::Head -->
     <!-- begin::Body -->
     <body class="kt-header--fixed kt-header-mobile--fixed kt-subheader--light kt-aside--enabled kt-aside--fixed kt-page--loading" >
-        <?php include("_layout.inc"); ?>
+        <?php require_once("_layout.inc"); ?>
         <!-- begin::Global Config(global config for global JS sciprts) -->
         <script>            var KTAppOptions = {
 "colors":{
@@ -58,6 +58,8 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 "#d9dffa",
 "#afb4d4",
 "#646c9a"]}}};        </script>
+<?php echo ("<script> var lt =  " . json_encode($GLOBALS["layout_translations"]) . "; </script>") ?>;
+
         <!-- end::Global Config -->
         <!--begin::Global Theme Bundle(used by all pages) -->
         <script src="./assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
