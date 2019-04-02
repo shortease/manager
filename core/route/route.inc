@@ -12,7 +12,6 @@ class Route {
 		$lang = Factory::getLang();
 		$lang->rmLastLangFile();
 		$lang->loadLangFile($langPath);
-		po($lang->getTranslations());
 		echo ("<script> var t =  " . json_encode($lang->getTranslations()[0]) . "; </script>");
 		$target_path = SH_COMPONENT_PATH . $com."/".$com.".inc";
 		require_once($target_path);

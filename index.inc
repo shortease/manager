@@ -58,7 +58,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 "#d9dffa",
 "#afb4d4",
 "#646c9a"]}}};        </script>
-<?php echo ("<script> var lt =  " . json_encode($GLOBALS["layout_translations"]) . "; </script>") ?>;
+<?php echo ("<script> var lt =  " . json_encode($GLOBALS["layout_translations"]) . "; </script>") ?>
 
         <!-- end::Global Config -->
         <!--begin::Global Theme Bundle(used by all pages) -->
