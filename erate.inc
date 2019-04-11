@@ -1,5 +1,6 @@
 <?php
 defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
+define( '__NSS_CONFIG__' , 1); // Config included
 
 define( '__NSS_INDEX__',  1 );
 

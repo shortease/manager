@@ -33,8 +33,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
     </head>
     <!-- end::Head -->
     <!-- begin::Body -->
-    <body class="kt-header--fixed kt-header-mobile--fixed kt-subheader--light kt-aside--enabled kt-aside--fixed kt-page--loading" >
-        <?php require_once("_layout.inc"); ?>
+    <body class="kt-header--fixed kt-header-mobile--fixed kt-subheader--fixed kt-subheader--enabled kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading" >
         <!-- begin::Global Config(global config for global JS sciprts) -->
         <script>            var KTAppOptions = {
 "colors":{
@@ -64,6 +63,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
         <!--begin::Global Theme Bundle(used by all pages) -->
         <script src="./assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
         <script src="./assets/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
+        <?php load_script("./assets/app/custom/general/my-script.js"); ?>
         <!--end::Global Theme Bundle -->
         <!--begin::Page Vendors(used by this page) -->
         <!-- <script src="./assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script> -->
@@ -76,6 +76,8 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
         <!--begin::Global App Bundle(used by all pages) -->
         <script src="./assets/app/bundle/app.bundle.js" type="text/javascript"></script>
         <!--end::Global App Bundle -->
+        <?php require_once("_layout.inc"); ?>
+        
     </body>
     <!-- end::Body -->
 </html>

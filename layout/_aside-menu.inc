@@ -14,7 +14,11 @@
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><? et("Dashboard")?></span>
                 </a>
-            </li>                     
+            </li>
+           <?php 
+                if (Factory::getUser()->isroot()) require_once("_root_menu.inc"); 
+                else require_once("_client_menu.inc");
+            ?>
         </ul>
 <!--         <ul class="kt-menu__nav ">
     <li class="kt-menu__section kt-menu__section--first">

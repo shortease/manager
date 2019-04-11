@@ -36,6 +36,7 @@ class Route {
 			if (!$task) $task = $page;
 			$langPath = SH_COMPONENT_PATH . DS . $page;
 			$langPath .= DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
+			$lang = Factory::getLang();
 			$lang->rmLastLangFile();
 			$lang = Factory::getLang();
 			$lang->loadLangFile($langPath);

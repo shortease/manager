@@ -1827,6 +1827,188 @@ var KTApp = function() {
 $(document).ready(function() {
     KTApp.init(KTAppOptions);
 });
+"use strict";
+
+// plugin setup
+var KTDialog = function(options) {
+    // Main object
+    var the = this;
+
+    // Get element object
+    var element;
+    var body = KTUtil.get('body');  
+
+    // Default options
+    var defaultOptions = {
+        'placement' : 'top center',
+        'type'  : 'loader',
+        'width' : 100,
+        'state' : 'default',
+        'message' : 'Loading...' 
+    };    
+
+    ////////////////////////////
+    // ** Private Methods  ** //
+    ////////////////////////////
+
+    var Plugin = {
+        /**
+         * Construct
+         */
+
+        construct: function(options) {
+            Plugin.init(options);
+
+            return the;
+        },
+
+        /**
+         * Handles subtoggle click toggle
+         */
+        init: function(options) {
+            the.events = [];
+
+            // merge default and user defined options
+            the.options = KTUtil.deepExtend({}, defaultOptions, options);
+
+            the.state = false;
+        },
+
+        /**
+         * Show dialog
+         */
+        show: function() {
+            Plugin.eventTrigger('show');
+
+            element = document.createElement("DIV");
+            KTUtil.setHTML(element, the.options.message);
+            
+            KTUtil.addClass(element, 'kt-dialog kt-dialog--shown');
+            KTUtil.addClass(element, 'kt-dialog--' + the.options.state);
+            KTUtil.addClass(element, 'kt-dialog--' + the.options.type); 
+
+            if (the.options.placement == 'top center') {
+                KTUtil.addClass(element, 'kt-dialog--top-center');
+            }
+
+            body.appendChild(element);
+
+            the.state = 'shown';
+
+            Plugin.eventTrigger('shown');
+
+            return the;
+        },
+
+        /**
+         * Hide dialog
+         */
+        hide: function() {
+            if (element) {
+                Plugin.eventTrigger('hide');
+
+                element.remove();
+                the.state = 'hidden';
+
+                Plugin.eventTrigger('hidden');
+            }
+
+            return the;
+        },
+
+        /**
+         * Trigger events
+         */
+        eventTrigger: function(name) {
+            for (var i = 0; i < the.events.length; i++) {
+                var event = the.events[i];
+
+                if (event.name == name) {
+                    if (event.one == true) {
+                        if (event.fired == false) {
+                            the.events[i].fired = true;                            
+                            event.handler.call(this, the);
+                        }
+                    } else {
+                        event.handler.call(this, the);
+                    }
+                }
+            }
+        },
+
+        addEvent: function(name, handler, one) {
+            the.events.push({
+                name: name,
+                handler: handler,
+                one: one,
+                fired: false
+            });
+
+            return the;
+        }
+    };
+
+    //////////////////////////
+    // ** Public Methods ** //
+    //////////////////////////
+
+    /**
+     * Set default options 
+     */
+
+    the.setDefaults = function(options) {
+        defaultOptions = options;
+    };
+
+    /**
+     * Check shown state 
+     */
+    the.shown = function() {
+        return the.state == 'shown';
+    };
+
+    /**
+     * Check hidden state 
+     */
+    the.hidden = function() {
+        return the.state == 'hidden';
+    };
+
+    /**
+     * Show dialog 
+     */
+    the.show = function() {
+        return Plugin.show();
+    };
+
+    /**
+     * Hide dialog
+     */
+    the.hide = function() {
+        return Plugin.hide();
+    };
+
+    /**
+     * Attach event
+     * @returns {KTToggle}
+     */
+    the.on = function(name, handler) {
+        return Plugin.addEvent(name, handler);
+    };
+
+    /**
+     * Attach event that will be fired once
+     * @returns {KTToggle}
+     */
+    the.one = function(name, handler) {
+        return Plugin.addEvent(name, handler, true);
+    };
+
+    // Construct plugin
+    Plugin.construct.apply(the, [options]);
+
+    return the;
+};
 'use strict';
 (function($) {
 
@@ -5623,188 +5805,6 @@ if (KTUtil.isRTL()) {
 
 $.extend(true, $.fn.KTDatatable.defaults, defaults);
 "use strict";
-
-// plugin setup
-var KTDialog = function(options) {
-    // Main object
-    var the = this;
-
-    // Get element object
-    var element;
-    var body = KTUtil.get('body');  
-
-    // Default options
-    var defaultOptions = {
-        'placement' : 'top center',
-        'type'  : 'loader',
-        'width' : 100,
-        'state' : 'default',
-        'message' : 'Loading...' 
-    };    
-
-    ////////////////////////////
-    // ** Private Methods  ** //
-    ////////////////////////////
-
-    var Plugin = {
-        /**
-         * Construct
-         */
-
-        construct: function(options) {
-            Plugin.init(options);
-
-            return the;
-        },
-
-        /**
-         * Handles subtoggle click toggle
-         */
-        init: function(options) {
-            the.events = [];
-
-            // merge default and user defined options
-            the.options = KTUtil.deepExtend({}, defaultOptions, options);
-
-            the.state = false;
-        },
-
-        /**
-         * Show dialog
-         */
-        show: function() {
-            Plugin.eventTrigger('show');
-
-            element = document.createElement("DIV");
-            KTUtil.setHTML(element, the.options.message);
-            
-            KTUtil.addClass(element, 'kt-dialog kt-dialog--shown');
-            KTUtil.addClass(element, 'kt-dialog--' + the.options.state);
-            KTUtil.addClass(element, 'kt-dialog--' + the.options.type); 
-
-            if (the.options.placement == 'top center') {
-                KTUtil.addClass(element, 'kt-dialog--top-center');
-            }
-
-            body.appendChild(element);
-
-            the.state = 'shown';
-
-            Plugin.eventTrigger('shown');
-
-            return the;
-        },
-
-        /**
-         * Hide dialog
-         */
-        hide: function() {
-            if (element) {
-                Plugin.eventTrigger('hide');
-
-                element.remove();
-                the.state = 'hidden';
-
-                Plugin.eventTrigger('hidden');
-            }
-
-            return the;
-        },
-
-        /**
-         * Trigger events
-         */
-        eventTrigger: function(name) {
-            for (var i = 0; i < the.events.length; i++) {
-                var event = the.events[i];
-
-                if (event.name == name) {
-                    if (event.one == true) {
-                        if (event.fired == false) {
-                            the.events[i].fired = true;                            
-                            event.handler.call(this, the);
-                        }
-                    } else {
-                        event.handler.call(this, the);
-                    }
-                }
-            }
-        },
-
-        addEvent: function(name, handler, one) {
-            the.events.push({
-                name: name,
-                handler: handler,
-                one: one,
-                fired: false
-            });
-
-            return the;
-        }
-    };
-
-    //////////////////////////
-    // ** Public Methods ** //
-    //////////////////////////
-
-    /**
-     * Set default options 
-     */
-
-    the.setDefaults = function(options) {
-        defaultOptions = options;
-    };
-
-    /**
-     * Check shown state 
-     */
-    the.shown = function() {
-        return the.state == 'shown';
-    };
-
-    /**
-     * Check hidden state 
-     */
-    the.hidden = function() {
-        return the.state == 'hidden';
-    };
-
-    /**
-     * Show dialog 
-     */
-    the.show = function() {
-        return Plugin.show();
-    };
-
-    /**
-     * Hide dialog
-     */
-    the.hide = function() {
-        return Plugin.hide();
-    };
-
-    /**
-     * Attach event
-     * @returns {KTToggle}
-     */
-    the.on = function(name, handler) {
-        return Plugin.addEvent(name, handler);
-    };
-
-    /**
-     * Attach event that will be fired once
-     * @returns {KTToggle}
-     */
-    the.one = function(name, handler) {
-        return Plugin.addEvent(name, handler, true);
-    };
-
-    // Construct plugin
-    Plugin.construct.apply(the, [options]);
-
-    return the;
-};
-"use strict";
 var KTHeader = function(elementId, options) {
     // Main object
     var the = this;
@@ -7871,231 +7871,6 @@ var KTScrolltop = function(elementId, options) {
     // Return plugin instance
     return the;
 };
-"use strict";
-
-// plugin setup
-var KTToggle = function(elementId, options) {
-    // Main object
-    var the = this;
-    var init = false;
-
-    // Get element object
-    var element = KTUtil.get(elementId);
-    var body = KTUtil.get('body');  
-
-    if (!element) {
-        return;
-    }
-
-    // Default options
-    var defaultOptions = {
-        togglerState: '',
-        targetState: ''
-    };    
-
-    ////////////////////////////
-    // ** Private Methods  ** //
-    ////////////////////////////
-
-    var Plugin = {
-        /**
-         * Construct
-         */
-
-        construct: function(options) {
-            if (KTUtil.data(element).has('toggle')) {
-                the = KTUtil.data(element).get('toggle');
-            } else {
-                // reset menu
-                Plugin.init(options);
-
-                // build menu
-                Plugin.build();
-
-                KTUtil.data(element).set('toggle', the);
-            }
-
-            return the;
-        },
-
-        /**
-         * Handles subtoggle click toggle
-         */
-        init: function(options) {
-            the.element = element;
-            the.events = [];
-
-            // merge default and user defined options
-            the.options = KTUtil.deepExtend({}, defaultOptions, options);
-
-            the.target = KTUtil.get(the.options.target);
-            the.targetState = the.options.targetState;
-            the.togglerState = the.options.togglerState;
-
-            the.state = KTUtil.hasClasses(the.target, the.targetState) ? 'on' : 'off';
-        },
-
-        /**
-         * Setup toggle
-         */
-        build: function() {
-            KTUtil.addEvent(element, 'mouseup', Plugin.toggle);
-        },
-        
-        /**
-         * Handles offcanvas click toggle
-         */
-        toggle: function(e) {
-            Plugin.eventTrigger('beforeToggle');
-
-            if (the.state == 'off') {
-                Plugin.toggleOn();
-            } else {
-                Plugin.toggleOff();
-            }
-
-            Plugin.eventTrigger('afterToggle');
-
-            e.preventDefault();
-
-            return the;
-        },
-
-        /**
-         * Handles toggle click toggle
-         */
-        toggleOn: function() {
-            Plugin.eventTrigger('beforeOn');
-
-            KTUtil.addClass(the.target, the.targetState);
-
-            if (the.togglerState) {
-                KTUtil.addClass(element, the.togglerState);
-            }
-
-            the.state = 'on';
-
-            Plugin.eventTrigger('afterOn');
-
-            Plugin.eventTrigger('toggle');
-
-            return the;
-        },
-
-        /**
-         * Handles toggle click toggle
-         */
-        toggleOff: function() {
-            Plugin.eventTrigger('beforeOff');
-
-            KTUtil.removeClass(the.target, the.targetState);
-
-            if (the.togglerState) {
-                KTUtil.removeClass(element, the.togglerState);
-            }
-
-            the.state = 'off';
-
-            Plugin.eventTrigger('afterOff');
-
-            Plugin.eventTrigger('toggle');
-
-            return the;
-        },
-
-        /**
-         * Trigger events
-         */
-        eventTrigger: function(name) {
-            for (var i = 0; i < the.events.length; i++) {
-                var event = the.events[i];
-
-                if (event.name == name) {
-                    if (event.one == true) {
-                        if (event.fired == false) {
-                            the.events[i].fired = true;                            
-                            event.handler.call(this, the);
-                        }
-                    } else {
-                        event.handler.call(this, the);
-                    }
-                }
-            }
-        },
-
-        addEvent: function(name, handler, one) {
-            the.events.push({
-                name: name,
-                handler: handler,
-                one: one,
-                fired: false
-            });
-
-            return the;
-        }
-    };
-
-    //////////////////////////
-    // ** Public Methods ** //
-    //////////////////////////
-
-    /**
-     * Set default options 
-     */
-
-    the.setDefaults = function(options) {
-        defaultOptions = options;
-    };
-
-    /**
-     * Get toggle state 
-     */
-    the.getState = function() {
-        return the.state;
-    };
-
-    /**
-     * Toggle 
-     */
-    the.toggle = function() {
-        return Plugin.toggle();
-    };
-
-    /**
-     * Toggle on 
-     */
-    the.toggleOn = function() {
-        return Plugin.toggleOn();
-    };
-
-    /**
-     * Toggle off 
-     */
-    the.toggleOff = function() {
-        return Plugin.toggleOff();
-    };
-
-    /**
-     * Attach event
-     * @returns {KTToggle}
-     */
-    the.on = function(name, handler) {
-        return Plugin.addEvent(name, handler);
-    };
-
-    /**
-     * Attach event that will be fired once
-     * @returns {KTToggle}
-     */
-    the.one = function(name, handler) {
-        return Plugin.addEvent(name, handler, true);
-    };
-
-    // Construct plugin
-    Plugin.construct.apply(the, [options]);
-
-    return the;
-};
 // plugin setup
 var KTWizard = function(elementId, options) {
     // Main object
@@ -8533,6 +8308,231 @@ var KTWizard = function(elementId, options) {
 
     /**
      * Attach event that will be fired once
+     */
+    the.one = function(name, handler) {
+        return Plugin.addEvent(name, handler, true);
+    };
+
+    // Construct plugin
+    Plugin.construct.apply(the, [options]);
+
+    return the;
+};
+"use strict";
+
+// plugin setup
+var KTToggle = function(elementId, options) {
+    // Main object
+    var the = this;
+    var init = false;
+
+    // Get element object
+    var element = KTUtil.get(elementId);
+    var body = KTUtil.get('body');  
+
+    if (!element) {
+        return;
+    }
+
+    // Default options
+    var defaultOptions = {
+        togglerState: '',
+        targetState: ''
+    };    
+
+    ////////////////////////////
+    // ** Private Methods  ** //
+    ////////////////////////////
+
+    var Plugin = {
+        /**
+         * Construct
+         */
+
+        construct: function(options) {
+            if (KTUtil.data(element).has('toggle')) {
+                the = KTUtil.data(element).get('toggle');
+            } else {
+                // reset menu
+                Plugin.init(options);
+
+                // build menu
+                Plugin.build();
+
+                KTUtil.data(element).set('toggle', the);
+            }
+
+            return the;
+        },
+
+        /**
+         * Handles subtoggle click toggle
+         */
+        init: function(options) {
+            the.element = element;
+            the.events = [];
+
+            // merge default and user defined options
+            the.options = KTUtil.deepExtend({}, defaultOptions, options);
+
+            the.target = KTUtil.get(the.options.target);
+            the.targetState = the.options.targetState;
+            the.togglerState = the.options.togglerState;
+
+            the.state = KTUtil.hasClasses(the.target, the.targetState) ? 'on' : 'off';
+        },
+
+        /**
+         * Setup toggle
+         */
+        build: function() {
+            KTUtil.addEvent(element, 'mouseup', Plugin.toggle);
+        },
+        
+        /**
+         * Handles offcanvas click toggle
+         */
+        toggle: function(e) {
+            Plugin.eventTrigger('beforeToggle');
+
+            if (the.state == 'off') {
+                Plugin.toggleOn();
+            } else {
+                Plugin.toggleOff();
+            }
+
+            Plugin.eventTrigger('afterToggle');
+
+            e.preventDefault();
+
+            return the;
+        },
+
+        /**
+         * Handles toggle click toggle
+         */
+        toggleOn: function() {
+            Plugin.eventTrigger('beforeOn');
+
+            KTUtil.addClass(the.target, the.targetState);
+
+            if (the.togglerState) {
+                KTUtil.addClass(element, the.togglerState);
+            }
+
+            the.state = 'on';
+
+            Plugin.eventTrigger('afterOn');
+
+            Plugin.eventTrigger('toggle');
+
+            return the;
+        },
+
+        /**
+         * Handles toggle click toggle
+         */
+        toggleOff: function() {
+            Plugin.eventTrigger('beforeOff');
+
+            KTUtil.removeClass(the.target, the.targetState);
+
+            if (the.togglerState) {
+                KTUtil.removeClass(element, the.togglerState);
+            }
+
+            the.state = 'off';
+
+            Plugin.eventTrigger('afterOff');
+
+            Plugin.eventTrigger('toggle');
+
+            return the;
+        },
+
+        /**
+         * Trigger events
+         */
+        eventTrigger: function(name) {
+            for (var i = 0; i < the.events.length; i++) {
+                var event = the.events[i];
+
+                if (event.name == name) {
+                    if (event.one == true) {
+                        if (event.fired == false) {
+                            the.events[i].fired = true;                            
+                            event.handler.call(this, the);
+                        }
+                    } else {
+                        event.handler.call(this, the);
+                    }
+                }
+            }
+        },
+
+        addEvent: function(name, handler, one) {
+            the.events.push({
+                name: name,
+                handler: handler,
+                one: one,
+                fired: false
+            });
+
+            return the;
+        }
+    };
+
+    //////////////////////////
+    // ** Public Methods ** //
+    //////////////////////////
+
+    /**
+     * Set default options 
+     */
+
+    the.setDefaults = function(options) {
+        defaultOptions = options;
+    };
+
+    /**
+     * Get toggle state 
+     */
+    the.getState = function() {
+        return the.state;
+    };
+
+    /**
+     * Toggle 
+     */
+    the.toggle = function() {
+        return Plugin.toggle();
+    };
+
+    /**
+     * Toggle on 
+     */
+    the.toggleOn = function() {
+        return Plugin.toggleOn();
+    };
+
+    /**
+     * Toggle off 
+     */
+    the.toggleOff = function() {
+        return Plugin.toggleOff();
+    };
+
+    /**
+     * Attach event
+     * @returns {KTToggle}
+     */
+    the.on = function(name, handler) {
+        return Plugin.addEvent(name, handler);
+    };
+
+    /**
+     * Attach event that will be fired once
+     * @returns {KTToggle}
      */
     the.one = function(name, handler) {
         return Plugin.addEvent(name, handler, true);

@@ -1,5 +1,5 @@
 "use strict";
-
+ 
 var KTDemoPanel = function() {
     var demoPanel = KTUtil.getByID('kt_demo_panel');
     var offcanvas;
