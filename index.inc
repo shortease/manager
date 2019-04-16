@@ -63,7 +63,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
         <!--begin::Global Theme Bundle(used by all pages) -->
         <script src="./assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
         <script src="./assets/demo/demo12/base/scripts.bundle.js" type="text/javascript"></script>
-        <?php load_script("./assets/app/custom/general/my-script.js"); ?>
+        <?php load_script("./assets/app/custom/general/general.js"); ?>
         <!--end::Global Theme Bundle -->
         <!--begin::Page Vendors(used by this page) -->
         <!-- <script src="./assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script> -->

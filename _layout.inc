@@ -15,6 +15,4 @@
     </div>
 </div>
 <!-- end:: Page -->
-<?php include("layout/_layout-quick-panel.inc"); ?>
 <?php include("layout/_layout-scrolltop.inc"); ?>
-<?php include("layout/_layout-demo-panel.inc"); ?>

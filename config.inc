@@ -2,7 +2,7 @@
 defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
 /********************************    GENERAL  *******************************/
-define('SH_VER', 						"0.7");
+define('SH_VER', 						"0.1.05");
 
 
 /********************************    PATH FIELDS CONST   *******************************/

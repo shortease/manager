@@ -62,7 +62,7 @@ var Clients = function() {
 		Clients.datat = datat;
 	}
 	var reloadData = function(){
-		datat.ajax.reload();
+		datat.ajax.reload().draw();
 	}
 	var searchHidden = function(hidden_status){
 		datat.column(-1).search(hidden_status).draw();
@@ -151,10 +151,9 @@ function updateClient(id, name, site_url, email){
 }
 
 
-var ff;
 function saveUpdate(){
 	var form = $('#update_form');
-	ff = form;
+
 	var btn = $(this);
 	form.validate({
         rules: {
@@ -194,7 +193,6 @@ function saveUpdate(){
             if (response) { 
             	if (!response.error) {	/// no error
             		Clients.reloadData();
-            		po("after reload");
 					$('#edit_modal').modal('hide');
             	} else {
                 	if (response.error == 1) {
@@ -206,7 +204,6 @@ function saveUpdate(){
                    		showError($('#general_update_alert'), response.error_msg);
                    }
                }
-               po("responsed ");
             } else {
             	showError($('#general_update_alert'), et('Can not create client'));
             }
