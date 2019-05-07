@@ -12,7 +12,7 @@
             <li class="kt-menu__item " aria-haspopup="true" >
                 <a href="/" class="kt-menu__link ">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
-                    <span class="kt-menu__link-text"><? et("Dashboard")?></span>
+                    <span class="kt-menu__link-text"><?php et("Dashboard")?></span>
                 </a>
             </li>
 
@@ -24,7 +24,7 @@
             <li class="kt-menu__item " aria-haspopup="true" >
                 <a href="/?com=channels" class="kt-menu__link ">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
-                    <span class="kt-menu__link-text"><? et("Channels")?></span>
+                    <span class="kt-menu__link-text"><?php et("Channels")?></span>
                 </a>
             </li>
         </ul>

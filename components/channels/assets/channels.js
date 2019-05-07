@@ -62,6 +62,8 @@ var Channels = function() {
 				$(row).data("id", data.id);
 				$(row).data("name", data.name);
 				$(row).data("url", data.url);
+				$(row).data("crawl_article_template", unescape(data.crawl_article_template));
+				$(row).data("crawl_links_template", unescape(data.crawl_links_template));
 				if (data.level > 1) {
 					$('.channel_name_td', row).prepend(' ');
 					for (var i=2;i<=data.level; i++) {
@@ -80,11 +82,15 @@ var Channels = function() {
 		$('#general_update_alert').hide();	
 		$(document).on('click','.add_channel_under',function() {
 			var rowProps = getRowProperties($(this));
-			add_channel(rowProps.id, rowProps.name);
+			update_channel(rowProps.id, rowProps);
 		})
 		$('#add_modal #save_btn').click(function() {
 			saveUpdate();
 		});
+		$(document).on('click','.edit_channel',function() {
+			var rowProps = getRowProperties($(this));
+			update_channel(0, rowProps);
+		})
 
 		$(document).on('click',".template_tabs",function() {
 			$('.template_tabs_content').removeClass("kt-hidden");
@@ -114,6 +120,12 @@ var Channels = function() {
 		    });
 		});
 
+		/// prepare crawler
+		$(document).on('click','.crawl_channel', function () {
+			var rowProps = getRowProperties($(this));
+			Crawler.crawlChannel(rowProps.id);
+		});
+
 	}
 
 	return {
@@ -138,18 +150,32 @@ function getRowProperties(targetObj) {
 	var trHolder = targetObj.closest('tr');
 	rowProps.id = trHolder.data('id');
 	rowProps.name = trHolder.data('name');
+	rowProps.url = trHolder.data('url');
+	rowProps.crawl_links_template = trHolder.data('crawl_links_template');
+	rowProps.crawl_article_template = trHolder.data('crawl_article_template');
 	return rowProps;
 }
 
 
-var add_parent_channel = 0;
-function add_channel (channel_id, channel_name) {
-	if (channel_id) {
-		$("#updateTitle").text(et("Add channel under") + " \"" +  channel_name + "\"");
-		add_parent_channel = channel_id;
+var add_parent_channel = 0, upd_channel_id = 0;
+function update_channel (parent_id, rowProps) {
+	if (parent_id == 0 && rowProps.id) {		/// update
+		add_parent_channel = 0;
+		upd_channel_id = rowProps.id;
+		$('#upd_name').val(rowProps.name);
+		$('#upd_channel_url').val(rowProps.url);
+		$('#crawl_links_template_upd').val(rowProps.crawl_links_template);
+		$('#crawl_article_template_upd').val(rowProps.crawl_article_template);
+	} else {				/// create new channel
+		$("#updateTitle").text(et("Add channel under") + " \"" +  rowProps.name + "\"");
+		upd_channel_id = 0;
+		add_parent_channel = parent_id;
+		$('#upd_name').val("");
+		$('#upd_channel_url').val("");
+		$('#crawl_links_template_upd').val("");
+		$('#crawl_article_template_upd').val("");
 	}
-	$('#upd_name').val("");
-	$('#upd_channel_url').val("");
+	
 	$('#add_modal').modal('show');
 
 }
@@ -176,12 +202,15 @@ function saveUpdate(){
     btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
 
     form.ajaxSubmit({
-        url: '/?page=channels&task=api&action=add_channel',
+        url: '/?page=channels&task=api&action=update_channel',
         "data": {
                 "site_id": site_id,
+                channel_id : upd_channel_id,
                 parent_channel_id : add_parent_channel,
                 channel_name : $('#upd_name').val(),
                 channel_url : $('#upd_channel_url').val(),
+				links_template : escape($('#crawl_links_template_upd').val()),
+				article_template : escape($('#crawl_article_template_upd').val()) 
             },
         success: function(response, status, xhr, $form) {
             if (response) { 

@@ -15,19 +15,47 @@ switch ($action) {
 		$channels_list = orderChannels($channels_list);
 		$response = $channels_list;
 		break;
-	case "add_channel":
+	case "update_channel":
 		$site_id = Request::getInt("site_id");
+		$channel_id = Request::getInt("channel_id");
 		$parent_channel_id = Request::getInt("parent_channel_id");
 		$channel_name = Request::getString("channel_name");
 		$channel_url = Request::getString("channel_url");
-
-		$response = Channel::addChannel($site_id, $channel_name, $channel_url , $parent_channel_id);
+		$links_template = Request::getString("links_template");
+		$article_template = Request::getString("article_template");
+		if ($channel_id) {	/// update existing channel
+			$ch = new Channel($channel_id);
+			$response = $ch->update($channel_name, $channel_url , $parent_channel_id, $links_template, $article_template);
+		} else { 			/// add new channel
+			$response = Channel::addChannel($site_id, $channel_name, $channel_url , $parent_channel_id, $links_template, $article_template);
+		}
 		break;
 	case "delete_channel":
 		$channel_id = Request::getInt("channel_id");
 		Channel::delete($channel_id);
 		$response = true;
 		break;
+	case "get_crawl_tmplates":
+		$channel_id = Request::getInt("channel_id");
+		$links_template = "";
+		$article_template = "";
+		$parent_id = $channel_id;
+		/// look up in channels tree for templates
+		while 	(!isset($ch) || 														/// first time - $ch is not set
+					( $parent_id > 0 && 									/// there is parent
+						(!strlen($links_template) || !strlen($article_template) )	/// one of templates not set yet
+					)
+				) 
+		{
+			$ch = new Channel($parent_id);
+			$parent_id = $ch->get('parent_id');
+			if (!strlen($links_template) && strlen($ch->get('crawl_links_template')) 	> 4 ) $links_template 	= $ch->get('crawl_links_template');
+			if (!strlen($article_template) && strlen($ch->get('crawl_article_template'))	> 4 ) $article_template = $ch->get('crawl_article_template');
+		}
+
+		$response = array('links_template' => $links_template, 'article_template' => $article_template);
+		break;
+
 	default:
 		$response = null;
 }

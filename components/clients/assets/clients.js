@@ -16,8 +16,10 @@ var Clients = function() {
                 "timeout": 20000,
                 dataSrc: function(res) {
                 	var resData = [];
-                	jQuery.map(res, function(a,b) { resData.push(a)});
-                	return resData;
+                	/*jQuery.map(res, function(a,b) { resData.push(a)});
+                	po(resData)*/
+
+                	return res;
                 }
 			},
 
@@ -42,9 +44,10 @@ var Clients = function() {
 									  <i class="la la-edit"></i>\
 									</a>'
 				},
-				{ data:"name"},
-				{ data:"site_name"},
-				{ data:"email"},
+				{ 
+					data:"name",
+					className: "client_name_td"
+				},
 				{ data:"isHidden", "visible": false},
 			],
 			createdRow: function( row, data, dataIndex ) {
@@ -57,6 +60,7 @@ var Clients = function() {
 				} else {
 					$('.change_hidden_status_btn ', row).html('<i class="la la-unlink "></i>'+et("Set inactive"));
 				}
+				$('.client_name_td',row).wrap('<a href="/?com=channels&site_id='+data.site_id+'"></a>')
 			},			
 		});
 		Clients.datat = datat;

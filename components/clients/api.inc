@@ -31,7 +31,7 @@ switch ($action) {
 		}
 		$mail_format_error = [error=>2, error_msg=>("Invalid email format")];
 		$password_format_error = [error=>3, error_msg=>("Invalid password format")];
-		$other_user_error = [error=>10, error_msg=>("Can't create user")];
+		$other_user_error = [error=>9, error_msg=>("Can't create user")];
 		$other_client_error = [error=>10, error_msg=>("Can't create client")];
 		$site_error = [error=>11, error_msg=>("Can't create site")];
 		$channel_error = [error=>12, error_msg=>("Can't create channel")];

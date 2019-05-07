@@ -21,7 +21,7 @@ echo ("<script>var site_id = $site_id</script>");
 	<!-- begin:: Subheader -->
 	<div class="kt-subheader   kt-grid__item" id="kt_subheader">
 		<div class="kt-subheader__main">
-			<h3 class="kt-subheader__title"><? et("Channels"); ?></h3>
+			<h3 class="kt-subheader__title"><?php et("Channels"); ?></h3>
 		</div>
 	</div>
 	<!-- begin:: Content -->
@@ -33,7 +33,7 @@ echo ("<script>var site_id = $site_id</script>");
 						<i class="kt-font-brand flaticon2-line-chart"></i>
 					</span>
 					<h3 class="kt-portlet__head-title">
-						<? et("List channels"); ?>
+						<?php et("List channels"); ?>
 					</h3>
 				</div>
 				<div class="kt-portlet__head-toolbar">
@@ -41,7 +41,7 @@ echo ("<script>var site_id = $site_id</script>");
 
 						<div class="dropdown dropdown-inline">
 							<button type="button" class="btn btn-brand btn-icon-sm " id="btn_add_bulk" >
-								<i class="flaticon2-plus"></i> <? et("Add bulk"); ?>
+								<i class="flaticon2-plus"></i> <?php et("Add bulk"); ?>
 							</button>
 						</div>
 					</div>
@@ -56,7 +56,7 @@ echo ("<script>var site_id = $site_id</script>");
 							<div class="row align-items-center">
 								<div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
 									<div class="kt-input-icon kt-input-icon--left">
-										<input type="text" class="form-control" placeholder="<? et("Search..."); ?>" id="generalSearch">
+										<input type="text" class="form-control" placeholder="<?php et("Search..."); ?>" id="generalSearch">
 										<span class="kt-input-icon__icon kt-input-icon__icon--left">
 											<span><i class="la la-search"></i></span>
 										</span>
@@ -65,13 +65,13 @@ echo ("<script>var site_id = $site_id</script>");
 								<div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
 									<div class="kt-form__group kt-form__group--inline">
 										<div class="kt-form__label">
-											<label><? et("Status"); ?>:</label>
+											<label><?php et("Status"); ?>:</label>
 										</div>
 										<div class="kt-form__control">
 											<select class="form-control bootstrap-select" id="client_status_select">
-												<option value="0" selected><? et("Active only"); ?></option>
-												<option value=""><? et("All"); ?></option>
-												<option value="1"><? et("Not active"); ?></option>
+												<option value="0" selected><?php et("Active only"); ?></option>
+												<option value=""><?php et("All"); ?></option>
+												<option value="1"><?php et("Not active"); ?></option>
 											</select>
 										</div>
 									</div>
@@ -184,3 +184,4 @@ echo ("<script>var site_id = $site_id</script>");
 
 <?php load_style("/components/channels/assets/channels.css"); ?>
 <?php load_script("/components/channels/assets/channels.js"); ?>
+<?php load_script("/components/crawler/assets/crawler.js"); ?>

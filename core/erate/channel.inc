@@ -14,9 +14,12 @@ class Channel extends ErateChannel {
 		return $channels;
 	}
 
-	public static function addChannel($siteId, $name, $url , $parent_id) {
+	public static function addChannel($siteId, $name, $url , $parent_id = 0, $links_template = "", $article_template = "") {
+		$new_channel_id = 0;
 		if ((!ErateChannel::channelExists($siteId, $name)) && (strlen($name) > 0)) {
+			/// create level from parent channel
 			$parent_channel = new Channel($parent_id);
+			$level = $parent_channel->get('level') + 1;
 
 			$channel = new Channel();
 			$channelData = array(
@@ -24,18 +27,42 @@ class Channel extends ErateChannel {
 					'name' => Utils::checkSQLParameter($name),
 					'url' => Utils::checkSQLParameter($url),
 					'parent_id' => $parent_id,
-					'level' => $parent_channel->get('level') + 1
+					'level' => $level,
+					'crawl_links_template' => Utils::checkSQLParameter($links_template),
+					'crawl_article_template' => Utils::checkSQLParameter($article_template),
 			);
 			$channel->setData($channelData);
 			$channel->syncToDb();
+			$new_channel_id = $channel->get('id');
+
+			/// create default placement
+			$site = new ErateSite($siteId);
+			$i_placement_id = InventoryPlacement::createPlacement($new_channel_id, DEFAULT_PLACEMENT_NAME);
+			$cl = new Client($site->get('clientId'));
+			$campaign_id = $cl->getDefaultCampaign();
+			$cp_id = CampaignPlacement::createNew($campaign_id, $i_placement_id);
+			if ($cp_id) {	/// update pl id in channel
+				$query = "update channels set default_cplacement_id = $cp_id where id = $new_channel_id";
+				Factory::getDB()->execute($query);
+			}
 		}
-		if (isset($channel)) {
-			return $channel->getId();
-		} else {
-			return 0;
-		}
+		return $new_channel_id;
 	}
 
+	public function update($name, $url , $parent_id, $links_template, $article_template)
+	{
+		$channelData = array(
+				'id' => $this->get('id'),
+				'name' => Utils::checkSQLParameter($name),
+				'url' => Utils::checkSQLParameter($url),
+//				'parent_id' => $parent_id,
+				'crawl_links_template' => Utils::checkSQLParameter($links_template),
+				'crawl_article_template' => Utils::checkSQLParameter($article_template),
+		);
+		$this->setData($channelData);
+		$this->syncToDb();
+		return true;
+	}
 	public static function delete($channel_id)
 	{
 		$channel = new Channel($channel_id);
