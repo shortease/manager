@@ -3,7 +3,7 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
 /********************************    GENERAL  *******************************/
 define('SH_VER', 						"0.1.10");
-
+define('SHORTIES_TOOL_TYPE',				11);
 
 /********************************    PATH FIELDS CONST   *******************************/
 

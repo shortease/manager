@@ -36,7 +36,6 @@ class Client extends ErateClient
 		$group = ErateGroup::genUserGroup(ErateGroup::EditUsers, ErateGroup::Clients, ErateGroup::Publishers);
 		$new_user_id = ErateUser::createErateUser($user_name, $passwd, $group, $client_name);
 		if($new_user_id <= 0) return $new_user_id;
-		
 		$new_client_id = ErateClient::createNewClient($client_name, null, null, $new_user_id);
 		if ($new_client_id <= 0 ) {
 			ErateUser::deleteUser($new_user_id);

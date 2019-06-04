@@ -20,8 +20,7 @@ var Crawler = function() {
 	*	crawl to channel address and get article links from it
 	**/
 	var getLinks = function(channelId, channel_url, links_template){
-		var whateverorigin = "http://www.whateverorigin.org/get?url=";
-		var url = 'https://crossorigin.me/' + encodeURIComponent(channel_url);
+		var url = encodeURIComponent(channel_url);
 		$.ajax({url : url})
 			.done(function(response) {
 				var body_DOM = $(response);
@@ -53,7 +52,13 @@ var Crawler = function() {
 	/**
 	*	
 	**/
+	var crawlItem = function(){
+		$.ajax({url : "/?page=crawler&task=api&action=get_crawl_channel", data : { } })
+			.done(function(response){
+				po(response);
+			});
 
+	}
 	/**
 	*	
 	**/
@@ -61,7 +66,8 @@ var Crawler = function() {
     return {
         init: function() {
         },
-        crawlChannel : crawlChannel
+        crawlChannel : crawlChannel,
+        crawlItem : crawlItem
     };
 }();
 
@@ -69,3 +75,17 @@ var Crawler = function() {
 /*jQuery(document).ready(function() {
     Crawler.init();
 });*/
+
+/*
+var jq = document.createElement('script');
+jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
+document.getElementsByTagName('head')[0].appendChild(jq);
+
+jq.onload = function() {
+	erjq = jQuery.noConflict();
+	erjq.ajax({url : "//devm.shortease.com/components/shcr/shcr_prepare.inc", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem" } })
+			.done(function(response){
+				console.info(response);
+			});
+}
+*/

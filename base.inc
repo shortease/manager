@@ -9,6 +9,8 @@ require (SH_CORE_PATH."/erate/inventoryPlacement.inc");
 require (SH_CORE_PATH."/erate/campaign.inc");
 require (SH_CORE_PATH."/erate/campaignPlacement.inc");
 require (SH_CORE_PATH."/erate/channel.inc");
+require (SH_CORE_PATH."/erate/crawler.inc");
+require (SH_CORE_PATH."/erate/banner.inc");
 
 
 

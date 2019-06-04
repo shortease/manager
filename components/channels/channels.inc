@@ -88,8 +88,8 @@ echo ("<script>var site_id = $site_id</script>");
 					<thead>
 						<th class="kt-align-center"><i class="la la-gear edit_channel"></i></th>
 						<th class="kt-align-center"></th>
-						<th><?et("Channel name");?></th>
-						<th><?et("Url");?></th>
+						<th><?php et("Channel name");?></th>
+						<th><?php et("Url");?></th>
 					</thead>
 					<tbody>
 					</tbody>	
@@ -124,13 +124,19 @@ echo ("<script>var site_id = $site_id</script>");
 					<input type="hidden" id="upd_channel_id" name="upd_channel_id" value="0">
 					<div class="kt-portlet__body">
 						<div class="form-group">
-							<label for="upd_name"><?et('Channel name')?></label>
-							<input type="text" class="form-control" placeholder="<?et('Enter channel name')?>" id="upd_name" name="upd_name" />
+							<label class="mt-checkbox mt-checkbox-outline">
+		                        <input type="checkbox"> <?php et('Crawled channel')?>
+		                        <span></span>
+		                    </label>
+						</div>						
+						<div class="form-group">
+							<label for="upd_name"><?php et('Channel name')?></label>
+							<input type="text" class="form-control" placeholder="<?php et('Enter channel name')?>" id="upd_name" name="upd_name" />
 							<span class="form-text alert-danger " id="name_error"></span>
 						</div>						
 						<div class="form-group">
-							<label for="upd_channel_url"><?et('Channel URL')?></label>
-							<input type="text" class="form-control" placeholder="<?et('Enter channel URL')?>" id="upd_channel_url" name="upd_channel_url" />
+							<label for="upd_channel_url"><?php et('Channel URL')?></label>
+							<input type="text" class="form-control" placeholder="<?php et('Enter channel URL')?>" id="upd_channel_url" name="upd_channel_url" />
 						</div>						
 						<div class="form-group">
 			        		<ul class="nav nav-tabs  nav-tabs-line template_tabs" role="tablist">
@@ -166,16 +172,16 @@ echo ("<script>var site_id = $site_id</script>");
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="updateTitle"><?et('Delete channel')?> <span class="del_name"></span></h5>
+				<h5 class="modal-title" id="updateTitle"><?php et('Delete channel')?> <span class="del_name"></span></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				</button>
 			</div>
 			<div class="modal-body kt-font-danger">
-				<?et('This will delete all channel an his successors data permanently and can not be undone !')?>
+				<?php et('This will delete all channel an his successors data permanently and can not be undone !')?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-danger" id="delete_btn"><?et('Delete channel')?> !!!</button>
+				<button type="button" class="btn btn-danger" id="delete_btn"><?php et('Delete channel')?> !!!</button>
 			</div>
 		</div>
 	</div>

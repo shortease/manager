@@ -16,10 +16,9 @@ class Campaign extends ErateCampaign
 		$campaign->set('name', $name);
 		$campaign->set('clientId', $client_id);
 		$campaign_creation_result = $campaign->syncToDb();
-		if ($campaign_creation_result) {
-			$new_campaign_id = $campaign->get('id');
-			$campaign_creation_result = $new_campaign_id;
-		}		
+		$new_campaign_id = $campaign->get('id');
+		$campaign_creation_result = $new_campaign_id;
+
 		return $campaign_creation_result;
 	}
 }

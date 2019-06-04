@@ -19,7 +19,8 @@ class Channel extends ErateChannel {
 		if ((!ErateChannel::channelExists($siteId, $name)) && (strlen($name) > 0)) {
 			/// create level from parent channel
 			$parent_channel = new Channel($parent_id);
-			$level = $parent_channel->get('level') + 1;
+			$level = $parent_channel->get('level');
+			$level = $level ? $level + 1 : 1;
 
 			$channel = new Channel();
 			$channelData = array(
@@ -38,8 +39,13 @@ class Channel extends ErateChannel {
 			/// create default placement
 			$site = new ErateSite($siteId);
 			$i_placement_id = InventoryPlacement::createPlacement($new_channel_id, DEFAULT_PLACEMENT_NAME);
-			$cl = new Client($site->get('clientId'));
+/*			$cl = new Client($site->get('clientId'));
 			$campaign_id = $cl->getDefaultCampaign();
+*/
+			$parent_cplacement_id = $parent_channel->get('default_cplacement_id');
+
+			$parent_cp = new CampaignPlacement($parent_cplacement_id);
+			$campaign_id = $parent_cp->get('campaignId');
 			$cp_id = CampaignPlacement::createNew($campaign_id, $i_placement_id);
 			if ($cp_id) {	/// update pl id in channel
 				$query = "update channels set default_cplacement_id = $cp_id where id = $new_channel_id";
@@ -85,6 +91,17 @@ class Channel extends ErateChannel {
 		/// delete inventory channel
 		$query = "delete from channels where id =".$channel_id;
 		Factory::getDB()->execute($query);
+	}
+
+	public function setTrackedTime()
+	{
+		$query = "update Channels set last_crawled = now() where id = ".$this->get('id');
+		Factory::getDB()->execute($query);
+	}
+
+	public function checkToken($token)
+	{
+		return (($this->get('token') == $token) && (strtotime(date("Y-m-d H:i:s")) - strtotime($this->get('token_date')) < 30));
 	}
 
 }
