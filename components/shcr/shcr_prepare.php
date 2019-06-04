@@ -63,7 +63,7 @@ function shcr(){
 			art_links = jQuery.map( art_links, function( link ) {
 			  return (new URL(link,location.origin)).href;
 			});
-			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.inc', 
+			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.php', 
 						data:{ channel_id:templates.id, 'action':'upd_links', token :templates.token,'links':JSON.stringify(art_links) }})
 			.done(function() {
 				setTimeout( function() { shcrRepeat(templates); }, 2000);
@@ -73,7 +73,7 @@ function shcr(){
 		eval("get_article = " + unescape(templates.article_template));
 		erJq.ajax({url:templates.url}).done(function(data) { 
 			var article_data = get_article($(data));
-			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.inc', 
+			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.php', 
 						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
 			.done(function() {
 				setTimeout( function() { shcrRepeat(templates); }, 2000);
@@ -91,6 +91,6 @@ if (action == 'getCrawlerItem' && Object.keys(templates).length && templates.tok
 
 function shcrRepeat(templates){
 	if(<?php echo ($repeat); ?> && Object.keys(templates).length && templates.token) {
-		erJq.getScript({url : "<?php echo(LIVE_PATH."/".SH_COMPONENT_PATH); ?>/shcr/shcr_prepare.inc", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } });
+		erJq.getScript({url : "<?php echo(LIVE_PATH."/".SH_COMPONENT_PATH); ?>/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } });
 	}
 }
