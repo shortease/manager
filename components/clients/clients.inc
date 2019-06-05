@@ -78,7 +78,7 @@ $clents_list = Client::getClientsList();
 									<!--< table class="table table-striped- table-bordered table-hover table-checkable" id="list_clients">
 										<thead>
 											<th class="kt-align-center"><i class="la la-gear edit_client"></i></th>
-											<th><?et("Clent name");?></th>
+											<th><?php et("Clent name");?></th>
 										</thead>
 										<tbody>
 											<?php foreach ($clents_list as $key => $clent) {?>
@@ -105,7 +105,7 @@ $clents_list = Client::getClientsList();
 									<table id="testdt" class="table table-striped- table-bordered table-hover table-checkable">
 										<thead>
 											<th class="kt-align-center"><i class="la la-gear edit_client"></i></th>
-											<th><?et("Clent name");?></th>
+											<th><?php et("Clent name");?></th>
 											<th></th>
 										</thead>
 										<tbody>
@@ -122,7 +122,7 @@ $clents_list = Client::getClientsList();
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="updateTitle"><?et('Edit client')?></h5>
+				<h5 class="modal-title" id="updateTitle"><?php et('Edit client')?></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				</button>
 			</div>
@@ -140,26 +140,26 @@ $clents_list = Client::getClientsList();
 					<input type="hidden" id="upd_client_id" name="upd_client_id" value="0">
 					<div class="kt-portlet__body">
 						<div class="form-group">
-							<label for="upd_name"><?et('Client name')?></label>
-							<input type="text" class="form-control" placeholder="<?et('Enter client name')?>" id="upd_name" name="upd_name" />
+							<label for="upd_name"><?php et('Client name')?></label>
+							<input type="text" class="form-control" placeholder="<?php et('Enter client name')?>" id="upd_name" name="upd_name" />
 							<span class="form-text alert-danger " id="name_error"></span>
 						</div>						
 						<div class="form-group">
-							<label for="upd_site_name"><?et('Site name')?></label>
-							<input type="text" class="form-control" placeholder="<?et('Enter site name')?>" id="upd_site_name" name="upd_site_name" />
+							<label for="upd_site_name"><?php et('Site name')?></label>
+							<input type="text" class="form-control" placeholder="<?php et('Enter site name')?>" id="upd_site_name" name="upd_site_name" />
 						</div>						
 						<div class="form-group">
-							<label for="upd_site_url"><?et('Site URL')?></label>
-							<input type="text" class="form-control" placeholder="<?et('Enter site URL')?>" id="upd_site_url" name="upd_site_url" />
+							<label for="upd_site_url"><?php et('Site URL')?></label>
+							<input type="text" class="form-control" placeholder="<?php et('Enter site URL')?>" id="upd_site_url" name="upd_site_url" />
 						</div>						
 						<div class="form-group">
-							<label for="upd_email"><?et('Email address')?></label>
-							<input type="email" class="form-control" placeholder="<?et('Enter email')?>" id="upd_email" name="upd_email" />
+							<label for="upd_email"><?php et('Email address')?></label>
+							<input type="email" class="form-control" placeholder="<?php et('Enter email')?>" id="upd_email" name="upd_email" />
 							<span class="form-text alert-danger " id="email_error"></span>
 						</div>	
 						<div class="form-group">
-							<label for="upd_password"><?et('Password')?></label>
-							<input type="text" class="form-control" id="upd_password" name="upd_password" placeholder="<?et('Password')?>" />
+							<label for="upd_password"><?php et('Password')?></label>
+							<input type="text" class="form-control" id="upd_password" name="upd_password" placeholder="<?php et('Password')?>" />
 						</div>					
 					</div>
 				</form>
@@ -177,16 +177,16 @@ $clents_list = Client::getClientsList();
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="updateTitle"><?et('Delete client')?> <span class="del_client_name"></span></h5>
+				<h5 class="modal-title" id="updateTitle"><?php et('Delete client')?> <span class="del_client_name"></span></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				</button>
 			</div>
 			<div class="modal-body kt-font-danger">
-				<?et('This will delete all client data permanently and can not be undone !')?>
+				<?php et('This will delete all client data permanently and can not be undone !')?>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-danger" id="delete_btn"><?et('Delete client !!!')?></button>
+				<button type="button" class="btn btn-danger" id="delete_btn"><?php et('Delete client !!!')?></button>
 			</div>
 		</div>
 	</div>

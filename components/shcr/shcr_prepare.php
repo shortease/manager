@@ -91,6 +91,6 @@ if (action == 'getCrawlerItem' && Object.keys(templates).length && templates.tok
 
 function shcrRepeat(templates){
 	if(<?php echo ($repeat); ?> && Object.keys(templates).length && templates.token) {
-		erJq.getScript({url : "<?php echo(LIVE_PATH."/".SH_COMPONENT_PATH); ?>/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } });
+		erJq.getScript({url : "<?php echo(LIVE_PATH); ?>components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } });
 	}
 }
