@@ -17,27 +17,27 @@ switch ($action) {
 		$user_name = Request::getString("upd_email");
 		$passwd = Request::getWord('upd_password');
 		/// check client name exists. Return error message if yes.
-		$name_exists_error = [error=>1, error_msg=>t("Name")." ".$client_name." ".t("is taken")];
+		$name_exists_error = ['error'=>1, 'error_msg'=>t("Name")." ".$client_name." ".t("is taken")];
 		$isClientExists = Client::checkNameExists($client_name, $client_id);
 		if ($isClientExists) {
 			$response = $name_exists_error;
 			break;
 		}
 		/// For creating new user ($client_id == 0) - check user exists by email and return error if yes
-		$mail_exists_error = [error=>2, error_msg=>t("Email")." ".$user_name." ".t("is already exists")];
+		$mail_exists_error = ['error'=>2, 'error_msg'=>t("Email")." ".$user_name." ".t("is already exists")];
 		if(!$client_id && ErateUser::getUserIdByMail($user_name)) {
 			$response = $mail_exists_error;
 			break;
 		}
-		$mail_format_error = [error=>2, error_msg=>("Invalid email format")];
-		$password_format_error = [error=>3, error_msg=>("Invalid password format")];
-		$other_user_error = [error=>9, error_msg=>("Can't create user")];
-		$other_client_error = [error=>10, error_msg=>("Can't create client")];
-		$site_error = [error=>11, error_msg=>("Can't create site")];
-		$channel_error = [error=>12, error_msg=>("Can't create channel")];
-		$iplacement_error = [error=>13, error_msg=>("Can't create inventory placement")];
-		$campaign_error = [error=>14, error_msg=>("Can't create campaign")];
-		$placement_error = [error=>15, error_msg=>("Can't create campaign placement")];
+		$mail_format_error = ['error'=>2, 'error_msg'=>("Invalid email format")];
+		$password_format_error = ['error'=>3, 'error_msg'=>("Invalid password format")];
+		$other_user_error = ['error'=>9, 'error_msg'=>("Can't create user")];
+		$other_client_error = ['error'=>10, 'error_msg'=>("Can't create client")];
+		$site_error = ['error'=>11, 'error_msg'=>("Can't create site")];
+		$channel_error = ['error'=>12, 'error_msg'=>("Can't create channel")];
+		$iplacement_error = ['error'=>13, 'error_msg'=>("Can't create inventory placement")];
+		$campaign_error = ['error'=>14, 'error_msg'=>("Can't create campaign")];
+		$placement_error = ['error'=>15, 'error_msg'=>("Can't create campaign placement")];
 		if (!$client_id) {	/// create new client, user, site and basic channel
 			$wizard_response = Client::createClientWizard($client_name, $site_name, $site_url, $user_name, $passwd);
 			if ($wizard_response <= 0) {
