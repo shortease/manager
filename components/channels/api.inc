@@ -27,7 +27,12 @@ switch ($action) {
 			$ch = new Channel($channel_id);
 			$response = $ch->update($channel_name, $channel_url , $parent_channel_id, $links_template, $article_template);
 		} else { 			/// add new channel
-			$response = Channel::addChannel($site_id, $channel_name, $channel_url , $parent_channel_id, $links_template, $article_template);
+			$parent_channel = new Channel($parent_channel_id);
+			$parent_cplacement_id = $parent_channel->get('default_cplacement_id');
+
+			$parent_cp = new CampaignPlacement($parent_cplacement_id);
+			$campaign_id = $parent_cp->get('campaignId');
+			$response = Channel::addChannel($site_id, $channel_name, $channel_url , $campaign_id, $parent_channel_id, $links_template, $article_template);
 		}
 		break;
 	case "delete_channel":
