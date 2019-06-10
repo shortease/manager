@@ -14,7 +14,7 @@ class Channel extends ErateChannel {
 		return $channels;
 	}
 
-	public static function addChannel($siteId, $name, $url , $parent_id = 0, $links_template = "", $article_template = "") {
+	public static function addChannel($siteId, $name, $url, $campaign_id = 0 , $parent_id = 0, $links_template = "", $article_template = "") {
 		$new_channel_id = 0;
 		if ((!ErateChannel::channelExists($siteId, $name)) && (strlen($name) > 0)) {
 			/// create level from parent channel
@@ -42,10 +42,11 @@ class Channel extends ErateChannel {
 /*			$cl = new Client($site->get('clientId'));
 			$campaign_id = $cl->getDefaultCampaign();
 */
-			$parent_cplacement_id = $parent_channel->get('default_cplacement_id');
+/*			$parent_cplacement_id = $parent_channel->get('default_cplacement_id');
 
 			$parent_cp = new CampaignPlacement($parent_cplacement_id);
 			$campaign_id = $parent_cp->get('campaignId');
+*/
 			$cp_id = CampaignPlacement::createNew($campaign_id, $i_placement_id);
 			if ($cp_id) {	/// update pl id in channel
 				$query = "update channels set default_cplacement_id = $cp_id where id = $new_channel_id";

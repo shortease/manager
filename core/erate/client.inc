@@ -56,14 +56,6 @@ class Client extends ErateClient
 			return SITE_CREATE_ERROR;
 		}
 
-		/// create channel
-		$new_channel_id = Channel::addChannel($new_site_id, DEFAULT_CHANNEL_NAME,$site_url);
-		if ($new_channel_id <= 0 ) {
-			Client::delete($new_client_id);
-			ErateUser::deleteUser($new_user_id);
-			return CHANNEL_CREATE_ERROR;
-		}
-
 		/// create campaign
 
 		$new_campaign_id = Campaign::createNew(DEFAULT_CAMPAIGN_NAME, $new_sub_client_id);
@@ -73,6 +65,14 @@ class Client extends ErateClient
 			ErateUser::deleteUser($new_user_id);
 			return CAMPAIGN_CREATE_ERROR;
 		}
+		/// create channel
+		$new_channel_id = Channel::addChannel($new_site_id, DEFAULT_CHANNEL_NAME,$site_url, $new_campaign_id);
+		if ($new_channel_id <= 0 ) {
+			Client::delete($new_client_id);
+			ErateUser::deleteUser($new_user_id);
+			return CHANNEL_CREATE_ERROR;
+		}
+
 
 		return true;
 	}
