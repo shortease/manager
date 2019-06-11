@@ -96,7 +96,7 @@ class Channel extends ErateChannel {
 
 	public function setTrackedTime()
 	{
-		$query = "update Channels set last_crawled = now() where id = ".$this->get('id');
+		$query = "update channels set last_crawled = now() where id = ".$this->get('id');
 		Factory::getDB()->execute($query);
 	}
 
