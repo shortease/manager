@@ -161,6 +161,20 @@ class Crawler
 		$tool = new Banner($article_id);
 		if(!$tool->checkToken($token))	return;		/// check token and it time 
 		$tool->updateArticle($article_data);
+		$c_placement_id = $this->getOneToolPlacement($article_id);
+		echo ('$c_placement_id = '.$c_placement_id);
+		$cp = new CampaignPlacement($c_placement_id);
+		$cp->exportToMongo();
+	}
+
+	/**
+	*	Find one connected placement by tool id
+	**/
+	private function getOneToolPlacement($toolId)
+	{
+		$query = "select placementId from tools_placements where toolId = $toolId order by placementId LIMIT 1";
+		$tp = Factory::getDB()->getAssocList(null,$query);
+		return $tp[0]['placementId'];
 	}
 
 }

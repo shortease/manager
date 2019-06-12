@@ -23,3 +23,28 @@ ALTER TABLE `eratep`.`tools` ADD COLUMN `last_crawled` DATETIME NULL  AFTER `ban
 ALTER TABLE `eratep`.`channels` ADD COLUMN `url` VARCHAR(1000) NULL  AFTER `source_id` , ADD COLUMN `parent_id` INT UNSIGNED NULL COMMENT 'parent channel id'  AFTER `url` , ADD COLUMN `level` INT UNSIGNED NULL COMMENT 'tree level'  AFTER `parent_id` , ADD COLUMN `to_crawl` TINYINT UNSIGNED NULL COMMENT 'is channel should be crawled'  AFTER `level` , ADD COLUMN `display_type` SMALLINT UNSIGNED NULL COMMENT 'should display 0 self crawled data, 1 all site data, 2 - self and under levels, 4 - only under levels, 5 - list of other channels'  AFTER `to_crawl` , ADD COLUMN `last_crawled` DATETIME NULL COMMENT 'date of last crawl'  AFTER `display_type` , ADD COLUMN `crawl_frequency` SMALLINT UNSIGNED NULL COMMENT 'crawl every X hours'  AFTER `last_crawled` , ADD COLUMN `crawl_links_template` VARCHAR(1000) NULL COMMENT 'jquery function returns list of article URLs'  AFTER `crawl_frequency` , ADD COLUMN `crawl_article_template` VARCHAR(1000) NULL COMMENT 'jquery function returns article data'  AFTER `crawl_links_template` , ADD COLUMN `default_cplacement_id` INT UNSIGNED NULL COMMENT 'campaign placment to store article tools'  AFTER `crawl_article_template` ;
 
 
+
+
+function links_template (body_DOM) {
+var links = [];
+    body_DOM.find('article a').each(function(){
+    	if (links.length < 10) links.push($(this).attr('href'));
+    });
+return links;
+}
+
+function (body_DOM){
+    var article = {};
+    article.title = body_DOM.find('h1').text();
+    article.descr = body_DOM.find('.product-description span').text();
+    article.price = body_DOM.find('.core-product-container .product-price .current-price').text();
+    
+    article.pictures = [];
+    body_DOM.find('.gallery-image').each(function(){
+        var picture = {};
+        picture.src = $(this).attr('src');
+        picture.text = "";
+        article.pictures.push(picture);
+    });
+    return article;
+}
