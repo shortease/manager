@@ -162,7 +162,6 @@ class Crawler
 		if(!$tool->checkToken($token))	return;		/// check token and it time 
 		$tool->updateArticle($article_data);
 		$c_placement_id = $this->getOneToolPlacement($article_id);
-		echo ('$c_placement_id = '.$c_placement_id);
 		$cp = new CampaignPlacement($c_placement_id);
 		$cp->exportToMongo();
 	}
