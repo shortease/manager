@@ -53,6 +53,7 @@ function upd_article($article_id, $article_data, $token) {
 }
 ?>
 
+if (erJq && !$) $ = erJq;
 function shcr(){
 	console.info(templates);
 	if (templates.type== "channel") {
