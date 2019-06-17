@@ -59,7 +59,7 @@ function shcr(){
 		eval("get_links = " + unescape(templates.links_template))
 		var art_links = [];
 		erJq.ajax({url:templates.url}).done(function(data) { 
-			art_links = get_links($(data));  
+			art_links = get_links(erJq(data));  
 			art_links = jQuery.map( art_links, function( link ) {
 			  return (new URL(link,location.origin)).href;
 			});
@@ -72,7 +72,7 @@ function shcr(){
 	} else if (templates.type== "article") {
 		eval("get_article = " + unescape(templates.article_template));
 		erJq.ajax({url:templates.url}).done(function(data) { 
-			var article_data = get_article($(data));
+			var article_data = get_article(erJq(data));
 			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.php', 
 						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
 			.done(function() {
