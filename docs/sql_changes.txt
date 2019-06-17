@@ -1,4 +1,15 @@
 
+/** Create report_server_pulls table to save report actions **/
+CREATE TABLE `report_server_pulls` (
+  `id` int(11) NOT NULL,
+  `rep_server_id` varchar(10) DEFAULT NULL,
+  `pull_action` varchar(20) DEFAULT NULL,
+  `pull_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
 clients active bit -> integer
 
 /**** remove not null in users, clients, campaigns, campaign_placements ***/
@@ -24,27 +35,3 @@ ALTER TABLE `eratep`.`channels` ADD COLUMN `url` VARCHAR(1000) NULL  AFTER `sour
 
 
 
-
-function links_template (body_DOM) {
-var links = [];
-    body_DOM.find('article a').each(function(){
-    	if (links.length < 10) links.push($(this).attr('href'));
-    });
-return links;
-}
-
-function (body_DOM){
-    var article = {};
-    article.title = body_DOM.find('h1').text();
-    article.descr = body_DOM.find('.product-description span').text();
-    article.price = body_DOM.find('.core-product-container .product-price .current-price').text();
-    
-    article.pictures = [];
-    body_DOM.find('.gallery-image').each(function(){
-        var picture = {};
-        picture.src = $(this).attr('src');
-        picture.text = "";
-        article.pictures.push(picture);
-    });
-    return article;
-}

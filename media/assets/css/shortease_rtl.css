@@ -1,0 +1,17 @@
+/*
+.er_str_holder {
+	left:auto;
+	right:0;
+}
+*/
+.er_pic_holder {
+	direction:rtl;
+}
+
+.close_x { 
+	right:auto;
+	left:0;
+}
+.er_art_title {
+    padding: 2% 2% 2% 35px;
+}
