@@ -51,9 +51,11 @@ var er_stories = function(options){
 	this.create_elements = function() {
 		numOfArticles = st_tools.length;
 		for(i=0;i<st_tools.length;i++){
-			st_tools[i]['pictures'] = st_tools[i]['tool_script']['pictures'];
-			st_tools[i].title = st_tools[i]['tool_script'].title;
-			st_tools[i].subTitle = st_tools[i]['tool_script'].subTitle;
+			if (st_tools[i]['tool_script']) {
+				st_tools[i]['pictures'] = st_tools[i]['tool_script']['pictures'];
+				st_tools[i].title = st_tools[i]['tool_script'].title;
+				st_tools[i].subTitle = st_tools[i]['tool_script'].subTitle;
+			}
 			/*var toolScript = st_tools[i]['tool_script'];
 			st_tools[i]['title_el'] = $('<div class="er_art_title">'+toolScript['title']+'</div>');
 			st_tools[i]['sub_title_el'] = $('<div class="er_art_sub_title">'+toolScript['subTitle']+'</div>');
