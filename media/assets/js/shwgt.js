@@ -448,7 +448,7 @@ var er_stories = function(options){
 		var prevTextsHolder = $('<div class="er_pr_texts_holder"></div>');
 		self.holder.append(prevHolder);
 		for(i=0;i<st_tools.length;i++){
-			if (st_tools[i].type != 'ad') {
+			if (st_tools[i].type != 'ad' && st_tools[i].title ) {
 				var stList = $('<ul id="er_item_'+i+'" data-ix="'+i+'" class="er_item_list"></ul>');
 				prevHolder.append(stList);
 				if (self.preview_texts) {	/// add preview texts under the image , 
