@@ -618,27 +618,29 @@ var er_stories = function(options){
 	this.normalize_subtitles_pictures = function(){
 		for (i=0;i<st_tools.length;i++){
 			var cTool = st_tools[i];
-			cTool.subTitles_arr = [];
-			cTool.subTitles_arr[0] = cTool.tool_script.title;
-			var wordsSplit =  cTool.tool_script.subTitle.split(" ");
-			if (wordsSplit.length > self.max_subtitle_words) {
-				for (j=0;j < wordsSplit.length;j=j+self.max_subtitle_words){
-					var shortSubtitle = '';
-					for (k=j;k<j+self.max_subtitle_words && k<wordsSplit.length;k++){
-						shortSubtitle += ' '+ wordsSplit[k];
+			if (cTool.tool_script) {
+				cTool.subTitles_arr = [];
+				cTool.subTitles_arr[0] = cTool.tool_script.title;
+				var wordsSplit =  cTool.tool_script.subTitle.split(" ");
+				if (wordsSplit.length > self.max_subtitle_words) {
+					for (j=0;j < wordsSplit.length;j=j+self.max_subtitle_words){
+						var shortSubtitle = '';
+						for (k=j;k<j+self.max_subtitle_words && k<wordsSplit.length;k++){
+							shortSubtitle += ' '+ wordsSplit[k];
+						}
+						cTool.subTitles_arr.push(shortSubtitle);
 					}
-					cTool.subTitles_arr.push(shortSubtitle);
 				}
-			}
-			var pics = cTool.tool_script.pictures;
-			var startPicsLengs = pics.length;
-			/// if there are more texts than pictures dublicate pictures
-			if (cTool.subTitles_arr.length > pics.length){
-				for (j=startPicsLengs;j<cTool.subTitles_arr.length;j++){
-					pics[j] = jQuery.extend({}, pics[j%startPicsLengs]); 
+				var pics = cTool.tool_script.pictures;
+				var startPicsLengs = pics.length;
+				/// if there are more texts than pictures dublicate pictures
+				if (cTool.subTitles_arr.length > pics.length){
+					for (j=startPicsLengs;j<cTool.subTitles_arr.length;j++){
+						pics[j] = jQuery.extend({}, pics[j%startPicsLengs]); 
+					}
 				}
+				st_tools[i].tool_script.pictures = pics;
 			}
-			st_tools[i].tool_script.pictures = pics;
 		}
 	}
 
