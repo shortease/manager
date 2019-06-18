@@ -82,10 +82,8 @@ jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
 document.getElementsByTagName('head')[0].appendChild(jq);
 
 jq.onload = function() {
-	erjq = jQuery.noConflict();
-	erjq.ajax({url : "//devm.shortease.com/components/shcr/shcr_prepare.inc", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem" } })
-			.done(function(response){
-				console.info(response);
-			});
+	erJq = jQuery.noConflict();
+	erJq.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } })
+			
 }
 */

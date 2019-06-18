@@ -57,7 +57,7 @@ if (erJq && !$) $ = erJq;
 function shcr(){
 	console.info(templates);
 	if (templates.type== "channel") {
-		eval("get_links = " + unescape(templates.links_template))
+		eval("get_links = " + unescape(templates.links_template));
 		var art_links = [];
 		erJq.ajax({url:templates.url}).done(function(data) { 
 			art_links = get_links(erJq(data));  

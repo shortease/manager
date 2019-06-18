@@ -679,7 +679,7 @@ var er_stories = function(options){
 		self.art_shifter = new er_shift_line({shift_delay:3000, callback:function() { self.showNextPicture(); } });
 		
 		
-		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/str.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/str.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
 		if (self.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: self.site_css+"?v="+Math.ceil(Math.random()*10000)}).appendTo("head"); }
 		self.create_holder();
 		self.create_elements();
