@@ -1,3 +1,10 @@
+ALTER TABLE channels
+ADD COLUMN `display_channels_list` VARCHAR(500) NULL AFTER `display_type`;
+
+/** add last_update field to channels table **/
+ALTER TABLE channels 
+ADD COLUMN last_update TIMESTAMP  NULL ON UPDATE CURRENT_TIMESTAMP AFTER `token_date`;
+
 
 /** Create report_server_pulls table to save report actions **/
 CREATE TABLE `report_server_pulls` (

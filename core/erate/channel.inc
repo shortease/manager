@@ -5,7 +5,8 @@ class Channel extends ErateChannel {
 
 	public static function listChannels ( $site_id, $parent_id = -1){
 		$query = "SELECT id, siteId, name, description, notes, isHidden, categoryId, source_id, 
-						url, parent_id, level, to_crawl, display_type, last_crawled, crawl_frequency, crawl_links_template, crawl_article_template, default_cplacement_id
+						url, parent_id, level, to_crawl, display_type, last_crawled, crawl_frequency, crawl_links_template, crawl_article_template, 
+						default_cplacement_id, display_type, display_channels_list
 					FROM channels
 					where siteId = ".$site_id ;
 		if ($parent_id >= 0) $query = $query . " and parent_id = " . $parent_id;
@@ -14,7 +15,7 @@ class Channel extends ErateChannel {
 		return $channels;
 	}
 
-	public static function addChannel($siteId, $name, $url, $campaign_id = 0 , $parent_id = 0, $links_template = "", $article_template = "") {
+	public static function addChannel($siteId, $name, $url, $campaign_id = 0 , $parent_id = 0, $links_template = "", $article_template = "", $display_type = "", $display_channels_list = "") {
 		$new_channel_id = 0;
 		if ((!ErateChannel::channelExists($siteId, $name)) && (strlen($name) > 0)) {
 			/// create level from parent channel
@@ -31,6 +32,8 @@ class Channel extends ErateChannel {
 					'level' => $level,
 					'crawl_links_template' => Utils::checkSQLParameter($links_template),
 					'crawl_article_template' => Utils::checkSQLParameter($article_template),
+					'display_type' => Utils::checkSQLParameter($display_type),
+					'display_channels_list' => Utils::checkSQLParameter($display_channels_list)
 			);
 			$channel->setData($channelData);
 			$channel->syncToDb();
@@ -56,7 +59,7 @@ class Channel extends ErateChannel {
 		return $new_channel_id;
 	}
 
-	public function update($name, $url , $parent_id, $links_template, $article_template)
+	public function update($name, $url , $parent_id, $links_template, $article_template, $display_type = "", $display_channels_list = "")
 	{
 		$channelData = array(
 				'id' => $this->get('id'),
@@ -65,6 +68,8 @@ class Channel extends ErateChannel {
 //				'parent_id' => $parent_id,
 				'crawl_links_template' => Utils::checkSQLParameter($links_template),
 				'crawl_article_template' => Utils::checkSQLParameter($article_template),
+				'display_type' => Utils::checkSQLParameter($display_type),
+				'display_channels_list' => Utils::checkSQLParameter($display_channels_list)
 		);
 		$this->setData($channelData);
 		$this->syncToDb();

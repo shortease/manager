@@ -1,6 +1,7 @@
 po = console.info;
 var er_template;
 var MEDIA_PATH = "//m.shortease.com/media/";
+//var REP_PATH = "//rep.erate.co.il/";
 
 var er_stories = function(options){
 	self = this;
@@ -55,6 +56,8 @@ var er_stories = function(options){
 				st_tools[i]['pictures'] = st_tools[i]['tool_script']['pictures'];
 				st_tools[i].title = st_tools[i]['tool_script'].title;
 				st_tools[i].subTitle = st_tools[i]['tool_script'].subTitle;
+				st_tools[i].price = st_tools[i]['tool_script'].price;
+				st_tools[i].price = st_tools[i].price ? st_tools[i].price : "";
 			}
 			/*var toolScript = st_tools[i]['tool_script'];
 			st_tools[i]['title_el'] = $('<div class="er_art_title">'+toolScript['title']+'</div>');
@@ -152,26 +155,26 @@ var er_stories = function(options){
 					} else 
 					{
 						//er_pic_holder.append('<img src="'+MEDIA_PATH+'/images/shorties/back'+ (Math.floor(Math.random() * 4) + 1) + '.png" class="er_back_img" />');
-						if (!self.normalize) {
-							er_pic_holder.append('<div class="er_art_title"><span class="text_holder">'+curTool['title']+'</span></div>');
-						}
+						/*if (!self.normalize) {
+							er_pic_holder.append('<div class="er_art_title"><span class="text_holder">'+curTool['title']+'</span><span class="text_holder description">'+ curTool['subTitle']+'</span></div>');
+						}*/
 						var imgHolder = $('<div class="er_img_holder"></div>');
 						var foreImg = $('<img src="'+curPic.address+'" />');//curPic.img.clone();
 						foreImg.addClass('er_fore_img');//er_art_picture
 						imgHolder.append(foreImg);
-						var textPls = ['lt','rt'];
+						/*var textPls = ['lt','rt'];
 						var textPl = textPls[Math.floor(Math.random()*textPls.length)];
 						if (curPic.text) {
 							imgHolder.append($('<div class="er_art_picture_text">'+curPic.text+'</div>').addClass(textPl));
-						}
+						}*/
 						er_pic_holder.append(imgHolder);
-						var articleLink ;
+						/*var articleLink ;
 						if (self.show_link && curTool['url'].length > 8) {
 							articleLink = "<div class='new_window_link'><img src='"+MEDIA_PATH+"images/sh_new_window_1.png' /></div>";
 							//articleLink = "<a href='"+curTool['url']+"' class='new_window_link'></a>";
 							$(articleLink).click(function() { self.report(self.placement_id, cur_tool_id, 2, 1); } );
-						}
-						var pic_txt = curTool['subTitle'];
+						}*/
+						/*var pic_txt = curTool['subTitle'];
 						var txt_class = "er_art_sub_title";
 						if (self.normalize) {
 							pic_txt = curTool.subTitles_arr[j%curTool.pictures.length];
@@ -179,15 +182,32 @@ var er_stories = function(options){
 								txt_class = "er_art_title";
 								pic_txt = curTool.subTitles_arr[0];
 							}
-						}
+						}*/
 					
 						//er_pic_holder.append('<div class="er_art_sub_title"><span class="text_holder">'+curTool['subTitle']+ articleLink+'</span></div>');
-						if (pic_txt) {
+						/*if (pic_txt) {
 							er_pic_holder.append('<div class="'+txt_class+' new_window_text_link"><span class="text_holder">'+ pic_txt + articleLink+'</span></div>');
-						}
+						}*/
+						var details_holder = $('<div class="sh_art_details"></div>');
+						var title_text = $('<div class="text_holder sh_title">'+curTool['title']+'</div>');
+						var desc_text = $('<div class="text_holder sh_description">'+curTool['subTitle']+'</div>');
+						var price_text = $('<div class="text_holder sh_price"><span class="pr_text">Price : </span><span class="pr_val">'+curTool['price']+'</span></div>');
+						var buttons_holder = $('<div class="sh_buttons_holder"></div>');
+						var btn_show_description = $('<div class="btn_show_descr">i</div>');
+						var btn_show_product = $('<div class="btn_show_product">Show product</div>');
+						buttons_holder
+									.append(btn_show_product)
+									.append(btn_show_description);
+						details_holder
+									.append(title_text)
+									.append(desc_text)
+									.append(price_text)
+									.append(buttons_holder);
+						er_pic_holder.append(details_holder);
 					}				
 				}
 			}
+
 			self.art_shifter.build(er_article_holder, curTool.pictures ? curTool.pictures.length : 1);
 		}
 		self.setOpenArticle();
@@ -229,7 +249,11 @@ var er_stories = function(options){
 			}			
 		} });
 		$('body').on({ 'touchmove' : function(){ if (self.holder.hasClass('open') ) self.navigatePictures(event, $('.er_pic_holder.er_showing')); } });
-		
+		$('.btn_show_descr').on('click',function(e) {
+			$(this).closest('.er_article_holder').find('.sh_description').toggle();
+			e.preventDefault();
+			e.stopPropagation();
+		});		
 	}
 	
 	this.setOpenArticle = function(){ 
@@ -354,9 +378,9 @@ var er_stories = function(options){
 		self.report(self.placement_id, st_tools[artIx]["toolId"], 1, 1);
 
 		if (artIx < 0 || artIx >= numOfArticles) return;
-		/*if (st_tools[artIx].artAutoshift) {
+		if (st_tools[artIx].artAutoshift) {
 			st_tools[artIx].artAutoshift.fill_item(0);
-		}*/
+		}
 		if (this.art_shifter) 
 		{
 			self.art_shifter.fill($('.er_article_holder[data-artix='+artIx+']'), 0, 0);
@@ -444,7 +468,7 @@ var er_stories = function(options){
 	}
 	this.build_preview = function(){
 		var prevHolder = $('<div class="er_prev_holder"></div>');
-		self.holder.append("<img class='er_sh_logo' src='"+MEDIA_PATH+"images/shorties_logo.png?v1' />");
+		self.holder.append("<img class='er_sh_logo' src='"+MEDIA_PATH+"images/logobl.png' />");
 		var prevTextsHolder = $('<div class="er_pr_texts_holder"></div>');
 		self.holder.append(prevHolder);
 		for(i=0;i<st_tools.length;i++){
@@ -474,7 +498,7 @@ var er_stories = function(options){
 					self.place_texts();
 				}
 				self.report(self.placement_id, sh_tool_id, 2, 1);
-				
+				self.art_shifter.unpause();
 				//self.showArticle($(this).data('ix'), 0);
 			} );
 	}
@@ -508,7 +532,7 @@ var er_stories = function(options){
 	}
 	
 	this.place_texts = function(){
-		var TEXTS_GAP = 20;
+/*		var TEXTS_GAP = 20;
 		var sub_title_top;
 		$('.er_pic_holder').each(function() {  /// set gap between two titles
 			if (!$(this).hasClass('er_tmpl_1')) { 	/// template 1 has fixed possitions
@@ -518,7 +542,7 @@ var er_stories = function(options){
 				sub_title_top = title.height() > 0 ? (title_top +title.height()+TEXTS_GAP) + 'px' : sub_title_top;
 				sub_title.css({'top':sub_title_top});
 			}
-		});
+		});*/
 	}
 	
 	this.debug = function (message, overwrite = 1){
@@ -546,7 +570,7 @@ var er_stories = function(options){
 	this.sendedEvents = [];
 	this.report = function(pl_id,t_id, event_type, onlyOnce){
 		if (!pl_id || !t_id) return;
-		var pixel_src = "//rep.erate.co.il/?t=rep&pid="+pl_id+"&tid="+t_id+"&et="+ (typeof event_type != "undefined" ? event_type : 1) + "&rn=" + parseInt(Math.random()*99999);  
+		var pixel_src = REP_PATH+"?t=rep&pid="+pl_id+"&tid="+t_id+"&et="+ (typeof event_type != "undefined" ? event_type : 1) + "&rn=" + parseInt(Math.random()*99999);  
 		var pixelObj =  document.createElement("IMG");
 		var flowNum = pl_id+"_"+t_id+"_"+event_type;
 		if(!onlyOnce || self.sendedEvents.indexOf(flowNum) < 0) {
@@ -698,6 +722,12 @@ var er_stories = function(options){
 
 		self.init_callback();
 		self.report(self.placement_id, sh_tool_id, 1, 1);
+		//self.art_shifter.unpause();
+
+		/// TODO - get indication if there is items to crawl from mongo
+		erJq = $;
+		$.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
+
 	}
 
 	
@@ -743,7 +773,7 @@ var er_shift_line = function(options)
 	var self = this;
 	var callback = options.callback ? options.callback : function() {};
 	var shift_delay = options.shift_delay ? options.shift_delay : 2000;
-	var is_active = true;
+	var is_active = false;
 	var MIN_ARTICLE_TIME = 13000;
 
 	this.build = function(shift_holder, num_of_shift_items) 
@@ -817,7 +847,7 @@ var er_shift_line = function(options)
 
 }
 
-var erOrientationData ={alpha:0,beta:0,gamma:0, curX:0, curY:0}, erStartOrientationData ;
+var erOrientationData ={alpha:0,beta:0,gamma:0, curX:0, curY:0}, erStartOrientationData = erOrientationData;
 var erTapHold = false, erTouchStartTime = 0, erTIME_TO_HOLD = 500, erMOVE_TO_NOT_HOLD = 1;
 var er_orientation = function (options) 
 {
