@@ -1,7 +1,7 @@
 po = console.info;
 var er_template;
 var MEDIA_PATH = "//m.shortease.com/media/";
-//var REP_PATH = "//rep.erate.co.il/";
+var REP_PATH = "//rep.shortease.com/";
 
 var er_stories = function(options){
 	self = this;
