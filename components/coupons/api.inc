@@ -22,6 +22,9 @@ switch ($action) {
 		$weight = Request::getInt("weight");
 		if (!$coupon_id) {
 			Coupon::add($site_id, $name, $coupon_code, $weight);
+		} else {
+			$coupon = new Coupon($coupon_id);
+			$coupon->save($name, $coupon_code, $weight);
 		}
 		break;
 		case "delete_coupon":

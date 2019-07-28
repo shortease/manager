@@ -28,6 +28,14 @@ class Coupon {
 		Channel::setLastUpdate(0,$site_id);
 	}
 
+	public function save($name, $code, $weight) {
+		$name = Utils::checkSQLParameter($name);
+		$code = Utils::checkSQLParameter($code);
+		$weight = (int)$weight;
+		$query = "update coupons set name = '".$name."', code = '".$code."', weight = ".$weight." where id = ".$this->id;
+		Factory::getDB()->execute($query);		
+
+	}
 	public static function listCoupons ( $site_id){
 		$query = "select id, name, code, weight from coupons where site_id = ".$site_id;
 		$query = $query ." ORDER BY name";

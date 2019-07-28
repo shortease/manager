@@ -19,6 +19,9 @@ var Coupons = function() {
                 dataSrc: function(res) {
                 	var resData = [];
                 	jQuery.map(res, function(a,b) { resData.push(a)});
+                	var sum_weight = 0;
+                	for (var i = 0; i < resData.length; i++) { sum_weight += resData[i].weight*1;}
+                	for (var i = 0; i < resData.length; i++) {  resData[i].perc_weight = resData[i].weight + " ("+(100 / sum_weight * resData[i].weight).toFixed(1) + '%)';}
                 	Coupons.coupons_arr = resData;
                 	return resData;
                 }
@@ -42,7 +45,7 @@ var Coupons = function() {
 					orderable:true,    
 				},
 				{ 
-					data:"weight",
+					data:"perc_weight",
 					className: "update_btn",  
 					orderable:true,    
 				},
@@ -70,13 +73,17 @@ var Coupons = function() {
 		datat.ajax.reload().draw();
 	}
 
+	var weight_slider;
 	var prepareControls = function() {
 		$('#general_update_alert').hide();	
 		$('#btn_add_coupon').click(function() {
-			update_coupon(0);
-		})
-
-		var weight_slider = document.getElementById('weight_slider');
+			update_coupon();
+		});
+		$(document).on('click','.update_btn',function() {
+			var coupon = getRowProperties($(this));
+			update_coupon(coupon);
+		});
+		weight_slider = document.getElementById('weight_slider');
 
 		noUiSlider.create(weight_slider, {
 		    start: [COUPON_DEFAULT_WEIGHT],
@@ -90,6 +97,7 @@ var Coupons = function() {
 		weight_slider.noUiSlider.on('update', function (values, handle) {
 		    $('#weight_inp').val(Math.round(values[handle]));
 		});
+		Coupons.weight_slider = weight_slider;
 
 		$('#add_modal #save_btn').click(function() {
 			saveUpdate();
@@ -121,7 +129,8 @@ var Coupons = function() {
 		},
 		reloadData:reloadData,
 		datat: datat,
-		coupons_arr:coupons_arr
+		coupons_arr:coupons_arr,
+		weight_slider : weight_slider
 	};
 
 }();
@@ -143,15 +152,21 @@ function getRowProperties(targetObj) {
 	return coupon;
 }
 var upd_coupon_id = 0;
-function update_coupon (coupon_id) {
-	var coupon;
+function update_coupon (coupon) {
 
-	if (coupon_id) { 	/// update
-		upd_coupon_id = coupon_id;
-		coupon = Coupons.coupons_arr[coupon_id];
+	if (coupon) { 	/// update
+		upd_coupon_id = coupon.id;
 		$("#updateTitle").text(et("Update coupon ")+coupon.name);
+		$("#upd_name").val(coupon.name);
+		$("#upd_coupon_code").val(coupon.code);
+		$("#weight_inp").val(coupon.weight);
+		Coupons.weight_slider.noUiSlider.set(coupon.weight)
 	} else {			/// add new
 		$("#updateTitle").text(et("Add new coupon"));
+		$("#upd_name").val("");
+		$("#upd_coupon_code").val("");
+		$("#weight_inp").val(10);
+		Coupons.weight_slider.noUiSlider.set(10)
 	}
 	$('#add_modal').modal('show');
 }
