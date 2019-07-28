@@ -11,11 +11,12 @@ require (SH_CORE_PATH."/erate/campaignPlacement.inc");
 require (SH_CORE_PATH."/erate/channel.inc");
 require (SH_CORE_PATH."/erate/crawler.inc");
 require (SH_CORE_PATH."/erate/banner.inc");
+require (SH_CORE_PATH."/erate/coupon.inc");
 
 
 
 function load_script ($script_path){
-	echo ("<script src=\"".$script_path."?v=".SH_VER."\" type=\"text/javascript\"></script>;");
+	echo ("<script src=\"".$script_path."?v=".SH_VER."\" type=\"text/javascript\"></script>");
 }
 function load_style ($style_path){
 	echo ("<link href=\"".$style_path."?v=".SH_VER."\" rel=\"stylesheet\" type=\"text/css\" />");

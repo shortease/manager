@@ -3,7 +3,6 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
 $site_id = Request::getInt("site_id");
 //// TODO add select site
-if (!$site_id) $site_id = 82;
 
 if (!$site_id) die();
 

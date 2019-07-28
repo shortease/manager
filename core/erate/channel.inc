@@ -105,6 +105,14 @@ class Channel extends ErateChannel {
 		Factory::getDB()->execute($query);
 	}
 
+	public static function setLastUpdate($id = 0, $site_id = 0)
+	{
+		$query = "";
+		if ($id) $query = "update channels set last_update = now() where id = ".$id;
+		else if ($site_id) $query = "update channels set last_update = now() where siteId = ".$site_id;
+		Factory::getDB()->execute($query);
+	}
+
 	public function checkToken($token)
 	{
 		return (($this->get('token') == $token) && (strtotime(date("Y-m-d H:i:s")) - strtotime($this->get('token_date')) < 30));

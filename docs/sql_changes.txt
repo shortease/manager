@@ -1,3 +1,17 @@
+/*** Coupons 24/7/2019  ****/
+CREATE TABLE `coupons` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) DEFAULT NULL,
+  `site_id` int(11) DEFAULT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  `weight` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ;
+
+
+/*******************/
+
+
 ALTER TABLE channels
 ADD COLUMN `display_channels_list` VARCHAR(500) NULL AFTER `display_type`;
 

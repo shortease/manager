@@ -1,0 +1,10 @@
+#weight_slider {
+    margin-top: 35px;
+}
+
+.delete_btn, .channels_select_btn, .update_btn {
+	cursor: pointer;
+}
+td:hover.delete_btn {
+	color: red;
+}

@@ -36,6 +36,7 @@ var Clients = function() {
 									    </a>\
 									    <div class="dropdown-menu dropdown-menu-left">\
 									        <a class="dropdown-item edit_client" href="#"><i class="la la-edit "></i> '+et("Edit Details")+'</a>\
+									        <a class="dropdown-item edit_coupons" href="#"><i class="la la-tags"></i>'+et("Coupons")+'</a>\
 									        <a class="dropdown-item change_hidden_status_btn" href="#"> </a>\
 									        <a class="dropdown-item delete_client_btn" href="#"><i class="la la-user-times "></i> '+et("Delete client data")+'</a>\
 									    </div>\
@@ -54,6 +55,8 @@ var Clients = function() {
 				$(row).data("id", data.id);
 				$(row).data("name", data.name);
 				$(row).data("isHidden", data.isHidden);
+				$(row).data("site_id", data.site_id);
+
 				if (data.isHidden == 1) {
 					$(row).addClass('kt-shape-bg-color-1');
 					$('.change_hidden_status_btn ', row).html('<i class="la la-link "></i>'+et("Set active"));
@@ -82,6 +85,12 @@ var Clients = function() {
 
 			updateClient(id, name);
 		});
+		$(document).on('click','.edit_coupons',  function() {
+			var trHolder = $(this).closest('tr');
+			var site_id = trHolder.data('site_id');
+			location.href = "/?com=coupons&site_id="+site_id;
+		});
+
 
 		$('#generalSearch').on( 'keyup', function () {
 		    datat.search( this.value ).draw();
