@@ -33,9 +33,10 @@ class Coupon {
 		$code = Utils::checkSQLParameter($code);
 		$weight = (int)$weight;
 		$query = "update coupons set name = '".$name."', code = '".$code."', weight = ".$weight." where id = ".$this->id;
-		Factory::getDB()->execute($query);		
-
+		Factory::getDB()->execute($query);
+		Channel::setLastUpdate(0,$this->site_id);
 	}
+	
 	public static function listCoupons ( $site_id){
 		$query = "select id, name, code, weight from coupons where site_id = ".$site_id;
 		$query = $query ." ORDER BY name";
