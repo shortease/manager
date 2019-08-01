@@ -109,7 +109,6 @@ var er_stories = function(options){
 			self.art_shifter.pause();
 			$('.er_articles_holder').hide();
 		} );
-		//$('.er_str_holder').append(er_articles_holder);
 		self.holder.append(er_articles_holder);
 		er_articles_holder.css({'width':(st_tools.length*100)+'%'});
 
@@ -211,7 +210,9 @@ var er_stories = function(options){
 			self.art_shifter.build(er_article_holder, curTool.pictures ? curTool.pictures.length : 1);
 		}
 		self.setOpenArticle();
-
+		$('.er_pic_holder').contextmenu(function(){
+			return false;
+		});
 		$('.er_pic_holder').click(function(event) {
 			var holder = $(this);
 			setTimeout(function(){ 
@@ -219,7 +220,10 @@ var er_stories = function(options){
 				} , 10 );
 		});
 
-		$('body').on({ 'touchstart' : function(){ startTouchX = event.touches[0].pageX; } });
+		$('body').on({ 'touchstart' : function(){ 
+			startTouchX = event.touches[0].pageX; 
+			self.art_shifter.pause();
+		} });
 		$('body').on({ 'touchmove' : function(e){ 
 			var xChange = e.originalEvent.changedTouches[event.changedTouches.length-1].pageX - startTouchX;
 			var artIx =$('.er_pic_holder.er_showing').data('artix');
@@ -229,6 +233,7 @@ var er_stories = function(options){
 			}
 		} });
 		$('body').on({ 'touchend' : function(e){
+			self.art_shifter.unpause();
 			var xChange = e.originalEvent.changedTouches[event.changedTouches.length-1].pageX - startTouchX;
 			if ( Math.abs(xChange) == 0 ) return;
 			//var artIx = $(this).data('artix'); 
@@ -250,12 +255,59 @@ var er_stories = function(options){
 		} });
 		$('body').on({ 'touchmove' : function(){ if (self.holder.hasClass('open') ) self.navigatePictures(event, $('.er_pic_holder.er_showing')); } });
 		$('.btn_show_descr').on('click',function(e) {
-			$(this).closest('.er_article_holder').find('.sh_description').toggle();
+			var article_holder = $(this).closest('.er_article_holder')
+			if (!article_holder.data('descr_open')){
+				article_holder.find('.sh_description').show();
+				article_holder.data('descr_open',1);
+				self.art_shifter.pause();
+			} else {
+				article_holder.find('.sh_description').hide();
+				article_holder.data('descr_open',0);
+				self.art_shifter.unpause();
+			}
+			self.showCoupon(article_holder);
 			e.preventDefault();
 			e.stopPropagation();
 		});		
 	}
-	
+	this.showCoupon = function(holder){
+		var COUPON_FREQUENCY = 1;
+		if (holder.data('has_coupon')) return;
+		/// get random for coupon display frequency
+		var freq_random = Math.ceil(Math.random()*COUPON_FREQUENCY);
+		if (freq_random != COUPON_FREQUENCY) {
+			holder.data('has_coupon',1)
+			return;
+		}
+		var sum_weights = 0;
+		for (var i=0;i<sh_channel_coupons.length;i++) sum_weights += 1*sh_channel_coupons[i].weight;
+		var rand_weight = Math.ceil(Math.random()*sum_weights);
+		var cum_weight = 0, selected_coupon = null;
+		for (var i=0;i<sh_channel_coupons.length;i++) {
+			cum_weight += 1*sh_channel_coupons[i].weight;
+			if (!selected_coupon && cum_weight >= rand_weight) selected_coupon = sh_channel_coupons[i];
+		}
+		selected_coupon.code = atob(selected_coupon.code)
+		var coupon_name = $('<div class="sh_coupon_name">Click for '+selected_coupon.name+'</div>');
+		var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
+		var coupon_holder = $('<div class="sh_coupon_holder"></div>');
+		coupon_holder.append(coupon_name);
+		coupon_holder.append(coupon_code);
+
+		setTimeout(function() {
+						holder.append(coupon_holder);
+						coupon_holder.animate({ top: '10%' }, 400, function() {  });
+					}, 1000);
+		$(document).on('click',coupon_holder, function() {
+			coupon_code.show();
+			if (!$('#select_holder').length) $('body').append('<input type="hidden" name="select_holder" id="select_holder" value="" style="display:none">');
+			$('#select_holder').val(selected_coupon.code);
+			$('#select_holder')[0].select();
+			document.execCommand("copy");
+		});
+		holder.data('has_coupon',1);
+		return;
+	}
 	this.setOpenArticle = function(){ 
 		var link_targets;
 		if (self.show_link) {
@@ -684,7 +736,7 @@ var er_stories = function(options){
 		self.dir = options.dir ? options.dir : 'ltr' ;
 		if (self.dir == 'rtl') $('body').addClass('er_rtl');
 		self.show_link = typeof options.show_link != 'undefined' ? options.show_link : true;
-		self.MAX_ARTICLES_NUM = 10;
+		self.MAX_ARTICLES_NUM = 50;
 		self.templates_map = typeof options.templates_map != 'undefined' ? options.templates_map : [1,2,3,4];
 		self.positions_map = typeof options.positions_map != 'undefined' ? options.positions_map : [1,2,3,4,5];
 		self.normalize = typeof options.normalize != 'undefined' ? options.normalize : false;	
@@ -693,7 +745,7 @@ var er_stories = function(options){
 		self.ad_freq_art_every = typeof options.ad_freq_art_every != 'undefined' ? options.ad_freq_art_every : 0;
 		self.init_callback = typeof options.init_callback != 'undefined' && options.init_callback.length > 0 ? options.init_callback : function() {};
 		self.touch_only = typeof options.touch_only != 'undefined' ? options.touch_only : 1;
-		if (!isTouchDevice() && self.touch_only) { return;}
+		//if (!isTouchDevice() && self.touch_only) { return;}
 		self.text_tilt_random = typeof options.text_tilt_random != 'undefined' ? options.text_tilt_random : 0; 	//// Text tilt : 0 - no, 1 - every text, n > 1 - every n texts
 		self.text_link = typeof options.text_link != 'undefined' ? options.text_link : 0;	//// Is text opens the article
 		
@@ -727,16 +779,18 @@ var er_stories = function(options){
 		/// TODO - get indication if there is items to crawl from mongo
 		erJq = $;
 		$.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
-alert(2);
 	}
-
+	return {
+		init : init
+	}
 	
-}
+}();
 
 /***
 *	wait for jQuery to be ready
 *	waitUntil - maximum wait time. Should be Date.now() + YOUR_SECONDS*1000
 ***/
+/*
 var er_str;
 erLoad("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js", function() {;
 	erWaitForGlobal("erStoriesOptions", function() {
@@ -765,6 +819,26 @@ function erWaitForGlobal(key, callback) {
     }, 50);
   }
 };
+*/
+function erLoad (url, callback) {
+		var script = document.createElement("SCRIPT");
+		script.src = url;
+		script.type = 'text/javascript';
+		if (callback) script.onerror = script.onload = function() { callback(); };
+		document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+
+erLoad("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js", function() {
+	$(document).ready(function() {
+		erLoad(MEDIA_PATH+"sites/"+iSiteId+"/init.js", function() {
+			er_stories.init(erStoriesOptions);
+		});
+	});
+});
+
+
+
 
 var fillerTimer;
 

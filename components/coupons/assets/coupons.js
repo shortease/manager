@@ -162,6 +162,7 @@ function update_coupon (coupon) {
 		$("#weight_inp").val(coupon.weight);
 		Coupons.weight_slider.noUiSlider.set(coupon.weight)
 	} else {			/// add new
+		upd_coupon_id = 0;
 		$("#updateTitle").text(et("Add new coupon"));
 		$("#upd_name").val("");
 		$("#upd_coupon_code").val("");

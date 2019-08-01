@@ -5,7 +5,7 @@
 	width:100%;
 	height:120px;
 	overflow: hidden;
-	margin: 10px 0;
+	margin: 0px 0;
 	position:relative;
 	z-index:999990;
 	left:0;
@@ -104,7 +104,7 @@
 	border-radius: 38px;
     overflow: hidden;
     padding: 2px;
-	border: 1px solid #8dc63f;
+	border: 1px solid #27ace2;
 	width:76px;
 	height:76px;
 	cursor:pointer;
@@ -196,7 +196,7 @@
 .er_art_title {
     font-size: 1.4em;
     position: absolute;
-    z-index: 999991;
+    z-index: 999992;
     width: 100%;
     background-color: #000000b0;
     /*padding: 2% 4% 2% 2%;*/
@@ -459,4 +459,83 @@
 .pos_6 .er_art_title,.pos_6 .er_art_sub_title {
 	top:75%;
 	left:15%;
+}
+
+
+
+
+
+/****************************/
+
+
+
+.sh_art_details {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 999991;
+    width: 100%;
+}
+.sh_art_details .text_holder {
+	background-color: #ffffffd1;
+    padding: 0 0.6em;
+    box-sizing: border-box;	
+}
+
+.sh_art_details .sh_title {
+    font-size: 1.4em;
+   	margin: 0 6% ;
+	line-height: 1.6em;
+}
+.sh_art_details .sh_description {
+    font-size: 1.2em;
+    display: none;
+   	margin: 0 6% ;
+}
+.sh_art_details .sh_price {
+    font-size: 1.2em;
+    margin: 6px 6% 20px 6%;
+	line-height: 1.4em;
+    display: inline-block;
+}
+.sh_art_details .sh_price .pr_val {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.btn_show_product {
+    line-height: 1.8em;
+    font-size: 1.4em;
+    display: inline-block;
+    background-color: #254554;
+    color: #ffffff;
+    padding: 0 0.5em;
+    margin: 0 6% 10px 6%;
+    float: left;
+}
+.btn_show_descr {
+    float: right;
+    line-height: 1.8em;
+    font-size: 1.4em;
+    background-color: #254554;
+    padding: 0 0.5em;
+    color: #ffffff;
+}
+
+.sh_coupon_holder {
+	width: 88%;
+	min-height: 3em;
+	padding: 0.5em 0;
+	z-index:999994;
+	position: absolute;
+    top: -10%;
+    left: 6%;
+    text-align: center;
+    background-color: #ffffffd1;
+}
+.sh_coupon_name {
+	font-weight: bold;
+}
+.sh_coupon_code {
+	display: none;
 }
