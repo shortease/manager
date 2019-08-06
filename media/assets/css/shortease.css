@@ -509,17 +509,20 @@
     display: inline-block;
     background-color: #254554;
     color: #ffffff;
-    padding: 0 0.5em;
+    padding: 0 1em;
     margin: 0 6% 10px 6%;
     float: left;
+    border-radius: 10px;
 }
 .btn_show_descr {
     float: right;
     line-height: 1.8em;
     font-size: 1.4em;
     background-color: #254554;
-    padding: 0 0.5em;
+    padding: 0 1em;
     color: #ffffff;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .sh_coupon_holder {
