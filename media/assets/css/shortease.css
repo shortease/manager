@@ -534,11 +534,19 @@
     top: -10%;
     left: 6%;
     text-align: center;
+}
+
+.sh_coupon_holder.show {
     background-color: #ffffffd1;
 }
+
 .sh_coupon_name {
 	font-weight: bold;
+	display: none;
 }
 .sh_coupon_code {
 	display: none;
+}
+.sh_coupon_holder.show .sh_coupon_name , .sh_coupon_holder.show .sh_coupon_code {
+	display: block;
 }

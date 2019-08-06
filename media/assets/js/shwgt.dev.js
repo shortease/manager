@@ -293,10 +293,12 @@ var er_stories = function(options){
 			cum_weight += 1*sh_channel_coupons[i].weight;
 			if (!selected_coupon && cum_weight >= rand_weight) selected_coupon = sh_channel_coupons[i];
 		}
-		selected_coupon.code = atob(selected_coupon.code)
-		var coupon_name = $('<div class="sh_coupon_name">Click for '+selected_coupon.name+'</div>');
+		selected_coupon.code = atob(selected_coupon.code);
+		var coupon_icon = $('<img src = "'+MEDIA_PATH+'images/gift_box.png" class="sh_coupon_icon" />');
+		var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+'</div>');
 		var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
 		var coupon_holder = $('<div class="sh_coupon_holder"></div>');
+		coupon_holder.append(coupon_icon);
 		coupon_holder.append(coupon_name);
 		coupon_holder.append(coupon_code);
 
@@ -305,11 +307,11 @@ var er_stories = function(options){
 						coupon_holder.animate({ top: '10%' }, 400, function() {  });
 					}, 1000);
 		$(document).on('click',coupon_holder, function() {
-			coupon_code.show();
-			if (!$('#select_holder').length) $('body').append('<input type="hidden" name="select_holder" id="select_holder" value="" style="display:none">');
+			coupon_holder.addClass('show');
+			/*if (!$('#select_holder').length) $('body').append('<input type="hidden" name="select_holder" id="select_holder" value="" style="display:none">');
 			$('#select_holder').val(selected_coupon.code);
 			$('#select_holder')[0].select();
-			document.execCommand("copy");
+			document.execCommand("copy");*/
 		});
 		holder.data('has_coupon',1);
 		return;
