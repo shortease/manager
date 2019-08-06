@@ -112,10 +112,10 @@ var er_stories = function(options){
 		self.holder.append(er_articles_holder);
 		er_articles_holder.css({'width':(st_tools.length*100)+'%'});
 
-		
 		for(i=0;i<st_tools.length;i++)
 		{
 			var curTool = st_tools[i];
+			if (!curTool.tool_script) continue;
 			var er_article_holder = $('<div class="er_article_holder" data-artix="'+i+'"></div>');
 			er_article_holder.width(self.width+'px');
 			if (curTool.type == 'ad') { 
@@ -193,7 +193,7 @@ var er_stories = function(options){
 						var price_text = $('<div class="text_holder sh_price"><span class="pr_text">Price : </span><span class="pr_val">'+curTool['price']+'</span></div>');
 						var buttons_holder = $('<div class="sh_buttons_holder"></div>');
 						var btn_show_description = $('<div class="btn_show_descr">i</div>');
-						var btn_show_product = $('<div class="btn_show_product">Show product</div>');
+						var btn_show_product = $('<div class="btn_show_product">Buy</div>');
 						buttons_holder
 									.append(btn_show_product)
 									.append(btn_show_description);
@@ -203,13 +203,20 @@ var er_stories = function(options){
 									.append(price_text)
 									.append(buttons_holder);
 						er_pic_holder.append(details_holder);
+						btn_show_product.click(function(e) { 
+							e.preventDefault();
+							e.stopPropagation();
+							location.href = curTool['url'];
+						});
 					}				
 				}
 			}
 
 			self.art_shifter.build(er_article_holder, curTool.pictures ? curTool.pictures.length : 1);
 		}
+
 		self.setOpenArticle();
+		/// prevent context menu on tap for pause
 		$('.er_pic_holder').contextmenu(function(){
 			return false;
 		});
@@ -219,7 +226,6 @@ var er_stories = function(options){
 					self.navigatePictures(event, holder); 
 				} , 10 );
 		});
-
 		$('body').on({ 'touchstart' : function(){ 
 			startTouchX = event.touches[0].pageX; 
 			self.art_shifter.pause();
@@ -386,7 +392,7 @@ var er_stories = function(options){
 		
 		curForeImg.css({right:(curForeImg.width()-$(window).width())/-2+'px'});
 		*/
-		self.orientation.save_position();
+		er_orientation.save_position();
 	}
 	
 	this.showNextPicture = function() {
@@ -427,9 +433,9 @@ var er_stories = function(options){
 		}
 		curArtIx = artIx;
 		curPicIx = 0
+		if (artIx < 0 || artIx >= numOfArticles || !st_tools[artIx]) return;
 		self.report(self.placement_id, st_tools[artIx]["toolId"], 1, 1);
 
-		if (artIx < 0 || artIx >= numOfArticles) return;
 		if (st_tools[artIx].artAutoshift) {
 			st_tools[artIx].artAutoshift.fill_item(0);
 		}
@@ -635,12 +641,11 @@ var er_stories = function(options){
 	}
 
 	
-	var curPreviewLeft = 0;
-	this.interaction = function() {
+	var curPreviewLeft = 0, shift = 0;
+	this.interaction = function() { 
 		var yChange = 15-erOrientationData.yChangeAng/2;
 		yChange = yChange < 0 ? 0 : yChange > 28 ? 28 : yChange;
 		var curImage = $('.er_curr.er_showing .er_fore_img');
-		
 		var MAX_MOVE = 40;
 		if (!erOrientationData.yChangeAng) erOrientationData.yChangeAng = 0;
 		var movePer = (erOrientationData.yChangeAng/MAX_MOVE*50+50)/100;
@@ -655,6 +660,20 @@ var er_stories = function(options){
 			curImage.css({'right':(-(movePer*shoulderWidth)) +'px'});
 		}		
 		var er_prev_holder = $('.er_prev_holder');
+		/************/
+		if (erOrientationData.xChangePx ) {
+			shift = curPreviewLeft + erOrientationData.xChangePx;
+			/// stop shifting on edges
+			if (shift > 20) shift = 20;
+			self.itemWidth = $('.er_item_list').outerWidth(true);
+			if (shift < -1*(self.itemWidth*numOfArticles - self.width + 20)) shift = -1*(self.itemWidth*numOfArticles - self.width + 20);
+			er_prev_holder.css({'left':(shift)+'px'});
+		} else {
+			curPreviewLeft = shift ;
+		}
+		//curPreviewLeft = shift;
+		/*************/
+		/*
 		if (erOrientationData.xChangePx != 0 || erOrientationData.yChangePx != 0) 
 		{
 			if (!self.holder.hasClass('open')) 
@@ -669,7 +688,7 @@ var er_stories = function(options){
 		{
 			curPreviewLeft = parseInt(er_prev_holder.css('left'));
 		}
-		
+		*/
 		var pixLeft = Math.abs(parseInt($('.er_articles_holder').css('left')))
 		if (self.holder.hasClass('open') && pixLeft%$(window).width() >8)
 		{
@@ -725,6 +744,8 @@ var er_stories = function(options){
 	this.width;
 	this.orientation;
 	this.init = function(options){ 
+		er_orientation.init();
+
 		self.placement_id = typeof options.placement_id != 'undefined' ? options.placement_id : 0 ;
 		self.ad_placement_id = typeof options.ad_placement_id != 'undefined' ? options.ad_placement_id : 0 ;
 		self.target_holder = typeof options.target_holder != 'undefined' &&  options.target_holder.length > 0 ? options.target_holder : 'body' ; 	//// target to add shorties
@@ -732,7 +753,7 @@ var er_stories = function(options){
 		self.site_css = typeof options.site_css != 'undefined' ? options.site_css : 0 ;
 		
 		self.width = options.width ? options.width : $(window).width() ;
-		self.preview_texts = typeof options.preview_texts != 'undefined' ? options.preview_texts : true ;
+		self.preview_texts = typeof options.preview_texts != 'undefined' ? options.preview_texts : false ;
 		self.dir = options.dir ? options.dir : 'ltr' ;
 		if (self.dir == 'rtl') $('body').addClass('er_rtl');
 		self.show_link = typeof options.show_link != 'undefined' ? options.show_link : true;
@@ -749,7 +770,10 @@ var er_stories = function(options){
 		self.text_tilt_random = typeof options.text_tilt_random != 'undefined' ? options.text_tilt_random : 0; 	//// Text tilt : 0 - no, 1 - every text, n > 1 - every n texts
 		self.text_link = typeof options.text_link != 'undefined' ? options.text_link : 0;	//// Is text opens the article
 		
-		
+		/// remove tools that does not have scripts
+		var temp_st_tools = [];
+		for (var i = 0;i<st_tools.length;i++) {if (st_tools[i].tool_script) temp_st_tools.push(st_tools[i]);}
+		st_tools = temp_st_tools;
 		if (st_tools.length>self.MAX_ARTICLES_NUM) st_tools.length =  self.MAX_ARTICLES_NUM;
 		if(self.normalize) self.normalize_subtitles_pictures();
 		self.art_shifter = new er_shift_line({shift_delay:3000, callback:function() { self.showNextPicture(); } });
@@ -769,7 +793,9 @@ var er_stories = function(options){
 		}
 		if (self.arrows_navigate) self.add_arrows();
 		setTimeout(self.shift_items, self.shift_step); 	//// start preview sliding
-		self.orientation = new er_orientation();
+		/*or_obj = new er_orientation();
+		self.orientation = or_obj;
+		po("opientation = ",or_obj, new er_orientation());*/
 		self.interaction();
 
 		self.init_callback();
@@ -779,9 +805,13 @@ var er_stories = function(options){
 		/// TODO - get indication if there is items to crawl from mongo
 		erJq = $;
 		$.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
+		self.itemWidth = $('.er_item_list').outerWidth(true);
+		po(self.itemWidth);
 	}
 	return {
-		init : init
+		init : init,
+		prepareNextArticle : prepareNextArticle,
+		//orientation : self.orientation
 	}
 	
 }();
@@ -873,7 +903,7 @@ var er_shift_line = function(options)
 		//// prepare next article if this is the last picture started
 		if(cur_item_ix == num_of_items - 1  && fill_percent > 3) {
 			var curArtIx = parseInt(shift_holder.data('artix'));
-			er_str.prepareNextArticle(curArtIx + 1);
+			er_stories.prepareNextArticle(curArtIx + 1);
 		}
 		var art_delay = shift_delay * num_of_items < MIN_ARTICLE_TIME ? MIN_ARTICLE_TIME / num_of_items : shift_delay;
 		$('.shifter_line',shift_holder).each(function(ix, el){
@@ -916,64 +946,73 @@ var er_shift_line = function(options)
 			}
 			prev_ix_width = cur_ix_width;
 		});
-		self.fill(cur_holder, cur_ix, parseInt(cur_perc_width));
+		self.fill(cur_holder, cur_item_ix, parseInt(cur_perc_width));
 	}
 
 }
 
-var erOrientationData ={alpha:0,beta:0,gamma:0, curX:0, curY:0}, erStartOrientationData = erOrientationData;
+var erOrientationData ={alpha:0,beta:0,gamma:0, curX:0, curY:0}, erStartOrientationData = {alpha:0,beta:0,gamma:0, curX:0, curY:0};
 var erTapHold = false, erTouchStartTime = 0, erTIME_TO_HOLD = 500, erMOVE_TO_NOT_HOLD = 1;
-var er_orientation = function (options) 
+var er_orientation = function () 
 {
-	var self = this;
-	
-	window.addEventListener('deviceorientation', function(event) {
-		var firstRun = (erOrientationData.alpha == 0 && erOrientationData.beta == 0);
-		erOrientationData.alpha	= event.alpha;
-		erOrientationData.beta	= event.beta;
-		erOrientationData.gamma	= event.gamma; 		
-		if (!firstRun) {
-			erOrientationData.xChangeAng = erOrientationData.beta - erStartOrientationData.beta;
-			erOrientationData.yChangeAng = erOrientationData.gamma - erStartOrientationData.gamma;
-			erOrientationData.zChangeAng = erOrientationData.alpha - erStartOrientationData.alpha;
-		}
-			
-		if (firstRun) self.save_position();
-	});	
-	window.addEventListener('touchmove', function(e) {
-		var firstRun = (erOrientationData.curX == 0 && erOrientationData.curY == 0);
-		erOrientationData.curX = e.targetTouches[0].pageX;
-		erOrientationData.curY = e.targetTouches[0].pageY;
-		if (!firstRun) 
-		{
-			erOrientationData.xChangePx = erOrientationData.curX - erStartOrientationData.curX;
-			erOrientationData.yChangePx = erOrientationData.curY - erStartOrientationData.curY;
-		}
-		if (firstRun) self.save_position();
-		checkHold();
-	});	
-	window.addEventListener('touchstart', function(e) {
-		erStartOrientationData.curX = e.touches[0].pageX;
-		erStartOrientationData.curY = e.touches[0].pageY;
-		erTouchStartTime = Date.now();
-		setTimeout(function(){ checkHold();}, erTIME_TO_HOLD);
-	});
-	window.addEventListener('touchend', function(e) {
-		erOrientationData.xChangePx = 0;
-		erOrientationData.yChangePx = 0;
-		erTouchStartTime = 0;
-	});
-	this.save_position = function(){
+	var save_position = function(){
 		erStartOrientationData = $.extend({}, erOrientationData);
 	}
 	
-	checkHold = function(){
+	var checkHold = function(){
 		//// check if holding more than erTIME_TO_HOLD and moved less than erMOVE_TO_NOT_HOLD
 		if (erTouchStartTime > 0 && Date.now() - erTouchStartTime > erTIME_TO_HOLD  && erOrientationData.yChangePx < erMOVE_TO_NOT_HOLD) {
 			erTapHold = true;
 		} else erTapHold = false;
 	}
-}
+
+	var init = function() { 
+		var firstRun = true;
+		window.addEventListener('deviceorientation', function(event) { 
+			//var firstRun = (erOrientationData.alpha == 0 && erOrientationData.beta == 0);
+			erOrientationData.alpha	= event.alpha;
+			erOrientationData.beta	= event.beta;
+			erOrientationData.gamma	= event.gamma; 		
+			if (!firstRun) {
+				erOrientationData.xChangeAng = erOrientationData.beta - erStartOrientationData.beta;
+				erOrientationData.yChangeAng = erOrientationData.gamma - erStartOrientationData.gamma;
+				erOrientationData.zChangeAng = erOrientationData.alpha - erStartOrientationData.alpha;
+			}
+				
+			if (firstRun) save_position();
+			firstRun = false;
+		});	
+		window.addEventListener('touchmove', function(e) { 
+			//var firstRun = (erOrientationData.curX == 0 && erOrientationData.curY == 0);
+			erOrientationData.curX = e.targetTouches[0].pageX;
+			erOrientationData.curY = e.targetTouches[0].pageY;
+			if (!firstRun) 
+			{
+				var xChangePx = erOrientationData.curX - erStartOrientationData.curX;
+				erOrientationData.xChangePx = xChangePx;
+				erOrientationData.yChangePx = erOrientationData.curY - erStartOrientationData.curY;
+			}
+			if (firstRun) save_position();
+			checkHold();
+			firstRun = false;
+		});	
+		window.addEventListener('touchstart', function(e) {
+			erStartOrientationData.curX = e.touches[0].pageX;
+			erStartOrientationData.curY = e.touches[0].pageY;
+			erTouchStartTime = Date.now();
+			setTimeout(function(){ checkHold();}, erTIME_TO_HOLD);
+		});
+		window.addEventListener('touchend', function(e) {
+			erOrientationData.xChangePx = 0;
+			erOrientationData.yChangePx = 0;
+			erTouchStartTime = 0;
+		});
+	}
+	return {
+		init:init,
+		save_position : save_position
+	}
+}();
 
 
 var templates = function () 
