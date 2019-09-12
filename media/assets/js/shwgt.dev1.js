@@ -638,8 +638,8 @@ var shortease = function(){
 		var user_data = null, user_data_unsended = null;
 		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
 		const GENERAL_TYPES = ["g","s","c","t"];
-		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - long pause (>10 sec), 5 - description opened, 6 - coupon clicked, 
-		/// 8 - widget loaded, 9 - widget opened, 10 - 25% tool time, 11 - 50% tool time, 12 - 75% tool time, 13 - 100% tool time
+		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - view time, 5 - description opened, 6 - coupon clicked, 
+		/// 8 - widget loaded, 9 - widget opened, 
 		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
