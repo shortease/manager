@@ -27,6 +27,18 @@
                     <span class="kt-menu__link-text"><?php et("Channels")?></span>
                 </a>
             </li>
+            <li class="kt-menu__section kt-menu__section--first">
+                <h4 class="kt-menu__section-text">
+                    Reports
+                </h4>
+                <i class="kt-menu__section-icon flaticon-more-v2"></i> 
+            </li>              
+            <li class="kt-menu__item " aria-haspopup="true" >
+                <a href="/?com=reports&action=channels" class="kt-menu__link ">
+                    <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
+                    <span class="kt-menu__link-text"><?php et("Channels report")?></span>
+                </a>
+            </li>            
         </ul>
 <!--         <ul class="kt-menu__nav ">
     <li class="kt-menu__section kt-menu__section--first">

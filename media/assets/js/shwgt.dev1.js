@@ -2,7 +2,7 @@ po = console.info;
 var er_template;
 var MEDIA_PATH = "//m.shortease.com/media/";
 var REP_PATH = "//rep.shortease.com/";
-
+ 
 var shortease = function(){
 	var status = {
 		preview_show : 0,
@@ -138,6 +138,15 @@ var shortease = function(){
 			cards[status.display_card].shift_line.stop();
 		}
 		if (event && (event.type == 'touchend' || event.type == 'mouseup')){
+			/// report pause and long pause
+/*			if (status.touch_length > 10) { /// more than 10 sec
+				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3); /// long pause
+			} else if (status.touch_length > 2) { /// more than 2 sec
+				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 4); /// short pause
+			}*/
+			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
+				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3, status.touch_length);
+			}
 			cards[status.display_card].shift_line.start();
 		}
 
@@ -165,6 +174,9 @@ var shortease = function(){
 	var moveToCardTimer;
 	status.lastTimeCardMoved = 0;
 	var moveToCard = function(cardNum, duration){
+		/// report tool impression
+		if (st_tools[cardNum] && st_tools[cardNum].channel_id && st_tools[cardNum].toolId)
+			report.add(iSiteId, st_tools[cardNum].channel_id, st_tools[cardNum].toolId, 1);
 		/// card move cooldown
 		status.lastTimeCardMoved = Date.now();
 
@@ -303,6 +315,8 @@ var shortease = function(){
 		$('body').css({'overflow': 'hidden'});
 		$('.close_x').show();
 		sh_preview.hide();
+		/// report widget open
+		report.add(iSiteId, iChannelId, 0, 9);
 	}
 	
 	var hide = function(){
@@ -313,6 +327,7 @@ var shortease = function(){
 		$('.close_x').hide();
 		reset();
 		sh_preview.show();
+		report.sendData();
 	}
 
 	var showDescription = function(){
@@ -426,6 +441,7 @@ var shortease = function(){
 		function leave(event) {
 			if (!status.touchCD) {
 				shortease.status.touchend_time = Date.now();
+				shortease.status.touch_length = (Date.now() - shortease.status.touchstart_time) /1000;
 				shortease.status.touchstart_time = 0;
 				shortease.status.changeX = 0;
 				shortease.status.touching_now = false;
@@ -525,6 +541,8 @@ var shortease = function(){
 					btn_show_product.click(function(e) { 
 						e.preventDefault();
 						e.stopPropagation();
+						/// report tool click
+						report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 2);
 						location.href = item_address;
 					});					
 				}
@@ -598,6 +616,10 @@ var shortease = function(){
 			 e.returnValue = false;
 			 return false;
 		});
+
+		$(window).on("beforeunload", function(e) {
+			report.sendData();
+		});
 	}
 	/***
 	*	preload first images of showing items
@@ -614,57 +636,146 @@ var shortease = function(){
 	var report = function() {
 		const STORAGE_NAME = 'sh_rep', STORAGE_UNSENDED_NAME = 'sh_rep_uns';
 		var user_data = null, user_data_unsended = null;
+		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
+		const GENERAL_TYPES = ["g","s","c","t"];
+		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - long pause (>10 sec), 5 - description opened, 6 - coupon clicked, 
+		/// 8 - widget loaded, 9 - widget opened, 10 - 25% tool time, 11 - 50% tool time, 12 - 75% tool time, 13 - 100% tool time
+		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
 
-		var rep_structure = {
-			gen : {	i:0, c:0 },
-			s : [],
-			ch : [],
-			pl : [],
-			t: []
-		};
-		var add = function (site_id, channel_id, placement_id, tool_id, event_type) {
+		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
+			if (!event_count) event_count = 1;
+			event_count = event_count ? Math.round(event_count) : 1; 	
 			getUserData();
-			var impressions = event_type == 1 ? 1 : 0;
-			var clicks = event_type == 2 ? 1 : 0;
+			saveData(user_data, site_id, channel_id, tool_id, event_type, event_count);
+			saveData(user_data_unsended, site_id, channel_id, tool_id, event_type, event_count);
+			function saveData (data_obj, site_id, channel_id, tool_id, event_type, event_count){
+				if (!EVENT_TYPES.includes(event_type)) return;  /// check permitted event
 
-			saveData(user_data, site_id, channel_id, placement_id, tool_id, event_type);
-			saveData(user_data_unsended, site_id, channel_id, placement_id, tool_id, event_type);
+				if (site_id || channel_id || tool_id) {
+					if (!data_obj.g) data_obj.g = [];
+					if (!data_obj.g[0]) data_obj.g[0] = [];
+					data_obj.g[0][event_type] = data_obj.g[0][event_type] ? data_obj.g[0][event_type]+event_count : event_count;
+				}
 
-			function saveData (data_obj, site_id, channel_id, placement_id, tool_id, event_type){
-				data_obj.gen.i += impressions;
-				data_obj.gen.c += clicks;
-				if (site_id) 		addDataToArray(data_obj.s, 	site_id, 		impressions, clicks);
-				if (channel_id) 	addDataToArray(data_obj.ch, channel_id, 	impressions, clicks);
-				if (placement_id) 	addDataToArray(data_obj.pl, placement_id, 	impressions, clicks);
-				if (tool_id) 		addDataToArray(data_obj.t, 	tool_id, 		impressions, clicks);
-			}
-			function addDataToArray(data_arr, id, impressions, clicks){
-				var data = data_arr.find(item => item.id == id);
-				if (!data) data_arr.push({id : id, i:impressions, c:clicks});
-				else {
-					data.i += impressions;
-					data.c += clicks;					
+				if (site_id) {
+					if (!data_obj.s) data_obj.s = [];
+					if (!data_obj.s[site_id]) data_obj.s[site_id] = [];
+					data_obj.s[site_id][event_type] = data_obj.s[site_id][event_type] ? data_obj.s[site_id][event_type] + event_count : event_count;
+				}
+
+				if (channel_id) {
+					if (!data_obj.c) data_obj.c = [];
+					if (!data_obj.c[channel_id]) data_obj.c[channel_id] = [];
+					data_obj.c[channel_id][event_type] = data_obj.c[channel_id][event_type] ? data_obj.c[channel_id][event_type] + event_count : event_count;
+				}
+				if (tool_id) {
+					if (!data_obj.t) data_obj.t = [];
+					if (!data_obj.t[tool_id]) data_obj.t[tool_id] = [];
+					data_obj.t[tool_id][event_type] = data_obj.t[tool_id][event_type] ? data_obj.t[tool_id][event_type] + event_count : event_count;
 				}
 			}
+
 			saveUserData();
 		}
-		var saveUserData = function() {
-			localStorage.setItem(STORAGE_NAME,		JSON.stringify(user_data));
-			localStorage.setItem(STORAGE_UNSENDED_NAME,	JSON.stringify(user_data_unsended));
+
+		var str_to_data = function(datastr) {
+			/// string structure - g(general):eventIdeventCount;s(sites):eventIdeventCount:eventIdeventCount;c(channels):eventIdeventCount:eventIdeventCount;t(tools):eventIdeventCount:eventIdeventCount;
+			var user_data = {};
+			data_arr = datastr.split(ITEM_DELIMITER); 
+			for (var i=0;i<data_arr.length;i++){	/// run on data report items 
+				var item = data_arr[i];
+				if (!item.length) continue;
+				var item_arr = item.split(DATA_DELIMITER);
+				var item_description = item_arr[0];	///  first item - is item description
+				var general_type = item_description[0]; /// first char of description is general type (site, channel ...)
+				var item_id = 1*(item_description.substr(1));
+
+				if (!GENERAL_TYPES.includes(general_type)) continue; /// if first char is not general type check next item
+				if (!user_data[general_type]) user_data[general_type] = []; /// if general type not exists yet create it
+				if (!user_data[general_type][item_id]) user_data[general_type][item_id] = []; /// if item id not exists yet create it
+				for (var j=1;j<item_arr.length;j++){	/// run on item events
+					var item_data = item_arr[j];
+					var event_id_length = item_data.indexOf(EVENT_ID_DELIMITER); 	/// looking for EVENT_ID_DELIMITER in item_data
+					if (event_id_length) item_data = item_data.replace(EVENT_ID_DELIMITER,""); 	/// remove EVENT_ID_DELIMITER
+					event_id_length = event_id_length > 0 ? event_id_length : 1; 	/// if no EVENT_ID_DELIMITER in item_data event id length is 1
+					var event_id = parseInt(item_data.substr(0,event_id_length));
+
+					var event_count = parseInt(item_data.substring(event_id_length, item_data.length));
+					if (!EVENT_TYPES.includes(event_id)) continue; /// if event id not permitted
+					user_data[general_type][item_id][event_id] = event_count;
+				}
+			}
+			return user_data;
 		};
+
+		var data_to_str = function(dataStructure) {
+			var data_str = "";
+			if (dataStructure.t) data_str += arr2str("t",dataStructure.t); 
+			if (dataStructure.g) data_str += arr2str("g",dataStructure.g); 
+			if (dataStructure.s) data_str += arr2str("s",dataStructure.s); 
+			if (dataStructure.c) data_str += arr2str("c",dataStructure.c); 
+			return data_str;
+
+			function arr2str(generalType, dataArr){
+				var item_data_str = "";
+				dataArr.forEach(function(item,item_id) { 
+					item_id = item_id ? item_id : '';
+					item_data_str += generalType+item_id+DATA_DELIMITER;
+					item.forEach(function(event_count,event_id) { 
+						if (EVENT_TYPES.includes(event_id)) {
+							if (event_id > 9) event_id = event_id + ".";
+							item_data_str += event_id+''+event_count+DATA_DELIMITER;
+						}
+					});
+					item_data_str = item_data_str.slice(0, -1); /// remove last DATA_DELIMITER
+					item_data_str+=ITEM_DELIMITER;
+				});
+				return item_data_str;
+			}
+		};
+		/**
+		*	saves user_data and user_data_unsended to localStorage
+		**/
+		var saveUserData = function() {
+			localStorage.setItem(STORAGE_NAME,		data_to_str(user_data));
+			localStorage.setItem(STORAGE_UNSENDED_NAME,	data_to_str(user_data_unsended));
+		};
+
+		/**
+		*	Get data from localStorage and set it to the user_data and user_data_unsended
+		**/		
 		var getUserData  = function() {
 			var userStoredData = localStorage.getItem(STORAGE_NAME);
-			user_data = userStoredData ? JSON.parse(userStoredData) : rep_structure;
+			user_data = userStoredData ? str_to_data(userStoredData) : { g:[], s:[], c:[], t:[]};
+
 			var userStoredDataUnsended = localStorage.getItem(STORAGE_UNSENDED_NAME);
-			user_data_unsended = userStoredDataUnsended ? JSON.parse(userStoredDataUnsended) : rep_structure;
+			user_data_unsended = userStoredDataUnsended ? str_to_data(userStoredDataUnsended) : { g:[], s:[], c:[], t:[]};
 		}
+
+		/**
+		*	after sending data to server remove it from user_data_unsended localStorage
+		**/
+		var removeUnsentData = function() { 
+			localStorage.removeItem(STORAGE_UNSENDED_NAME);
+		}
+
+		/**
+		*	send data to server 
+		**/
 		var sendData = function() {
-			po(user_data_unsended);
+			getUserData();
+			if (user_data_unsended && user_data_unsended.g[0] && user_data_unsended.g[0][9]) { /// there is report for widget open
+				$.ajax({
+					url: REP_PATH+"?t=sho&rep=1",
+					data: { rd: data_to_str(user_data_unsended)},
+				});
+			}
+			removeUnsentData();
 		}
+
 		return {
 			sendData : sendData,
 			add : add,
-			user_data : user_data,
 		}
 	}();
 	/***
@@ -693,6 +804,8 @@ var shortease = function(){
 		addArrows();
 		sh_preview.init();
 		sh_preview.show();
+		report.sendData();
+		report.add(iSiteId, iChannelId, 0, 8);		
 	}
 
 	return {
@@ -1115,3 +1228,4 @@ sh_debug = function (message, overwrite = 1){
 			debugDiv.innerHTML += '<br>'+ message;
 		}
 	}
+

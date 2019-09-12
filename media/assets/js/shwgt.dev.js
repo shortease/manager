@@ -203,10 +203,11 @@ var er_stories = function(options){
 									.append(price_text)
 									.append(buttons_holder);
 						er_pic_holder.append(details_holder);
+						let item_address = curTool['url'];
 						btn_show_product.click(function(e) { 
 							e.preventDefault();
 							e.stopPropagation();
-							location.href = curTool['url'];
+							location.href = item_address;
 						});
 					}				
 				}
@@ -237,41 +238,46 @@ var er_stories = function(options){
 			if (Math.abs(xChange) > 20) {
 				self.prepareNextArticle(shift_to_art_ix);
 			}
+			if (self.holder.hasClass('open') ) self.navigatePictures(event, $('.er_pic_holder.er_showing')); 
 		} });
-		$('body').on({ 'touchend' : function(e){
+		$('body').on({ 'touchend' : function(e){ 
+			if (!self.holder.hasClass('open')) return;
 			self.art_shifter.unpause();
 			var xChange = e.originalEvent.changedTouches[event.changedTouches.length-1].pageX - startTouchX;
 			if ( Math.abs(xChange) == 0 ) return;
 			//var artIx = $(this).data('artix'); 
 			var artIx =$('.er_pic_holder.er_showing').data('artix');
-			if (self.holder.hasClass('open') && typeof artIx != 'undefined'){ 
+			if ( typeof artIx != 'undefined'){  
 				var shift_to_art_ix = artIx + (xChange>0 ? -1 : 1);
-				if (Math.abs(xChange) > 100) {
+				if (Math.abs(xChange) > 100) { 
 					self.shiftArticlesAnimation(shift_to_art_ix, 0, 300);
 					
-				} else {
+				} else { 
 					self.shiftArticlesAnimation(artIx, 0, 200);
 				}
 				startTouchX = 0; 
-				if (self.art_shifter) 
+				/*if (self.art_shifter) 
 				{
 					self.art_shifter.unpause();
-				}
+				}*/
 			}			
 		} });
-		$('body').on({ 'touchmove' : function(){ if (self.holder.hasClass('open') ) self.navigatePictures(event, $('.er_pic_holder.er_showing')); } });
+
 		$('.btn_show_descr').on('click',function(e) {
 			var article_holder = $(this).closest('.er_article_holder')
 			if (!article_holder.data('descr_open')){
 				article_holder.find('.sh_description').show();
 				article_holder.data('descr_open',1);
 				self.art_shifter.pause();
+				self.showCoupon(article_holder);
 			} else {
 				article_holder.find('.sh_description').hide();
 				article_holder.data('descr_open',0);
 				self.art_shifter.unpause();
+				if (article_holder.data('has_coupon')){
+					article_holder.find('.sh_coupon_holder').remove();
+				}
 			}
-			self.showCoupon(article_holder);
 			e.preventDefault();
 			e.stopPropagation();
 		});		
@@ -295,7 +301,7 @@ var er_stories = function(options){
 		}
 		selected_coupon.code = atob(selected_coupon.code);
 		var coupon_icon = $('<img src = "'+MEDIA_PATH+'images/gift_box.png" class="sh_coupon_icon" />');
-		var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+'</div>');
+		var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+' coupon</div>');
 		var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
 		var coupon_holder = $('<div class="sh_coupon_holder"></div>');
 		coupon_holder.append(coupon_icon);
@@ -304,10 +310,14 @@ var er_stories = function(options){
 
 		setTimeout(function() {
 						holder.append(coupon_holder);
-						coupon_holder.animate({ top: '10%' }, 400, function() {  });
+						coupon_holder.animate({ top: '10%' }, 400, function() { sh_shake(coupon_holder, 5); });
+						
 					}, 1000);
-		$(document).on('click',coupon_holder, function() {
+		$(coupon_holder).click(function(e) { 
+			e.stopPropagation();
+			e.preventDefault();
 			coupon_holder.addClass('show');
+			return false;
 			/*if (!$('#select_holder').length) $('body').append('<input type="hidden" name="select_holder" id="select_holder" value="" style="display:none">');
 			$('#select_holder').val(selected_coupon.code);
 			$('#select_holder')[0].select();
@@ -427,7 +437,7 @@ var er_stories = function(options){
 	
 	var prev_move_pixel = 0;
 	var prev_move_art_ix = 0;
-	this.shiftArticles = function(artIx, movePixel, timeToComplete){
+	this.shiftArticles = function(artIx, movePixel, timeToComplete){ 
 		if (artIx <= 0 && movePixel > 20) return;
 		if (artIx >= numOfArticles-1 && movePixel < -20) {
 			movePixel = 0;
@@ -438,10 +448,10 @@ var er_stories = function(options){
 		if (artIx < 0 || artIx >= numOfArticles || !st_tools[artIx]) return;
 		self.report(self.placement_id, st_tools[artIx]["toolId"], 1, 1);
 
-		if (st_tools[artIx].artAutoshift) {
+		if (st_tools[artIx].artAutoshift) { 
 			st_tools[artIx].artAutoshift.fill_item(0);
 		}
-		if (this.art_shifter) 
+		if (this.art_shifter && !this.art_shifter.cur_fill_percent) 
 		{
 			self.art_shifter.fill($('.er_article_holder[data-artix='+artIx+']'), 0, 0);
 		}		
@@ -743,6 +753,20 @@ var er_stories = function(options){
 		}
 	}
 
+	var checkCrawlTools = function() {
+		/// looking for tools that needs to be crawled
+		var tool_should_be_crawled = false;
+		for (var i = 0;i<st_tools.length;i++){
+			var crawl_frequency = st_tools[i].crawl_frequency ? st_tools[i].crawl_frequency : 24;
+			/// time passed from last crawl more that crawl_frequency
+			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency){
+				tool_should_be_crawled = true;
+			}
+			if (tool_should_be_crawled) break
+		} 
+		return tool_should_be_crawled;
+	}
+
 	this.width;
 	this.orientation;
 	this.init = function(options){ 
@@ -806,9 +830,10 @@ var er_stories = function(options){
 
 		/// TODO - get indication if there is items to crawl from mongo
 		erJq = $;
-		$.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
+		if (checkCrawlTools()) {
+			$.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
+		}
 		self.itemWidth = $('.er_item_list').outerWidth(true);
-		po(self.itemWidth);
 	}
 	return {
 		init : init,
@@ -894,12 +919,13 @@ var er_shift_line = function(options)
 		}
 	}
 	
-	var cur_holder, cur_item_ix, cur_fill_percent;
+	var cur_holder, cur_item_ix;
+	this.cur_fill_percent = 0;
 	this.fill = function(shift_holder, item_ix, fill_percent){
 		if (!fill_percent) fill_percent = 0;
 		cur_holder = shift_holder;
 		cur_item_ix = item_ix;
-		cur_fill_percent = fill_percent;
+		self.cur_fill_percent = fill_percent;
 		if (!is_active) return;
 		var num_of_items = $('.shifter_line',shift_holder).length;
 		//// prepare next article if this is the last picture started
@@ -1076,4 +1102,38 @@ function detectTurn(){
 
 function isTouchDevice() {
     return 'ontouchstart' in document.documentElement;
+}
+
+function sh_shake(shokeObj, repeat) {
+	var horizontal_move = 3, 
+		horizontal_time = 100,
+		vertical_move =3;
+	shokeObj.css({ "transition" : "transform "+(horizontal_time/1000)+"s", transform:" rotate(-30deg)"});
+	setTimeout(function() { shokeObj.css({  transform:" rotate(0deg)"}); }, horizontal_time);
+	setTimeout(function() { shokeObj.css({  transform:" rotate(30deg)"}); }, 2*horizontal_time);
+	setTimeout(function() { shokeObj.css({  
+											transform:" rotate(0deg)"}); 
+											repeat--;
+											if (repeat > 0) {
+												sh_shake(shokeObj, repeat);
+											}
+				}, 3*horizontal_time);
+	/*
+	shokeObj.css({ "transition" : "transform "+(horizontal_time/1000)+"s", transform:" rotate(-30deg)"});
+	shokeObj.animate({left:"-="+horizontal_move, top:"-="+vertical_move},horizontal_time, 
+				function() { shokeObj.css({  transform:" rotate(0deg)"}); }
+			)
+			.animate({left:"+="+horizontal_move, top:"+="+vertical_move},horizontal_time, 
+				function() { shokeObj.css({  transform:" rotate(30deg)"}); }
+			)
+			.animate({left:"+="+horizontal_move, top:"-="+vertical_move},horizontal_time, 
+				function() { shokeObj.css({  transform:" rotate(0deg)"}); }
+			)
+			.animate({left:"-="+horizontal_move, top:"+="+vertical_move},horizontal_time, function() {
+				repeat--;
+				if (repeat > 0) {
+					sh_shake(shokeObj, repeat);
+				}
+			  });
+			  */
 }

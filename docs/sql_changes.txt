@@ -1,3 +1,48 @@
+/*** Reports 10 sep 2019 ***/
+CREATE TABLE `sh_day_site_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `site_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `event_count` int(11) DEFAULT NULL,
+  `event_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `site` (`site_id`),
+  KEY `date` (`event_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `sh_day_site_events` 
+ADD UNIQUE INDEX `event_uniq` (`site_id` ASC, `event_id` ASC, `event_date` ASC);
+;
+
+CREATE TABLE `sh_day_channel_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `channel_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `event_count` int(11) DEFAULT NULL,
+  `event_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `channel` (`channel_id`),
+  KEY `date` (`event_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `sh_day_channel_events` 
+ADD UNIQUE INDEX `event_uniq` (`channel_id` ASC, `event_id` ASC, `event_date` ASC);
+;
+
+
+CREATE TABLE `sh_day_tool_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tool_id` int(11) DEFAULT NULL,
+  `event_id` int(11) DEFAULT NULL,
+  `event_count` int(11) DEFAULT NULL,
+  `event_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tool` (`tool_id`),
+  KEY `date` (`event_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+
 /*** Coupons 24/7/2019  ****/
 CREATE TABLE `coupons` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
