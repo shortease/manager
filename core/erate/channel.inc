@@ -15,7 +15,7 @@ class Channel extends ErateChannel {
 		return $channels;
 	}
 
-	public static function addChannel($siteId, $name, $url, $campaign_id = 0 , $parent_id = 0, $links_template = "", $article_template = "", $display_type = "", $display_channels_list = "") {
+	public static function addChannel($siteId, $name, $url, $campaign_id = 0 , $parent_id = 0, $links_template = "", $article_template = "", $display_type = 0, $display_channels_list = "") {
 		$new_channel_id = 0;
 		if ((!ErateChannel::channelExists($siteId, $name)) && (strlen($name) > 0)) {
 			/// create level from parent channel
