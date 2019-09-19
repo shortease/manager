@@ -44,7 +44,7 @@ var shortease = function(){
 	var cards = [];
 
 	var build = function(){
-		$('body').append("<div class='close_x' ><img src='"+MEDIA_PATH+"images/sh_x_1.png' /></div>");
+		$('body').append("<div class='close_x' ><img src='"+MEDIA_PATH+"images/close_x.png' /></div>");
 		create_holder();
 		prepare_cards();
 	}
@@ -540,10 +540,11 @@ var shortease = function(){
 					var desc_text = $('<div class="text_holder sh_description">'+curTool['subTitle']+'</div>');
 					var price_text = $('<div class="text_holder sh_price"><span class="pr_text">Price : </span><span class="pr_val">'+curTool['price']+'</span></div>');
 					var buttons_holder = $('<div class="sh_buttons_holder"></div>');
-					var btn_show_description = $('<div class="btn_show_descr">\
+					/*var btn_show_description = $('<div class="btn_show_descr">\
 						<div class="descr_arr_holder"><img class="descr_arr" src="'+MEDIA_PATH+'/images/arrup.png" /></div>\
-						<div>Learn more</div></div>');
-					var btn_show_product = $('<div class="btn_show_product">Buy</div>');
+						<div>Learn more</div></div>');*/
+					var btn_show_description = $('<div class="btn_show_descr"></div>');
+					var btn_show_product = $('<div class="btn_show_product"></div>');
 					buttons_holder
 								.append(btn_show_product)
 								.append(btn_show_description);
@@ -617,7 +618,7 @@ var shortease = function(){
 			} 
 		});
 		/// click on description button 
-		$('.btn_show_descr').click(function(e){
+		$('.btn_show_descr').click(function(e){ po("open descr");
 			if (!status.description_open) {
 				showDescription();
 				showCoupon();
