@@ -2,6 +2,7 @@ po = console.info;
 var er_template;
 var MEDIA_PATH = "//m.shortease.com/media/";
 var REP_PATH = "//rep.shortease.com/";
+var CR_PATH = "//m.shortease.com/";
  
 var shortease = function(){
 	var status = {
@@ -51,7 +52,13 @@ var shortease = function(){
 	var create_holder = function() {
 
 		if ($('#sh_cards').length == 0) {
-			var desktop_class = status.desktop ? "desk_holder" : "";
+			var desktop_class = "";
+			if (status.desktop) {
+				desktop_class = "desk_holder";
+				$('body').addClass('shdt');
+			} else {
+				$('body').addClass('shmb');
+			}
 			def.cards_hollder = $('<div class="sh_cards '+desktop_class+'"></div>'); 
 			if (def.target_holder_prepend)	def.target_holder.prepend(def.cards_hollder);
 			else def.target_holder.append(def.cards_hollder);
@@ -298,10 +305,12 @@ var shortease = function(){
 			curPicIx--;
 		if (curCardIx < 0) return;
 		else {
-			if (animated) {
+			if (animated) { 
+				if (cards[status.touched_card-1]) cards[status.touched_card-1].shift_line.reset();
+				cards[status.touched_card].shift_line.reset();
 				showCard(curCardIx, curPicIx, animated);
 			} else {
-				cards[status.display_card].shift_line.reset();
+				cards[status.touched_card].shift_line.reset();
 				showPicture(curPicIx);
 			}
 		}
@@ -317,17 +326,19 @@ var shortease = function(){
 		sh_preview.hide();
 		/// report widget open
 		report.add(iSiteId, iChannelId, 0, 9);
+		if (typeof sh_custom_show === "function") sh_custom_show();
 	}
 	
 	var hide = function(){
 		shortease.status.shortease_show = false;
 		def.cards_hollder.removeClass('open');
-		def.holder.width(def.width);
+		def.holder.width(def.preview_width);
 		$('body').css({'overflow': 'unset'});
 		$('.close_x').hide();
 		reset();
 		sh_preview.show();
 		report.sendData();
+		if (typeof sh_custom_hide === "function") sh_custom_hide();
 	}
 
 	var showDescription = function(){
@@ -350,6 +361,7 @@ var shortease = function(){
 	}
 
 	var showCoupon = function(){
+		if (!sh_channel_coupons || !sh_channel_coupons.length) return;		/// no coupons
 		var curCard = cards[status.display_card].card;
 		var COUPON_FREQUENCY = 2;
 		if (curCard.data('has_coupon')) return;
@@ -470,10 +482,13 @@ var shortease = function(){
 	/***
 	* 	prepare st_tools array. 
 	***/
-	var prepare_tools = function() {
+	var prepare_tools = function() { 
 		/// remove tools that does not have scripts
 		var temp_st_tools = [];
-		for (var i = 0;i<st_tools.length;i++) {if (st_tools[i].tool_script) temp_st_tools.push(st_tools[i]);}
+		for (var i = 0;i<st_tools.length;i++) {
+			if (st_tools[i].tool_script && st_tools[i].tool_script.pictures.length) 
+				temp_st_tools.push(st_tools[i]);
+		}
 		st_tools = temp_st_tools;
 		/// limit number of items
 		if (st_tools.length>def.MAX_ARTICLES_NUM) st_tools.length =  def.MAX_ARTICLES_NUM;
@@ -553,7 +568,8 @@ var shortease = function(){
 			cards[i].shift_line.init({
 				'holder':er_article_holder, 
 				'num_of_items':curTool.pictures.length, 
-				'callback':shortease.showNextPicture
+				'callback':shortease.showNextPicture,
+				card:i
 			});
 
 		}
@@ -628,11 +644,25 @@ var shortease = function(){
 	***/
 	var preload = function(){
 		var num_of_showing_items = 10;
+		num_of_showing_items = num_of_showing_items <= def.items_number ? num_of_showing_items : def.items_number;
 		for (var i = 0; i < num_of_showing_items; i++){
 			if (st_tools[i].pictures[0]){
 				$('<img src="'+st_tools[i].pictures[0].address+'" />');
 			}
 		}
+	}
+	var checkCrawlTools = function() {
+		/// looking for tools that needs to be crawled
+		var tool_should_be_crawled = false;
+		for (var i = 0;i<st_tools.length;i++){
+			var crawl_frequency = st_tools[i].crawl_frequency ? st_tools[i].crawl_frequency : 24;
+			/// time passed from last crawl more that crawl_frequency
+			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency){
+				tool_should_be_crawled = true;
+			}
+			if (tool_should_be_crawled) break
+		} 
+		return tool_should_be_crawled;
 	}
 
 	var report = function() {
@@ -640,8 +670,8 @@ var shortease = function(){
 		var user_data = null, user_data_unsended = null;
 		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
 		const GENERAL_TYPES = ["g","s","c","t"];
-		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - view time, 5 - description opened, 6 - coupon clicked, 
-		/// 8 - widget loaded, 9 - widget opened, 
+		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - long pause (>10 sec), 5 - description opened, 6 - coupon clicked, 
+		/// 8 - widget loaded, 9 - widget opened, 10 - 25% tool time, 11 - 50% tool time, 12 - 75% tool time, 13 - 100% tool time
 		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
@@ -789,12 +819,14 @@ var shortease = function(){
 
 		def.target_holder = $(def.target_holder);
 		def.width = def.target_holder.width();
+		def.preview_width = def.width;
 		if (status.desktop) {
 			def.width = $(document).width()/100*33;
 			//def.target_holder.addClass('desk_holder');
 		}
 
 		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.dev.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"sites/"+iSiteId+"/init.css"}).appendTo("head");
 		if (def.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: def.site_css+"?v="+Math.ceil(Math.random()*10000)}).appendTo("head"); }
 
 		touch_events();
@@ -808,10 +840,20 @@ var shortease = function(){
 		sh_preview.show();
 		report.sendData();
 		report.add(iSiteId, iChannelId, 0, 8);		
+		erJq = $;
+		if (checkCrawlTools()) {
+			$.getScript({url : CR_PATH+"components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
+		}		
+	}
+
+	var reinit = function() { 
+		def.target_holder.empty();
+		init(def);
 	}
 
 	return {
 		init : init,
+		reinit : reinit,
 		status : status,
 		def : def,
 		show:show,
@@ -906,6 +948,7 @@ var sh_preview = function(){
 
 		function effect_shift(thumbIx){
 			thumbObj = items[i];
+			if (!thumbObj.pictures.length) return;
 			//thumb_items = thumb.find('li');
 			//thumb_items.css({'top':'-1000px'});
 			$(thumbObj.pictures).each(function() { $(this).css({'top':'-1000px'}); });
@@ -1093,7 +1136,6 @@ var sh_shift_line = function(options) {
 	var status = {
 		cur_ix : 0,
 		cur_percent : 0,
-		paused : true,
 	}
 	var items = [];
 	var buld = function(){
@@ -1112,7 +1154,7 @@ var sh_shift_line = function(options) {
 		var total_duration = (def.item_duration * def.num_of_items < def.min_card_duration) ? def.min_card_duration : def.item_duration * def.num_of_items;
 		def.item_duration = total_duration / def.num_of_items;
 	}
-	var start = function(itemIx){
+	var start = function(itemIx){ 
 		if (itemIx && itemIx != status.cur_ix) {	/// start from specific index
 			reset();
 			fillTo(itemIx);
@@ -1124,7 +1166,7 @@ var sh_shift_line = function(options) {
 							{ 	
 								step: function( now, fx ) { status.cur_percent = now; },
 								duration : durationLeft,
-								complete: function() { 
+								complete: function(a,b) { 
 										if (status.cur_ix + 1 < def.num_of_items) {
 											status.cur_ix++;
 											status.cur_percent = 0;
@@ -1148,15 +1190,17 @@ var sh_shift_line = function(options) {
 	var getCurFiller = function(itemIx) {
 		if (!itemIx && itemIx != 0 ) itemIx = status.cur_ix;
 		var curLine = items[itemIx];
-		var curFiller = curLine.find('.shifter_filler');
+		var curFiller = !curLine ? null :curLine.find('.shifter_filler');
 		return curFiller;
 	}
-	var reset = function(){
+	var reset = function(){ 
 		stop();
 		status.cur_ix = 0;
 		status.cur_percent = 0;
-		$(items).each(function() {
-			$(this).find('.shifter_filler').width('0%');
+		$(items).each(function(ix, item) {
+			var filler = $(this).find('.shifter_filler');
+			filler.stop();
+			filler.width('0%');
 		})
 	}
 	var init = function(options){
