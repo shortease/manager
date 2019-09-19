@@ -509,6 +509,8 @@ var shortease = function(){
 					curPic = curTool.pictures[j];
 					var er_pic_holder = $('<div class="er_pic_holder"  data-artix="'+i+'" data-picix="'+j+'"></div>');
 					cards[i].pictures[j] = er_pic_holder;
+					var cover = $('<div class="sh_pic_cover"></div>');	/// cover to prevent image saveas menu
+					er_pic_holder.append(cover);
 					if (j==0) er_pic_holder.css({'display':'block'});
 					/// show first picture of every card
 					er_article_holder.append(er_pic_holder);
