@@ -299,28 +299,28 @@
 .er_arrow {
     position: absolute;
     z-index: 999992;
-    top: 49%;
-    height: 40px;
-    width: 40px;
+	top: 45%;
+    height: 11vw;
+    width: 11vw;
     font-size: 40px;
     line-height: 40px;
 	opacity: 0.6;
 }
 .er_arrow.er_left {
     left: 5px;
-	background: url(//m.shortease.com/media/images/arrl.png);
+	background: url(//m.shortease.com/media/images/arrl.png?v1);
 	background-size: contain;
 }
 .er_arrow.er_right {
     right: 5px;
 	text-align: right;
-	background: url(//m.shortease.com/media/images/arrr.png);
+	background: url(//m.shortease.com/media/images/arrr.png?v1);
 	background-size: contain;
 }
 
 .sh_details_up_arrow {
 	position: absolute;
-	background: url(//m.shortease.com/media/images/arrr.png);
+	background: url(//m.shortease.com/media/images/arrr.png?v1);
 }
 
 /****** RTL *******/
@@ -352,7 +352,7 @@
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	z-index: 999991;
+	z-index: 999994;
     width: 100%;
 }
 .sh_art_details .text_holder {
@@ -370,9 +370,10 @@
 .sh_art_details .sh_description { 
     font-size: 1.2em;
     display: none;
-    max-height: 4.7em;
-    overflow-y: scroll;
+/*     max-height: 4.7em; */    
+	overflow-y: scroll;
    	margin: 0 6% ;
+   	height: 7.2em;
 }
 .sh_art_details .sh_description.open {
 	display: block;
@@ -426,19 +427,30 @@
 	height: 25px;
 }
 
+.er_article_holder {
+	perspective: 2000px;
+}
 .sh_coupon_holder {
-	width: 88%;
-	min-height: 3em;
-	padding: 0.5em 0;
+	width: 20%;
+	height: 50px;
+    width: 50px;
 	z-index:999994;
 	position: absolute;
     top: -10%;
-    left: 6%;
+    left: 15px;
     text-align: center;
+    background: url("//m.shortease.com/media/images/presentb.png") no-repeat;
+    background-size: contain;
 }
 
 .sh_coupon_holder.show {
-    background-color: #ffffffd1;
+    /* background-color: #ffffffd1; */
+    background: url("//m.shortease.com/media/images/coupon_b.png") no-repeat;
+    background-size: contain;
+    top: 10%;
+    width: 35%;
+    height: 25%;    
+    opacity: 1;
 }
 
 .sh_coupon_name {

@@ -363,7 +363,7 @@ var shortease = function(){
 	var showCoupon = function(){
 		if (!sh_channel_coupons || !sh_channel_coupons.length) return;		/// no coupons
 		var curCard = cards[status.display_card].card;
-		var COUPON_FREQUENCY = 2;
+		var COUPON_FREQUENCY = 1;
 		if (curCard.data('has_coupon')) return;
 		/// get random for coupon display frequency
 		var freq_random = Math.ceil(Math.random()*COUPON_FREQUENCY);
@@ -379,27 +379,46 @@ var shortease = function(){
 			cum_weight += 1*sh_channel_coupons[i].weight;
 			if (!selected_coupon && cum_weight >= rand_weight) selected_coupon = sh_channel_coupons[i];
 		}
-		selected_coupon.code = atob(selected_coupon.code);
-		var coupon_icon = $('<img src = "'+MEDIA_PATH+'images/gift_box.png" class="sh_coupon_icon" />');
-		var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+' coupon</div>');
-		var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
+
+		let coupon_code = atob(selected_coupon.code);
+		// var coupon_icon = $('<img src = "'+MEDIA_PATH+'images/gift_box.png" class="sh_coupon_icon" />');
+		// var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+' coupon</div>');
+		// var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
 		var coupon_holder = $('<div class="sh_coupon_holder"></div>');
-		coupon_holder.append(coupon_icon);
-		coupon_holder.append(coupon_name);
-		coupon_holder.append(coupon_code);
+
+		//coupon_holder.append(coupon_icon);
+		//coupon_holder.append(coupon_name);
+		//coupon_holder.append(coupon_code);
 
 		setTimeout(function() {
 						curCard.append(coupon_holder);
-						coupon_holder.animate({ top: '10%' }, 400, function() { sh_shake(coupon_holder, 5); });
+						jQuery.extend(jQuery.easing,{easeOutBounce:function(e,n,u,r,t){return(n/=t)<1/2.75?r*(7.5625*n*n)+u:n<2/2.75?r*(7.5625*(n-=1.5/2.75)*n+.75)+u:n<2.5/2.75?r*(7.5625*(n-=2.25/2.75)*n+.9375)+u:r*(7.5625*(n-=2.625/2.75)*n+.984375)+u}});
+						coupon_holder.animate({ top: '25%' }, 
+								{duration:900, easing: "easeOutBounce", complete: function() { 
+									coupon_holder.addClass("sh_shake");
+									sh_shake(coupon_holder, 1,"sh_shake"); } }
+							);
 						
 					}, 1000);
 		$(coupon_holder).click(function(e) { 
 			e.stopPropagation();
 			e.preventDefault();
-			coupon_holder.addClass('show');
 			return false;
 		});
 		curCard.data('has_coupon',1);
+		coupon_holder.click(function(e){
+			e.stopPropagation();
+			e.preventDefault();
+			coupon_holder.removeClass("sh_shake");
+			coupon_holder.animate({ width:'10px', height:'10px', opacity:'0' }, 
+				{duration:600, complete: function() {  
+					coupon_holder.addClass('show');
+					coupon_holder.animate({ width:'35%', height:'25%', opacity:'1', top:"10%" }, 
+						{duration:300}
+					);
+				} }
+			);
+		});
 		return;
 
 	}
@@ -618,7 +637,7 @@ var shortease = function(){
 			} 
 		});
 		/// click on description button 
-		$('.btn_show_descr').click(function(e){ po("open descr");
+		$('.btn_show_descr').click(function(e){ 
 			if (!status.description_open) {
 				showDescription();
 				showCoupon();
@@ -658,11 +677,12 @@ var shortease = function(){
 		for (var i = 0;i<st_tools.length;i++){
 			var crawl_frequency = st_tools[i].crawl_frequency ? st_tools[i].crawl_frequency : 24;
 			/// time passed from last crawl more that crawl_frequency
-			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency){
+			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency*.01){
 				tool_should_be_crawled = true;
 			}
 			if (tool_should_be_crawled) break
 		} 
+	 
 		return tool_should_be_crawled;
 	}
 
@@ -1237,9 +1257,21 @@ erLoad("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js", funct
 function isTouchDevice() {
     return (typeof window.orientation !== "undefined");
 }
-
-function sh_shake(shokeObj, repeat) {
-	var horizontal_move = 3, 
+function sh_shake(shokeObj, repeat, checkClass) {
+	let spin_duration = 1000, spin_delay = 4000;
+	//transition" : "transform "+(spin_duration/1000)+"s", transform: rotateY(-360deg)
+	//shokeObj.css({ "transition" : "transform 0s", transform:" rotateY(90deg)"});
+	shokeObj.css({ "transition" : "transform "+(spin_duration/1000)+"s", transform:" rotateY(360deg)"});
+	if (repeat) {
+		setTimeout(function() { 
+			shokeObj.css({ "transition" : "transform 0s", transform:" rotateY(0deg)"});
+		 }, spin_duration);		
+		setTimeout(function() { 
+			if (shokeObj.hasClass(checkClass))	
+				sh_shake(shokeObj, repeat, checkClass); 
+		 }, spin_delay);
+	}
+	/*var horizontal_move = 3, 
 		horizontal_time = 100,
 		vertical_move =3;
 	shokeObj.css({ "transition" : "transform "+(horizontal_time/1000)+"s", transform:" rotate(-30deg)"});
@@ -1251,7 +1283,7 @@ function sh_shake(shokeObj, repeat) {
 											if (repeat > 0) {
 												sh_shake(shokeObj, repeat);
 											}
-				}, 3*horizontal_time);
+				}, 3*horizontal_time);*/
 }
 
 sh_debug = function (message, overwrite = 1){
