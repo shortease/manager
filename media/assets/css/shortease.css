@@ -70,7 +70,6 @@
 	z-index:999999;
 	right:6px;
 	top:11px;
-	background-color: #000000b0;
 	border-radius:15px;
 }
 .close_x img {
@@ -300,27 +299,26 @@
     position: absolute;
     z-index: 999992;
 	top: 45%;
-    height: 11vw;
-    width: 11vw;
+    height: 7%;
+    width: 10%;
     font-size: 40px;
     line-height: 40px;
-	opacity: 0.6;
 }
 .er_arrow.er_left {
     left: 5px;
-	background: url(//m.shortease.com/media/images/arrl.png?v1);
+	background: url(//m.shortease.com/media/images/arrl.png?v2) no-repeat;
 	background-size: contain;
 }
 .er_arrow.er_right {
     right: 5px;
 	text-align: right;
-	background: url(//m.shortease.com/media/images/arrr.png?v1);
+	background: url(//m.shortease.com/media/images/arrr.png) no-repeat;
 	background-size: contain;
 }
 
 .sh_details_up_arrow {
 	position: absolute;
-	background: url(//m.shortease.com/media/images/arrr.png?v1);
+	background: url(//m.shortease.com/media/images/arrr.png) no-repeat;
 }
 
 /****** RTL *******/
@@ -416,6 +414,16 @@
     margin: 0 6% 10px 6%;
 }
 
+.sh_tmpl_blue .btn_show_descr {
+	background-image:  url(//m.shortease.com/media/images/infob_btn.png);
+}
+.sh_tmpl_yellow .btn_show_descr {
+	background-image: url(//m.shortease.com/media/images/infoy_btn.png);
+}
+.sh_tmpl_pink .btn_show_descr {
+	background-image: url(//m.shortease.com/media/images/infop_btn.png);
+}
+
 .descr_arr_holder {
 	position: relative;
 	width: 100%;
@@ -443,6 +451,16 @@
     background-size: contain;
 }
 
+.sh_tmpl_blue .sh_coupon_holder {
+	background-image:  url(//m.shortease.com/media/images/presentb.png);
+}
+.sh_tmpl_yellow .sh_coupon_holder {
+	background-image: url(//m.shortease.com/media/images/presenty.png);
+}
+.sh_tmpl_pink .sh_coupon_holder {
+	background-image: url(//m.shortease.com/media/images/presentp.png);
+}
+
 .sh_coupon_holder.show {
     /* background-color: #ffffffd1; */
     background: url("//m.shortease.com/media/images/coupon_b.png") no-repeat;
@@ -453,6 +471,15 @@
     opacity: 1;
 }
 
+.sh_tmpl_blue .sh_coupon_holder.show {
+	background-image:  url(//m.shortease.com/media/images/coupon_b.png);
+}
+.sh_tmpl_yellow .sh_coupon_holder.show {
+	background-image: url(//m.shortease.com/media/images/coupon_y.png);
+}
+.sh_tmpl_pink .sh_coupon_holder.show {
+	background-image: url(//m.shortease.com/media/images/coupon_p.png);
+}
 .sh_coupon_name {
 	font-size: 1.1em;
 	display: none;
@@ -515,4 +542,18 @@
 	top: 0;
 	left: 0;
 	z-index: 999993;
+}
+
+.sh_coupon_text{
+    width: 100%;
+    height: 76%;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.sh_coupon_name{
+	margin-top: 36%;
+    text-align: center;
+}
+.sh_coupon_code{
+   text-align: center;
 }
