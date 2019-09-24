@@ -66,6 +66,7 @@ var Channels = function() {
 				$(row).data("crawl_links_template", unescape(data.crawl_links_template));
 				$(row).data("display_type", data.display_type);
 				$(row).data("display_channels_list", data.display_channels_list);
+				$(row).data("to_crawl", data.to_crawl);
 				if (data.level > 1) {
 					$('.channel_name_td', row).prepend(' ');
 					for (var i=2;i<=data.level; i++) {
@@ -254,6 +255,7 @@ var Channels = function() {
 				$(row).data("url", data.url);
 				$(row).data("crawl_article_template", unescape(data.crawl_article_template));
 				$(row).data("crawl_links_template", unescape(data.crawl_links_template));
+				$(row).data("to_crawl", data.to_crawl);
 				if (data.level > 1) {
 					$('.channel_name_td', row).prepend(' ');
 					for (var i=2;i<=data.level; i++) {
@@ -295,6 +297,7 @@ function getRowProperties(targetObj) {
 	rowProps.crawl_article_template = trHolder.data('crawl_article_template');
 	rowProps.display_type = trHolder.data('display_type');
 	rowProps.display_channels_list = trHolder.data('display_channels_list');
+	rowProps.to_crawl = parseInt(trHolder.data('to_crawl'));
 	return rowProps;
 }
 
@@ -310,6 +313,7 @@ function update_channel (parent_id, rowProps) {
 		$('#crawl_article_template_upd').val(rowProps.crawl_article_template);
 		$('#display_type').val(rowProps.display_type);
 		$('#display_channels_list').val(rowProps.display_channels_list);
+		$('#to_crawl').prop("checked",rowProps.to_crawl);
 	} else {				/// create new channel
 		$("#updateTitle").text(et("Add channel under") + " \"" +  rowProps.name + "\"");
 		upd_channel_id = 0;
@@ -318,6 +322,7 @@ function update_channel (parent_id, rowProps) {
 		$('#upd_channel_url').val("");
 		$('#crawl_links_template_upd').val("");
 		$('#crawl_article_template_upd').val("");
+		$('#to_crawl').prop("checked",1);
 	}
 	Channels.prepareSelectChannels();
 
@@ -345,7 +350,6 @@ function saveUpdate(){
     }
     /// loading class
     btn.addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
-
     form.ajaxSubmit({
         url: '/?page=channels&task=api&action=update_channel',
         "data": {
@@ -357,7 +361,8 @@ function saveUpdate(){
 				links_template : escape($('#crawl_links_template_upd').val()),
 				article_template : escape($('#crawl_article_template_upd').val()),
 				display_type: $('#display_type').val(),
-				display_channels_list: $('#display_channels_list').val()
+				display_channels_list: $('#display_channels_list').val(),
+				to_crawl : $('#to_crawl').prop("checked") ? 1 : 0
             },
         success: function(response, status, xhr, $form) {
             if (response) { 

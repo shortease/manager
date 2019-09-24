@@ -133,8 +133,8 @@ echo ("<script>var site_id = $site_id</script>");
 						</div>						
 						<div class="form-group">
 							<label class="mt-checkbox mt-checkbox-outline">
-		                        <input type="checkbox"> <?php et('Crawled channel')?>
-		                        <span></span>
+								<label for="to_crawl"><?php et('Crawled channel')?></label>
+		                        <input type="checkbox" name="to_crawl" id="to_crawl" checked="1" /> 
 		                    </label>
 						</div>						
 						<div class="form-group channels_select">

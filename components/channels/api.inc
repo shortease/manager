@@ -25,16 +25,17 @@ switch ($action) {
 		$article_template = Request::getString("article_template");
 		$display_type = Request::getInt("display_type");
 		$display_channels_list = Request::getString("display_channels_list");
+		$to_crawl = Request::getInt("to_crawl");
 		if ($channel_id) {	/// update existing channel
 			$ch = new Channel($channel_id);
-			$response = $ch->update($channel_name, $channel_url , $parent_channel_id, $links_template, $article_template,$display_type, $display_channels_list);
+			$response = $ch->update($channel_name, $channel_url , $parent_channel_id, $links_template, $article_template,$display_type, $display_channels_list, $to_crawl);
 		} else { 			/// add new channel
 			$parent_channel = new Channel($parent_channel_id);
 			$parent_cplacement_id = $parent_channel->get('default_cplacement_id');
 
 			$parent_cp = new CampaignPlacement($parent_cplacement_id);
 			$campaign_id = $parent_cp->get('campaignId');
-			$response = Channel::addChannel($site_id, $channel_name, $channel_url , $campaign_id, $parent_channel_id, $links_template, $article_template,$display_type, $display_channels_list);
+			$response = Channel::addChannel($site_id, $channel_name, $channel_url , $campaign_id, $parent_channel_id, $links_template, $article_template,$display_type, $display_channels_list, $to_crawl);
 		}
 		break;
 	case "delete_channel":
