@@ -77,6 +77,8 @@ var Crawler = function() {
 });*/
 
 /*
+var bodyHtml; $.ajax({url:"http://www.shortease.com/shop/jewelry/"}).done(function(data){bodyHtml = data;});
+
 var jq = document.createElement('script');
 jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
 document.getElementsByTagName('head')[0].appendChild(jq);
@@ -86,4 +88,6 @@ jq.onload = function() {
 	erJq.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } })
 			
 }
+
+
 */
