@@ -38,7 +38,9 @@ var shortease = function(){
 		holder : null,
 		items_number : 0,
 		card_move_duration : 200,
-		arrows_navigate : 0
+		arrows_navigate : 0,
+		coupon_frequency : 1,
+		templates_map : ['blue','pink','yellow'], 
 	}
 	var images = [];
 	var cards = [];
@@ -151,10 +153,10 @@ var shortease = function(){
 			} else if (status.touch_length > 2) { /// more than 2 sec
 				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 4); /// short pause
 			}*/
-			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
+/*			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
 				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3, status.touch_length);
 			}
-			cards[status.display_card].shift_line.start();
+*/			cards[status.display_card].shift_line.start();
 		}
 
 		if (event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
@@ -363,11 +365,10 @@ var shortease = function(){
 	var showCoupon = function(){
 		if (!sh_channel_coupons || !sh_channel_coupons.length) return;		/// no coupons
 		var curCard = cards[status.display_card].card;
-		var COUPON_FREQUENCY = 1;
 		if (curCard.data('has_coupon')) return;
 		/// get random for coupon display frequency
-		var freq_random = Math.ceil(Math.random()*COUPON_FREQUENCY);
-		if (freq_random != COUPON_FREQUENCY) {
+		var freq_random = Math.ceil(Math.random()*def.coupon_frequency);
+		if (freq_random != def.coupon_frequency) {
 			curCard.data('has_coupon',1)
 			return;
 		}
@@ -382,13 +383,18 @@ var shortease = function(){
 
 		let coupon_code = atob(selected_coupon.code);
 		// var coupon_icon = $('<img src = "'+MEDIA_PATH+'images/gift_box.png" class="sh_coupon_icon" />');
-		// var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+' coupon</div>');
-		// var coupon_code = $('<div class="sh_coupon_code">'+selected_coupon.code+'</div>');
+		var coupon_text = $('<div class="sh_coupon_text"></div>');
+		var coupon_name = $('<div class="sh_coupon_name">'+selected_coupon.name+'</div>');
+		var coupon_code_div = $('<div class="sh_coupon_code">'+coupon_code+'</div>');
+		coupon_text.append(coupon_name);
+		coupon_text.append(coupon_code_div);
 		var coupon_holder = $('<div class="sh_coupon_holder"></div>');
-
+		coupon_holder.append(coupon_text);
+ 
 		//coupon_holder.append(coupon_icon);
 		//coupon_holder.append(coupon_name);
 		//coupon_holder.append(coupon_code);
+
 
 		setTimeout(function() {
 						curCard.append(coupon_holder);
@@ -413,7 +419,7 @@ var shortease = function(){
 			coupon_holder.animate({ width:'10px', height:'10px', opacity:'0' }, 
 				{duration:600, complete: function() {  
 					coupon_holder.addClass('show');
-					coupon_holder.animate({ width:'35%', height:'25%', opacity:'1', top:"10%" }, 
+					coupon_holder.animate({ width:'120px', height:'157px', opacity:'1', top:"10%" }, 
 						{duration:300}
 					);
 				} }
@@ -523,6 +529,11 @@ var shortease = function(){
 		}
 	}
 
+	var get_random_template = function() {
+		var template_name = def.templates_map[Math.floor(Math.random() * def.templates_map.length)];
+		return template_name;		
+	}
+
 	var prepare_cards = function(){ 
 		/// if runs again after display turning - remove the holder first
 		$('.er_articles_holder').remove();
@@ -530,7 +541,7 @@ var shortease = function(){
 		def.holder.append(def.er_articles_holder);
 		def.er_articles_holder.css({'width': def.width_open+'px'});//(st_tools.length*100)+'%'});
 		for (var i=0;i<st_tools.length;i++) {
-			var er_article_holder = $('<div class="er_article_holder" data-artix="'+i+'"></div>');
+			var er_article_holder = $('<div class="er_article_holder sh_tmpl_'+get_random_template()+'" data-artix="'+i+'"></div>');
 			cards[i] = {};
 			cards[i].card = er_article_holder;
 			er_article_holder.width(def.width+'px');
@@ -645,14 +656,6 @@ var shortease = function(){
 				hideDescription();
 			}
 			e.stopPropagation();			
-		});
-		/// prevent contextmenu on long tap
-		$('.er_article_holder').contextmenu(function(e) {
-			 e.preventDefault && e.preventDefault();
-			 e.stopPropagation && e.stopPropagation();
-			 e.cancelBubble = true;
-			 e.returnValue = false;
-			 return false;
 		});
 
 		$(window).on("beforeunload", function(e) {
@@ -826,11 +829,19 @@ var shortease = function(){
 			removeUnsentData();
 		}
 
+		var timer = function () {
+			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
+				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3, status.touch_length);
+			}
+		}
+
 		return {
 			sendData : sendData,
 			add : add,
 		}
 	}();
+
+
 	/***
 	* 	setup widget
 	***/
@@ -852,6 +863,11 @@ var shortease = function(){
 
 		touch_events();
 		prepare_tools();
+		if (!st_tools || !st_tools.length) {	/// no tools found
+			def.target_holder.remove();
+			return;
+		}
+
 		def.width_open = def.items_number * def.width;
 		preload();
 		build();
