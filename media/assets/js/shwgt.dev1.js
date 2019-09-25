@@ -329,6 +329,8 @@ var shortease = function(){
 		/// report widget open
 		report.add(iSiteId, iChannelId, 0, 9);
 		if (typeof sh_custom_show === "function") sh_custom_show();
+
+		report.timer(4);
 	}
 	
 	var hide = function(){
@@ -474,6 +476,7 @@ var shortease = function(){
 				shortease.status.touch_speed = 0;
 				moves(event);
 			}
+			setTimeout( function() { report.timer(3); }, 1000);
 		}
 		function leave(event) {
 			if (!status.touchCD) {
@@ -620,6 +623,7 @@ var shortease = function(){
 
 	var controls = function(){
 		$('.close_x, .sh_modal').click(function() { close_cards();	});
+		$('.sh_modal').mousedown(function() { close_cards();	});
 		$(document).keyup(function(e) {
 		     if (e.key === "Escape") { 
 		        close_cards();
@@ -694,11 +698,12 @@ var shortease = function(){
 		var user_data = null, user_data_unsended = null;
 		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
 		const GENERAL_TYPES = ["g","s","c","t"];
-		/// 1 - impression, 2 - click (buy), 3 - pause (interested), 4 - long pause (>10 sec), 5 - description opened, 6 - coupon clicked, 
+		/// 1 - impression, 2 - click (buy), 3 - pause timer (interested), 4 - widget open timer, 5 - description opened, 6 - coupon clicked, 
 		/// 8 - widget loaded, 9 - widget opened, 10 - 25% tool time, 11 - 50% tool time, 12 - 75% tool time, 13 - 100% tool time
 		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
+			po(site_id, channel_id, tool_id, event_type, event_count);
 			if (!event_count) event_count = 1;
 			event_count = event_count ? Math.round(event_count) : 1; 	
 			getUserData();
@@ -829,15 +834,22 @@ var shortease = function(){
 			removeUnsentData();
 		}
 
-		var timer = function () {
-			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
-				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3, status.touch_length);
+		var timer = function (event_id) {
+			var check_condition = false;
+			if (event_id == 3) check_condition = status.touchstart_time;
+			if (event_id == 4) check_condition = status.shortease_show;
+			po("timer", check_condition, event_id);
+			var CHECK_DURATION = 1000;
+			if (check_condition) { 
+				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, event_id, CHECK_DURATION/1000);
+				setTimeout(function() { report.timer(event_id); }, CHECK_DURATION);
 			}
 		}
 
 		return {
 			sendData : sendData,
 			add : add,
+			timer:timer,
 		}
 	}();
 
@@ -1122,7 +1134,7 @@ var sh_preview = function(){
 			setDisabledClass();
 		}); 
 		prevHolder.mouseleave(function( event ) { 
-			prevHolder.find('.er_arrow').remove();
+			//prevHolder.find('.er_arrow').remove();
 		});
 		$(document).on('click','.er_prev_holder .er_left', function() {
 			scrollHolder.animate({scrollLeft:'-='+previewHolderWidth+'px'}, { 
