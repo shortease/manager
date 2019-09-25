@@ -87,6 +87,7 @@ echo "<script>var site_id = $site_id;</script>";
 						<th><?php et("Impressions");?></th>
 						<th><?php et("Clicks");?></th>
 						<th><?php et("pause time");?></th>
+						<th><?php et("view time");?></th>
 						<th><?php et("widget loaded");?></th>
 						<th><?php et("widget opened");?></th>
 					</thead>

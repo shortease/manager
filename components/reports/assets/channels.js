@@ -41,6 +41,9 @@ var Report = function() {
 					data:"pause_time",
 				},
 				{ 
+					data:"view_time",
+				},
+				{ 
 					data:"widget_loaded",
 				},
 				{ 
