@@ -52,6 +52,10 @@ var Report = function() {
 			],
 			createdRow: function( row, data, dataIndex ) {
 				$(row).data("channel_id", data.channel_id);
+				var pause_time =parseInt($($('td',row).get(3)).text());
+				var view_time = parseInt($($('td',row).get(4)).text());
+				$($('td',row).get(3)).text((pause_time/3600).toFixed(2));
+				$($('td',row).get(4)).text((view_time/3600).toFixed(2));
 			},			
 		});
 		Report.datat = datat;
