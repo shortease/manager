@@ -5,4 +5,5 @@ default/
 src/
 docs/
 config.inc
+sftp-config.json
 
