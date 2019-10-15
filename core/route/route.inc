@@ -42,7 +42,8 @@ class Route {
 			$lang->rmLastLangFile();
 			$lang = Factory::getLang();
 			$lang->loadLangFile($langPath);
-	 		$GLOBALS["translations"] = $lang->getTranslations()[0];
+			$GLOBALS["translations"] = array();
+			if (count($lang->getTranslations())) $GLOBALS["translations"] = $lang->getTranslations()[0];
 			$target_path = SH_COMPONENT_PATH . $page."/".$task.".inc";
 			require_once($target_path);
 		}
