@@ -12,7 +12,9 @@ class Route {
 		$lang = Factory::getLang();
 		$lang->rmLastLangFile();
 		$lang->loadLangFile($langPath);
-		echo ("<script> var t =  " . json_encode($lang->getTranslations()[0]) . "; </script>");
+		$trnsl = "";
+		if (isset($lang->getTranslations()[0])) $trnsl = json_encode($lang->getTranslations()[0]);
+		echo ("<script> var t =  " . $trnsl . "; </script>");
 		$target_path = SH_COMPONENT_PATH . $com."/".$com.".inc";
 		require_once($target_path);
 	}
