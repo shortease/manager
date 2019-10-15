@@ -13,7 +13,7 @@ class Route {
 		$lang->rmLastLangFile();
 		$lang->loadLangFile($langPath);
 		$trnsl = "[]";
-		if (isset($lang->getTranslations()[0])) $trnsl = json_encode($lang->getTranslations()[0]);
+		if (count($lang->getTranslations())) $trnsl = json_encode($lang->getTranslations()[0]);
 		echo ("<script> var t =  " . $trnsl . "; </script>");
 		$target_path = SH_COMPONENT_PATH . $com."/".$com.".inc";
 		require_once($target_path);
