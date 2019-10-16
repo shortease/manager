@@ -28,6 +28,7 @@
 .er_sh_logo {
 	position:absolute;
 	left:5px;
+	top:5px;
 	width:67px;
 	height:20px;
 	z-index:999990;
@@ -299,8 +300,8 @@
     position: absolute;
     z-index: 999992;
 	top: 45%;
-    height: 7%;
-    width: 10%;
+    height: 40px;
+    width: 40px;
     font-size: 40px;
     line-height: 40px;
 }
@@ -364,6 +365,7 @@
     font-size: 1.4em;
    	margin: 0 6% ;
 	line-height: 2.2em;
+	overflow: hidden;
 }
 .sh_art_details .sh_description { 
     font-size: 1.2em;
@@ -383,7 +385,7 @@
 	line-height: 2.2em;
     display: inline-block;
 	height: 2.2em;
-    width: 45vw;    
+    width: 181px;    
 }
 .sh_art_details .sh_price .pr_val {
     font-size: 1em;
@@ -398,8 +400,8 @@
     margin: 0 6% 10px 6%;
     float: left;
     background: url(//m.shortease.com/media/images/shop_btn.png) no-repeat;
-    width: 51vw;
-    height: 7vh;
+    width: 181px;
+    height: 50px;
     background-size: contain;
 }
 .btn_show_descr {
@@ -408,8 +410,8 @@
     bottom: 0px;
     text-align: center;
 	background: url(//m.shortease.com/media/images/infob_btn.png) no-repeat;
-    width: 14vw;
-    height: 8vh;
+    width: 50px;
+    height: 50px;
     background-size: contain;
     margin: 0 6% 10px 6%;
 }
@@ -530,6 +532,10 @@
 .er_prev_holder .er_arrow.sh_disabled {
 	opacity: 0.2;
 }
+.sh_cards {
+	position: relative;
+}
+
 .sh_cards.open {
     height: 2000px;
 	background-color: black;    

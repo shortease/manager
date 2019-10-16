@@ -880,7 +880,7 @@ var shortease = function(){
 			//def.target_holder.addClass('desk_holder');
 		}
 
-		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.dev.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
 		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"sites/"+iSiteId+"/init.css"}).appendTo("head");
 		if (def.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: def.site_css+"?v="+Math.ceil(Math.random()*10000)}).appendTo("head"); }
 

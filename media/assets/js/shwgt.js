@@ -4,10 +4,10 @@ var MEDIA_PATH = "//shmd.nyc3.cdn.digitaloceanspaces.com/";
 var REP_PATH = "//rep.shortease.com/";
 var CR_PATH = "//m.shortease.com/";
 
-/*var MEDIA_PATH = "//devm.shortease.com/media/";
+var MEDIA_PATH = "//devm.shortease.com/media/";
 var REP_PATH = "//devrep.shortease.com/";
 var CR_PATH = "//devm.shortease.com/";
- */
+
 var shortease = function(){
 	var status = {
 		preview_show : 0,
@@ -880,7 +880,7 @@ var shortease = function(){
 			//def.target_holder.addClass('desk_holder');
 		}
 
-		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.dev.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
 		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"sites/"+iSiteId+"/init.css"}).appendTo("head");
 		if (def.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: def.site_css+"?v="+Math.ceil(Math.random()*10000)}).appendTo("head"); }
 
