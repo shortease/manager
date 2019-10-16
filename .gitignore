@@ -6,4 +6,5 @@ src/
 docs/
 config.inc
 sftp-config.json
-
+media/sites
+tests/
