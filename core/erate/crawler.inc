@@ -163,7 +163,7 @@ class Crawler
 		$tool->updateArticle($article_data);
 		$c_placement_id = $this->getOneToolPlacement($article_id);
 		$cp = new CampaignPlacement($c_placement_id);
-		$cp->exportToMongo();
+//		$cp->exportToMongo();
 	}
 
 	/**
