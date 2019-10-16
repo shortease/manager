@@ -1,8 +1,8 @@
 po = console.info;
 var er_template;
-var MEDIA_PATH = "//m.shortease.com/media/";
-var REP_PATH = "//rep.shortease.com/";
-var CR_PATH = "//m.shortease.com/";
+var MEDIA_PATH = "//devm.shortease.com/media/";
+var REP_PATH = "//devrep.shortease.com/";
+var CR_PATH = "//devm.shortease.com/";
  
 var shortease = function(){
 	var status = {
@@ -33,7 +33,6 @@ var shortease = function(){
 		dir : 'ltr',
 		preview_texts : false,
 		MAX_ARTICLES_NUM : 50,
-		arrows_navigate : 0,
 		touch_only : 0,
 		holder : null,
 		items_number : 0,
@@ -127,10 +126,25 @@ var shortease = function(){
 				right_card.css({'transform-origin': 'left center', 'transform' : 'translateZ(0vw) rotateY('+(status.left_card_percent*35)+'deg)' });
 			}
 		}
+		var move_image = function(changeX){
+			var MAX_MOVE = 50;
+			changeX = changeX > MAX_MOVE ? MAX_MOVE : changeX < -MAX_MOVE ? -MAX_MOVE : changeX;
+			var move_perc = 1 / MAX_MOVE * changeX;
+			var img_holder = cards[status.display_card].pictures[status.display_card_picture];
+			var cur_image = $('.er_fore_img', img_holder);
+			var img_width = cur_image.width();
+			var holder_width = img_holder.width();
+			var move_pix =  -(img_width-holder_width)/2 + (img_width-holder_width)/2 * move_perc;
+			po("move image ", cur_image.css('left'), move_pix);
+			cur_image.css('left', move_pix);
+		}
 		/// prevent cards moving if description is open
 		if (status.description_open) return;
 		var changeX = shortease.status.changeX;
 		if (changeX) { 
+			if((Date.now() - status.touchstart_time > 100) && status.left_card_percent == 0 ) { /// finger stopped - move image
+				move_image(changeX);
+			} else {	/// move to next card
 			shift = curLeft + changeX;
 			/// stop shifting on edges 
 			shift = limitEdges(shift);
@@ -138,6 +152,7 @@ var shortease = function(){
 			getDisplayPercent(shift);
 			setCardAngle();
 			def.holder.css({'left':(shift)+'px'});
+		}
 		} else {
 			curLeft = shift ;
 			status.shift = shift;
@@ -147,16 +162,7 @@ var shortease = function(){
 			cards[status.display_card].shift_line.stop();
 		}
 		if (event && (event.type == 'touchend' || event.type == 'mouseup')){
-			/// report pause and long pause
-/*			if (status.touch_length > 10) { /// more than 10 sec
-				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3); /// long pause
-			} else if (status.touch_length > 2) { /// more than 2 sec
-				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 4); /// short pause
-			}*/
-/*			if (status.touch_length > 1) { /// if pause more than 1 sec - report time of pause
-				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 3, status.touch_length);
-			}
-*/			cards[status.display_card].shift_line.start();
+			cards[status.display_card].shift_line.start();
 		}
 
 		if (event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
@@ -178,6 +184,7 @@ var shortease = function(){
 				moveToCard(status.touched_card, def.card_move_duration);
 			}
 		}
+		
 	}
 
 	var moveToCardTimer;
@@ -703,7 +710,7 @@ var shortease = function(){
 		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
-			po(site_id, channel_id, tool_id, event_type, event_count);
+//			po(site_id, channel_id, tool_id, event_type, event_count);
 			if (!event_count) event_count = 1;
 			event_count = event_count ? Math.round(event_count) : 1; 	
 			getUserData();
@@ -838,7 +845,7 @@ var shortease = function(){
 			var check_condition = false;
 			if (event_id == 3) check_condition = status.touchstart_time;
 			if (event_id == 4) check_condition = status.shortease_show;
-			po("timer", check_condition, event_id);
+//			po("timer", check_condition, event_id);
 			var CHECK_DURATION = 1000;
 			if (check_condition) { 
 				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, event_id, CHECK_DURATION/1000);
