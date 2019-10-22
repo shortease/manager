@@ -30,6 +30,7 @@ var shortease = function(){
 		touchCD : false
 	};
 	var def = {
+		add_logo : true,
 		target_holder : 'body',
 		target_holder_prepend : 1,
 		site_css : false,
