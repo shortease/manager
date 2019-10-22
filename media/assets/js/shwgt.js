@@ -946,8 +946,8 @@ var sh_preview = function(){
 		$('.er_prev_holder').remove();
 		items = [];
 		prevHolder = $('<div class="er_prev_holder"></div>');
-		if(!$('.er_sh_logo').length)
-			shortease.def.holder.parent().prepend("<img class='er_sh_logo' src='"+MEDIA_PATH+"images/logobl.png' />");
+		if(shortease.def.add_logo && !$('.er_sh_logo').length)
+			shortease.def.holder.parent().prepend("<img class='er_sh_logo' src='"+MEDIA_PATH+"images/logo.png' />");
 		shortease.def.holder.append(prevHolder);
 
 		for(var i=0;i<st_tools.length;i++){
