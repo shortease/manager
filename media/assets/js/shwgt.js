@@ -27,7 +27,8 @@ var shortease = function(){
 		next_card:0,
 		left_card:0,	
 		shift :0,
-		touchCD : false
+		touchCD : false,
+		isImageMoved : false
 	};
 	var def = {
 		add_logo : true,
@@ -107,7 +108,11 @@ var shortease = function(){
 		var getDisplayPercent = function(shift){
 			var rate = Math.abs(shift)/def.width;
 			status.left_card = Math.ceil(rate)-1;
+			if (status.left_card <0) status.left_card = 0; /// first card
 			status.right_card = status.left_card+1 > def.items_number -1 ? -1 : status.left_card+1;
+			if (status.right_card < 0.01){
+				status.right_card = 0;
+			}
 			status.right_card_percent = rate - Math.floor(rate);
 			status.left_card_percent = 1 - status.right_card_percent;
 			if (status.right_card_percent == 0) status.left_card_percent = 0;
@@ -131,33 +136,36 @@ var shortease = function(){
 				right_card.css({'transform-origin': 'left center', 'transform' : 'translateZ(0vw) rotateY('+(status.left_card_percent*35)+'deg)' });
 			}
 		}
-		var move_image = function(changeX){
+		var move_image = function(imgChangeX){
 			var MAX_MOVE = 50;
-			changeX = changeX > MAX_MOVE ? MAX_MOVE : changeX < -MAX_MOVE ? -MAX_MOVE : changeX;
-			var move_perc = 1 / MAX_MOVE * changeX;
+			imgChangeX = imgChangeX > MAX_MOVE ? MAX_MOVE : imgChangeX < -MAX_MOVE ? -MAX_MOVE : imgChangeX;
+			var move_perc = 1 / MAX_MOVE * imgChangeX;
 			var img_holder = cards[status.display_card].pictures[status.display_card_picture];
 			var cur_image = $('.er_fore_img', img_holder);
 			var img_width = cur_image.width();
 			var holder_width = img_holder.width();
 			var move_pix =  -(img_width-holder_width)/2 + (img_width-holder_width)/2 * move_perc;
-			po("move image ", cur_image.css('left'), move_pix);
 			cur_image.css('left', move_pix);
 		}
 		/// prevent cards moving if description is open
 		if (status.description_open) return;
 		var changeX = shortease.status.changeX;
+		/// if finger stopped - move image
+		if (!status.isImageMoved && status.touching_now  && (Date.now() - status.touchstart_time > 130) && (status.left_card_percent < 0.01 || status.left_card_percent > 0.99))
+			status.isImageMoved = true;
 		if (changeX) { 
-			if((Date.now() - status.touchstart_time > 100) && status.left_card_percent == 0 ) { /// finger stopped - move image
+			if(status.isImageMoved) { 
+				getDisplayPercent(curLeft);
 				move_image(changeX);
 			} else {	/// move to next card
-			shift = curLeft + changeX;
-			/// stop shifting on edges 
-			shift = limitEdges(shift);
-			status.shift = shift;
-			getDisplayPercent(shift);
-			setCardAngle();
-			def.holder.css({'left':(shift)+'px'});
-		}
+				shift = curLeft + changeX;
+				/// stop shifting on edges 
+				shift = limitEdges(shift);
+				status.shift = shift;
+				getDisplayPercent(shift);
+				setCardAngle();
+				def.holder.css({'left':(shift)+'px'});
+			}
 		} else {
 			curLeft = shift ;
 			status.shift = shift;
@@ -169,16 +177,15 @@ var shortease = function(){
 		if (event && (event.type == 'touchend' || event.type == 'mouseup')){
 			cards[status.display_card].shift_line.start();
 		}
-
-		if (event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
+		if (!status.isImageMoved && event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
 			/// move right
-			if (status.touched_card == status.left_card && (status.left_card_percent < 0.8 || 
+			if (/*status.touched_card == status.left_card && */ status.touch_speed < 0 && (status.left_card_percent < 0.8 || 
 															(Math.abs(status.touch_speed) > 3 && status.left_card_percent < 0.95))
 				) { 
 				status.display_card_picture = 0;
 				moveToCard(status.touched_card+1, def.card_move_duration);
 			} else 	/// move left
-			if (status.touched_card == status.right_card && (status.right_card_percent < 0.8 ||
+				if (/*status.touched_card == status.right_card && */(status.right_card_percent < 0.8 ||
 															(Math.abs(status.touch_speed) > 3 && status.right_card_percent < 0.95))
 						&& status.touch_speed > 0
 				) { 
@@ -267,7 +274,7 @@ var shortease = function(){
 	 	status.display_card = 0;
 	 	status.display_card_picture = 0;
 	 	status.left_card = 0;
-	 	status.left_card_percent = 1;
+	 	status.left_card_percent = 0;
 	 	status.right_card_percent = 0;
 	 	status.right_card = 1;
 	 	status.shift = 0;
@@ -497,6 +504,7 @@ var shortease = function(){
 				shortease.status.touchstart_time = 0;
 				shortease.status.changeX = 0;
 				shortease.status.touching_now = false;
+				setTimeout(function() { shortease.status.isImageMoved = false; } , 70); /// release imge move after short time
 				moves(event);
 			}
 		}	
