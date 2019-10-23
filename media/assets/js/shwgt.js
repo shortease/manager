@@ -144,6 +144,10 @@ var shortease = function(){
 			var cur_image = $('.er_fore_img', img_holder);
 			var img_width = cur_image.width();
 			var holder_width = img_holder.width();
+			if (holder_width/img_width > 0.75) { /// image not wide enough
+				status.isImageMoved = false;
+				return;
+			}
 			var move_pix =  -(img_width-holder_width)/2 + (img_width-holder_width)/2 * move_perc;
 			cur_image.css('left', move_pix);
 		}
@@ -179,14 +183,14 @@ var shortease = function(){
 		}
 		if (!status.isImageMoved && event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
 			/// move right
-			if (/*status.touched_card == status.left_card && */ status.touch_speed < 0 && (status.left_card_percent < 0.8 || 
-															(Math.abs(status.touch_speed) > 3 && status.left_card_percent < 0.95))
+			if (/*status.touched_card == status.left_card && */ status.touch_speed < 1 && (status.left_card_percent < 0.8 || 
+															(status.touch_speed < 3 && status.left_card_percent < 0.95))
 				) { 
 				status.display_card_picture = 0;
 				moveToCard(status.touched_card+1, def.card_move_duration);
 			} else 	/// move left
-				if (/*status.touched_card == status.right_card && */(status.right_card_percent < 0.8 ||
-															(Math.abs(status.touch_speed) > 3 && status.right_card_percent < 0.95))
+				if (/*status.touched_card == status.right_card && */ status.touch_speed > 1 && (status.right_card_percent < 0.8 ||
+															(status.touch_speed > 3 && status.right_card_percent < 0.95))
 						&& status.touch_speed > 0
 				) { 
 				status.display_card_picture = 0;
