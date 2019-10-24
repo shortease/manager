@@ -3,11 +3,10 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
 
 $channel_id = Request::getInt("channel_id");;
-echo "<script>var channel_id = $channel_id;</script>";
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/vendors/custom/datatables/datatables.bundle.css">
 <script src="/assets/vendors/custom/datatables/datatables.bundle.js"></script>
-
+<script>var channel_id = <?php echo($channel_id);?></script>;
 
 <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
 	<!-- begin:: Subheader -->

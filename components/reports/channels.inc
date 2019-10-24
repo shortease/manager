@@ -1,9 +1,10 @@
 <?php
 defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
+if (!$site_id)
+    $site_id = $_SESSION["site_id"] ? $_SESSION["site_id"] : 0;
 
-$site_id = 119;
-echo "<script>var site_id = $site_id;</script>";
+//echo "<script>var site_id = $site_id;</script>";
 
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/vendors/custom/datatables/datatables.bundle.css">

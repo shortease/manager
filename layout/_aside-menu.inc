@@ -1,4 +1,11 @@
-<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); ?>
+<?php defined( '_SHM_ENABLED_' ) or die( 'Restricted access' ); 
+    
+    $site_id = Request::getInt("site_id");
+    if (!$site_id)
+        $site_id = $_SESSION["site_id"] ? $_SESSION["site_id"] : 0;
+    echo ('<script>var site_id = '. $site_id.'</script>');
+
+?>
 <!-- begin:: Aside Menu -->
 <div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
     <div id="kt_aside_menu" class="kt-aside-menu " data-ktmenu-vertical="1" data-ktmenu-scroll="1" >
@@ -10,7 +17,7 @@
                 <i class="kt-menu__section-icon flaticon-more-v2"></i> 
             </li>   
             <li class="kt-menu__item " aria-haspopup="true" >
-                <a href="/" class="kt-menu__link ">
+                <a href="/" class="kt-menu__link btn disabled">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Dashboard")?></span>
                 </a>
@@ -22,7 +29,7 @@
                 else require_once("_client_menu.inc");
             ?>
             <li class="kt-menu__item " aria-haspopup="true" >
-                <a href="/?com=channels" class="kt-menu__link ">
+                <a href="/?com=channels" class="kt-menu__link btn  client_req">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Channels")?></span>
                 </a>
@@ -34,7 +41,7 @@
                 <i class="kt-menu__section-icon flaticon-more-v2"></i> 
             </li>              
             <li class="kt-menu__item " aria-haspopup="true" >
-                <a href="/?com=reports&action=channels" class="kt-menu__link ">
+                <a href="/?com=reports&action=channels" class="kt-menu__link btn client_req">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Channels report")?></span>
                 </a>
@@ -213,3 +220,10 @@
     </div>
 </div>
 <!-- end:: Aside Menu -->
+
+<script>
+
+if (!site_id) {
+    $('.client_req').addClass('disabled');
+}
+</script>
