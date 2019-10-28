@@ -61,18 +61,21 @@ $channel_id = Request::getInt("channel_id");;
 											<label><?php et("Status"); ?>:</label>
 										</div>
 										<div class="kt-form__control">
-											<select class="form-control bootstrap-select" id="client_status_select">
-												<option value="0" selected><?php et("DATES"); ?></option>
-												<option value=""><?php et("All"); ?></option>
-												<option value="1"><?php et("Today"); ?></option>
-												<option value="2"><?php et("Yesterday"); ?></option>
-												<option value="3"><?php et("Current week"); ?></option>
-												<option value="4"><?php et("Current month"); ?></option>
-												<option value="5"><?php et("Previous month"); ?></option>
-											</select>
-										</div>
+											<select class="form-control bootstrap-select" id="dates_name_select">
+												<option value="all" selected><?php et("All dates"); ?></option>
+												<option value="today"><?php et("Today"); ?></option>
+												<option value="yesterday"><?php et("Yesterday"); ?></option>
+												<option value="cur_week"><?php et("Current week"); ?></option>
+												<option value="cur_month"><?php et("Current month"); ?></option>
+												<option value="prev_month"><?php et("Previous month"); ?></option>
+											</select> 
+										</div> 
 									</div>
 								</div>
+								<div class="col-md-3 kt-margin-b-20-tablet-and-mobile">
+									<input type="text" class="form-control" name="daterange" id="daterange" value="" />
+								</div>
+
 							</div>
 						</div>
 					</div>
@@ -84,7 +87,7 @@ $channel_id = Request::getInt("channel_id");;
 						<th><?php et("Impressions");?></th>
 						<th><?php et("Clicks");?></th>
 						<th><?php et("pause time");?></th>
-						<th><?php et("widget loaded");?></th>
+						<th><?php et("view time");?></th>
 						<th><?php et("widget opened");?></th>
 					</thead>
 					<tbody>
