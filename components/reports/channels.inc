@@ -4,12 +4,16 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 if (!isset($site_id))
 	$site_id = isset($_SESSION["site_id"]) ? $_SESSION["site_id"] : 0;
 
-//echo "<script>var site_id = $site_id;</script>";
 
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/vendors/custom/datatables/datatables.bundle.css">
 <script src="/assets/vendors/custom/datatables/datatables.bundle.js"></script>
-
+<script>
+	var site_id = <?php echo($site_id); ?>
+	if (!site_id) {
+		window.location.replace('/?com=clients');
+	}
+</script>
 
 <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
 	<!-- begin:: Subheader -->
