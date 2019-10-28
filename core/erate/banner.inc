@@ -8,9 +8,9 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 class Banner extends ErateBanner
 {
 
-	public function updateArticle($article_data)
+	public function updateArticle($article_data, $title)
 	{
-		$query = "update tools set tool_script = '".$article_data."', last_crawled = now() where id = ".$this->get('id');
+		$query = "update tools set tool_script = '".$article_data."', name = '".$title."', last_crawled = now() where id = ".$this->get('id');
 		Factory::getDB()->execute($query);		
 	}
 

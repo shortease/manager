@@ -30,7 +30,8 @@ if ($action == 'getCrawlerItem') {
 	$article_data = Request::getVar("article_data");
 	$article_id = Request::getInt("article_id");
 	$token = Request::getString("token");
-	upd_article($article_id, $article_data, $token);
+	$title = Request::getString("title");
+	upd_article($article_id, $article_data, $token, $title);
 } else {
 	die('Action not allowed');
 }
@@ -47,9 +48,9 @@ function upd_links ($channel_id, $links, $token) {
 	$cr->upd_links($channel_id, $links, $token);
 }
 
-function upd_article($article_id, $article_data, $token) {
+function upd_article($article_id, $article_data, $token, $title) {
 	$cr = new Crawler();
-	$cr->upd_article($article_id, $article_data, $token);
+	$cr->upd_article($article_id, $article_data, $token,$title);
 }
 ?>
 
@@ -75,7 +76,7 @@ function shcr(){
 		erJq.ajax({url:templates.url}).done(function(data) { 
 			var article_data = get_article(erJq(data));
 			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.php', 
-						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
+						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'title':article_data.title,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
 			.done(function() {
 				setTimeout( function() { shcrRepeat(templates); }, 2000);
 			});

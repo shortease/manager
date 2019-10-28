@@ -2,7 +2,7 @@
     
     $site_id = Request::getInt("site_id");
     if (!$site_id)
-        $site_id = $_SESSION["site_id"] ? $_SESSION["site_id"] : 0;
+        $site_id = isset($_SESSION["site_id"]) ? $_SESSION["site_id"] : 0;
     echo ('<script>var site_id = '. $site_id.'</script>');
 
 ?>

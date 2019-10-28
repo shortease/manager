@@ -156,11 +156,11 @@ class Crawler
 		return $selected_article;
 	}
 
-	public function upd_article($article_id, $article_data, $token)
+	public function upd_article($article_id, $article_data, $token, $title)
 	{
 		$tool = new Banner($article_id);
 		if(!$tool->checkToken($token))	return;		/// check token and it time 
-		$tool->updateArticle($article_data);
+		$tool->updateArticle($article_data, $title);
 		$c_placement_id = $this->getOneToolPlacement($article_id);
 		$cp = new CampaignPlacement($c_placement_id);
 //		$cp->exportToMongo();
