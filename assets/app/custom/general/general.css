@@ -1,0 +1,3 @@
+.daterangepicker .drp-calendar td.in-range.available:not(.active):not(.off):not(.today) {
+	background-color: #d8d8d8;
+}
