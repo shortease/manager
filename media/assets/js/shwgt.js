@@ -443,12 +443,12 @@ var shortease = function(){
 			return false;
 		});
 		curCard.data('has_coupon',1);
-		report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 6);		
 
 		coupon_holder.click(function(e){
 			e.stopPropagation();
 			e.preventDefault();
 			coupon_holder.removeClass("sh_shake");
+			report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 6);		
 			coupon_holder.animate({ width:'10px', height:'10px', opacity:'0' }, 
 				{duration:600, complete: function() {  
 					coupon_holder.addClass('show');

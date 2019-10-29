@@ -100,7 +100,7 @@ if (!isset($site_id))
 						<th><?php et("Quick swipe");?></th>
 						<th><?php et("Description clicked");?></th>
 						<th><?php et("Products viewed");?></th>
-						<th><?php et("Coupons showed");?></th>
+						<th><?php et("Coupons clicked");?></th>
 					</thead>
 					<tbody>
 					</tbody>	

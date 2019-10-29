@@ -99,31 +99,6 @@ var Report = function() {
 		return mark;
 	}
 
-	var calculateInteresRate = function() {
-		var columns = datat.columns().data();
-		var purchases = columns[3];
-		var pause_times = columns[4];
-		var view_times = columns[5];
-		var swipes = columns[6];
-		var descriptions = columns[7];
-		var impressions = columns[8];
-
-		var MAX_PURCHASE = 0.1, MAX_PAUSE = 0.5, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
-		var PURCHASE_WEIGHT = 0.6, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.3, DESCRIPTIONS_WEIGHT =  0.2; 
-
-		var itemsNum = impressions.length;
-		for (var i=0;i<itemsNum;i++){
-			var imp = impressions[i];
-			var purchase_mark = Math.min((purchases[i]/imp)/MAX_PURCHASE*100, 100);
-			var pause_mark = Math.min((pause_times[i]/imp)/MAX_PAUSE*100, 100);
-			var view_mark = Math.min((view_times[i]/imp)/MAX_VIEW*100, 100);
-			var swipe_mark = Math.min((swipes[i]/imp)/MAX_SWIPE*100, 100);
-			var descriptions_mark = Math.min((descriptions[i]/imp)/MAX_DESCRIPTIONS*100, 100);
-			var mark = purchase_mark * PURCHASE_WEIGHT + pause_mark * PAUSE_WEIGHT + view_mark * VIEW_WEIGHT + swipe_mark * SWIPE_WEIGHT + descriptions_mark * DESCRIPTIONS_WEIGHT ;
-			console.table(i, mark,  purchase_mark, pause_mark, view_mark, swipe_mark, descriptions_mark);
-			$($('#reportdt td.interest_rate_td')[i]).text(mark.toFixed(1));
-		}
-	}
 	var dateRangePicker;
 
 	var prepareDatesPicker = function() {
