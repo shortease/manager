@@ -12,12 +12,12 @@ class Report
 		"2" => "click",
 		"3" => "pause_time",
 		"4" => "view_time",
-		"5" => "description",
+		"5" => "description_opened",
 		"6" => "coupon",
+		"7" => "quick_swipe",
 		"8" => "widget_loaded",
 		"9" => "widget_opened",
-		"10" => "open_point",
-		"11" => "close_point"
+
 	);
 
 	public function channels($site_id, $date_from = null, $date_to = null)

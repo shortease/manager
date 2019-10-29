@@ -84,11 +84,16 @@ $channel_id = Request::getInt("channel_id");;
 				<table id="reportdt" class="table table-striped- table-bordered table-hover table-checkable">
 					<thead>
 						<th><?php et("Product name");?></th>
-						<th><?php et("Impressions");?></th>
-						<th><?php et("Clicks");?></th>
-						<th><?php et("pause time");?></th>
-						<th><?php et("view time");?></th>
-						<th><?php et("widget opened");?></th>
+						<th><?php et("Interest rate");?></th>
+						<th><?php et("Widget loaded");?></th>
+						<th><?php et("Widget opened");?></th>
+						<th><?php et("Purchase clicked");?></th>
+						<th><?php et("Pause time (hours)");?></th>
+						<th><?php et("View time (hours)");?></th>
+						<th><?php et("Quick swipe");?></th>
+						<th><?php et("Description clicked");?></th>
+						<th><?php et("Products viewed");?></th>
+						<th><?php et("Coupons showed");?></th>
 					</thead>
 					<tbody>
 					</tbody>	

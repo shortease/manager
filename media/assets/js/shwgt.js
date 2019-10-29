@@ -3,11 +3,11 @@ var er_template;
 var MEDIA_PATH = "//shmd.nyc3.cdn.digitaloceanspaces.com/";
 var REP_PATH = "//rep.shortease.com/";
 var CR_PATH = "//m.shortease.com/";
-
+/*
 var MEDIA_PATH = "//devm.shortease.com/media/";
 var REP_PATH = "//devrep.shortease.com/";
 var CR_PATH = "//devm.shortease.com/";
-
+*/
 var shortease = function(){
 	var status = {
 		preview_show : 0,
@@ -183,13 +183,17 @@ var shortease = function(){
 		}
 		if (!status.isImageMoved && event && (event.type == 'touchend' || event.type == 'mouseup') && Math.abs(status.touch_speed) > 0) {
 			/// move right
-			if (/*status.touched_card == status.left_card && */ status.touch_speed < 1 && (status.left_card_percent < 0.8 || 
+			if ( status.touch_speed < 1 && (status.left_card_percent < 0.8 || 
 															(status.touch_speed < 3 && status.left_card_percent < 0.95))
 				) { 
+				/// quick swipe from first image
+				if((Date.now() - shortease.status.lastTimeCardMoved)/1000 < 2 && status.display_card_picture == 0) {	
+					report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 7);
+				}
 				status.display_card_picture = 0;
 				moveToCard(status.touched_card+1, def.card_move_duration);
 			} else 	/// move left
-				if (/*status.touched_card == status.right_card && */ status.touch_speed > 1 && (status.right_card_percent < 0.8 ||
+				if ( status.touch_speed > 1 && (status.right_card_percent < 0.8 ||
 															(status.touch_speed > 3 && status.right_card_percent < 0.95))
 						&& status.touch_speed > 0
 				) { 
@@ -341,7 +345,7 @@ var shortease = function(){
 		}
 	}
 
-	var show = function(){
+	var show = function(cardIx){
 		reset();
 		shortease.status.shortease_show = true;
 		def.cards_hollder.addClass('open');
@@ -350,10 +354,11 @@ var shortease = function(){
 		$('.close_x').show();
 		sh_preview.hide();
 		/// report widget open
-		report.add(iSiteId, iChannelId, 0, 9);
-		if (typeof sh_custom_show === "function") sh_custom_show();
-
+		var tid =  (typeof cardIx !="undefined") ? st_tools[cardIx].toolId : 0;
+		report.add(iSiteId, iChannelId, tid, 9);
 		report.timer(4);
+	
+		if (typeof sh_custom_show === "function") sh_custom_show();
 	}
 	
 	var hide = function(){
@@ -374,6 +379,7 @@ var shortease = function(){
 		status.description_open = true;
 		$('.sh_description').removeClass('open');
 		curCard.card.find('.sh_description').addClass('open');
+		report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 5);		
 	}
 	var hideDescription = function(){
 		var curCard = cards[status.display_card];
@@ -437,6 +443,8 @@ var shortease = function(){
 			return false;
 		});
 		curCard.data('has_coupon',1);
+		report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, 6);		
+
 		coupon_holder.click(function(e){
 			e.stopPropagation();
 			e.preventDefault();
@@ -520,7 +528,7 @@ var shortease = function(){
 				shortease.status.changeX = shortease.status.touchX - shortease.status.touchstartX;
 				shortease.status.touch_length = (Date.now() - shortease.status.touchstart_time) /1000;
 				shortease.status.touch_speed = (shortease.status.changeX/shortease.status.touch_length)/50;
-				if (shortease.status.touch_length < 0.1) shortease.status.touch_speed = 1;
+				if (shortease.status.touch_length < 0.01) shortease.status.touch_speed = 1;
 				moves(event);
 			}
 		}
@@ -723,11 +731,11 @@ var shortease = function(){
 		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
 		const GENERAL_TYPES = ["g","s","c","t"];
 		/// 1 - impression, 2 - click (buy), 3 - pause timer (interested), 4 - widget open timer, 5 - description opened, 6 - coupon clicked, 
-		/// 8 - widget loaded, 9 - widget opened, 10 - 25% tool time, 11 - 50% tool time, 12 - 75% tool time, 13 - 100% tool time
-		const EVENT_TYPES = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13];
+		/// 7 - quick swipe, 8 - widget loaded, 9 - widget opened
+		const EVENT_TYPES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
-//			po(site_id, channel_id, tool_id, event_type, event_count);
+			po(site_id, channel_id, tool_id, event_type, event_count);
 			if (!event_count) event_count = 1;
 			event_count = event_count ? Math.round(event_count) : 1; 	
 			getUserData();
@@ -858,14 +866,22 @@ var shortease = function(){
 			removeUnsentData();
 		}
 
+		let i=0;
 		var timer = function (event_id) {
 			var check_condition = false;
 			if (event_id == 3) check_condition = status.touchstart_time;
 			if (event_id == 4) check_condition = status.shortease_show;
-//			po("timer", check_condition, event_id);
 			var CHECK_DURATION = 1000;
 			if (check_condition) { 
-				report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, event_id, CHECK_DURATION/1000);
+				/// count timer only if page visible and last interaction was less than 30 sec ago
+				if (isPageVisible() && 
+						(status.touching_now || 
+							(Date.now() - status.touchend_time)/1000 < 30 ||
+							(status.touchend_time == 0 && status.touchstart_time == 0 && (Date.now() - status.lastTimeCardMoved)/1000 < 30)
+							)
+					) {
+					report.add(iSiteId, st_tools[status.display_card].channel_id, st_tools[status.display_card].toolId, event_id, CHECK_DURATION/1000);
+				}
 				setTimeout(function() { report.timer(event_id); }, CHECK_DURATION);
 			}
 		}
@@ -1105,7 +1121,7 @@ var sh_preview = function(){
 	var controls = function(){
 		$('.er_item_list').click(function() {
 			cardIx = $(this).data('ix');
-			shortease.show();
+			shortease.show(cardIx);
 			shortease.showCard(cardIx);
 			prevHolder.find('.er_arrow').remove();
 		});
@@ -1360,3 +1376,13 @@ sh_debug = function (message, overwrite = 1){
 		}
 	}
 
+isPageVisible = function(){
+	var isVisible = true;
+	if ((typeof document.hidden !== "undefined" && document.hidden) ||
+		(typeof document.webkitHidden !== "undefined" && document.webkitHidden) ||
+		(typeof document.msHidden !== "undefined" && document.msHidden) 
+		) {
+		isVisible = false;
+	}
+	return isVisible;
+}

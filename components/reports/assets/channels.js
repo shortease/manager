@@ -3,6 +3,7 @@ var Report = function() {
 	var datat;
 	var start_date ='2010-01-01';
 	var end_date ='2110-01-01';
+	var INTERES_INDEX = 1,PAUSE_INDEX = 5, VIEW_INDEX = 6;
 
 	var prepareChannelsTable = function(){
 		datat = $("#reportdt").DataTable({
@@ -26,15 +27,23 @@ var Report = function() {
                 }
 			},
 
-			"order": [[1, 'asc']],	/// start ordering from second column
+			"order": [[0, 'asc']],	/// start ordering from second column
 
 			columns :[
 				{ 
 					data:"channel_name",
 					/*className: "client_name_td"*/
 				},
+				{
+					data:null,
+					className: "interest_rate_td",
+					"render": function(data,type,row) { return getInteresRate(data["impression"],data["click"],data["pause_time"],data["view_time"],data["quick_swipe"],data["description_opened"]).toFixed(1); }
+				},
 				{ 
-					data:"impression",
+					data:"widget_loaded",
+				},
+				{ 
+					data:"widget_opened",
 				},
 				{ 
 					data:"click",
@@ -46,18 +55,24 @@ var Report = function() {
 					data:"view_time",
 				},
 				{ 
-					data:"widget_loaded",
+					data:"quick_swipe",
 				},
 				{ 
-					data:"widget_opened",
+					data:"description_opened",
+				},
+				{ 
+					data:"impression",
+				},
+				{ 
+					data:"coupon",
 				},
 			],
 			createdRow: function( row, data, dataIndex ) {
 				$(row).data("channel_id", data.channel_id);
-				var pause_time =parseInt($($('td',row).get(3)).text());
-				var view_time = parseInt($($('td',row).get(4)).text());
-				$($('td',row).get(3)).text((pause_time/3600).toFixed(2));
-				$($('td',row).get(4)).text((view_time/3600).toFixed(2));
+				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
+				var view_time = parseInt($($('td',row).get(VIEW_INDEX)).text());
+				$($('td',row).get(PAUSE_INDEX)).text((pause_time/3600).toFixed(2));
+				$($('td',row).get(VIEW_INDEX)).text((view_time/3600).toFixed(2));
 			},			
 		});
 		Report.datat = datat;
@@ -67,6 +82,20 @@ var Report = function() {
 		datat.ajax.reload().draw();
 		setCustomDates();
 	}
+
+	var getInteresRate = function(impressions, purchases, pause_times, view_times, swipes, descriptions) {
+		var MAX_PURCHASE = 0.1, MAX_PAUSE = 0.5, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
+		var PURCHASE_WEIGHT = 0.6, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.3, DESCRIPTIONS_WEIGHT =  0.2; 
+
+		var purchase_mark = Math.min((purchases/impressions)/MAX_PURCHASE*100, 100);
+		var pause_mark = Math.min((pause_times/impressions)/MAX_PAUSE*100, 100);
+		var view_mark = Math.min((view_times/impressions)/MAX_VIEW*100, 100);
+		var swipe_mark = Math.min((swipes/impressions)/MAX_SWIPE*100, 100);
+		var descriptions_mark = Math.min((descriptions/impressions)/MAX_DESCRIPTIONS*100, 100);
+		var mark = purchase_mark * PURCHASE_WEIGHT + pause_mark * PAUSE_WEIGHT + view_mark * VIEW_WEIGHT + swipe_mark * SWIPE_WEIGHT + descriptions_mark * DESCRIPTIONS_WEIGHT ;
+		return mark;
+	}
+
 	var setCustomDates = function(){
 		dateRangePicker.setStartDate(moment(Report.start_date).format("MM/DD/YYYY"));
 		dateRangePicker.setEndDate(moment(Report.end_date).add(-1,"day").format("MM/DD/YYYY"));

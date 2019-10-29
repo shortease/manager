@@ -4,12 +4,11 @@ defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 if (!isset($site_id))
 	$site_id = isset($_SESSION["site_id"]) ? $_SESSION["site_id"] : 0;
 
-
 ?>
 <link rel="stylesheet" type="text/css" href="/assets/vendors/custom/datatables/datatables.bundle.css">
 <script src="/assets/vendors/custom/datatables/datatables.bundle.js"></script>
 <script>
-	var site_id = <?php echo($site_id); ?>
+	var site_id1 = <?php echo($site_id); ?>;
 	if (!site_id) {
 		window.location.replace('/?com=clients');
 	}
@@ -92,12 +91,16 @@ if (!isset($site_id))
 				<table id="reportdt" class="table table-striped- table-bordered table-hover table-checkable">
 					<thead>
 						<th><?php et("Channel name");?></th>
-						<th><?php et("Impressions");?></th>
-						<th><?php et("Clicks");?></th>
-						<th><?php et("Pause time (hours)");?></th>
-						<th><?php et("View time (hours)");?></th>
+						<th><?php et("Interest rate");?></th>
 						<th><?php et("Widget loaded");?></th>
 						<th><?php et("Widget opened");?></th>
+						<th><?php et("Purchase clicked");?></th>
+						<th><?php et("Pause time (hours)");?></th>
+						<th><?php et("View time (hours)");?></th>
+						<th><?php et("Quick swipe");?></th>
+						<th><?php et("Description clicked");?></th>
+						<th><?php et("Products viewed");?></th>
+						<th><?php et("Coupons showed");?></th>
 					</thead>
 					<tbody>
 					</tbody>	
