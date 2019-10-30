@@ -28,6 +28,7 @@ class Route {
 			$page = "login";
 		}
 
+		if ($page=="index") $page = "";
 		if (!$page) {
 			$langPath = SH_LAYOUT_PATH . DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
 	 		$lang = Factory::getLang();

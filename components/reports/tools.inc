@@ -107,3 +107,6 @@ $channel_id = Request::getInt("channel_id");;
 
 <!-- <?php load_style("/components/clients/assets/clients.css"); ?> -->
 <?php load_script("/components/reports/assets/tools.js"); ?>
+<script type="text/javascript">
+	$('.reports_item').addClass('kt-menu__item--active')
+</script>

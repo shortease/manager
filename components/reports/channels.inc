@@ -115,3 +115,6 @@ if (!isset($site_id))
 <?php load_style("/components/reports/assets/reports.css"); ?>
 <?php load_script("/components/reports/assets/channels.js"); ?>
 
+<script type="text/javascript">
+	$('.reports_item').addClass('kt-menu__item--active')
+</script>

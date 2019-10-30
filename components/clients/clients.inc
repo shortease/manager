@@ -195,3 +195,8 @@ $clents_list = Client::getClientsList();
 
 <?php load_style("/components/clients/assets/clients.css"); ?>
 <?php load_script("/components/clients/assets/clients.js"); ?>
+
+
+<script type="text/javascript">
+	$('.clients_item').addClass('kt-menu__item--active')
+</script>

@@ -223,3 +223,6 @@ echo ("<script>var site_id = $site_id</script>");
 <?php load_style("/components/channels/assets/channels.css"); ?>
 <?php load_script("/components/channels/assets/channels.js"); ?>
 <?php load_script("/components/crawler/assets/crawler.js"); ?>
+<script type="text/javascript">
+	$('.channels_item').addClass('kt-menu__item--active')
+</script>

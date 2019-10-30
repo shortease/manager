@@ -1,3 +1,36 @@
+body {
+	background-color: #eaeaea;
+}
+
+.kt-header,.kt-aside__brand,.kt-aside-menu {
+	background-color: #2f2f2f;
+}
+
+.kt-aside-menu .kt-menu__nav > .kt-menu__item:not(.kt-menu__item--parent):not(.kt-menu__item--open):not(.kt-menu__item--here):not(.kt-menu__item--active):hover > .kt-menu__link {
+    background-color: #1db1ee;
+}
+
+.kt-aside-menu .kt-menu__nav > .kt-menu__item.kt-menu__item--active > .kt-menu__link {
+    background-color: #f5c208;
+}
+
+.kt-aside__brand-logo img {
+	width:150px;
+}
+
+.kt-header-menu .kt-menu__nav > .kt-menu__item.kt-menu__item--open, .kt-header-menu .kt-menu__nav > .kt-menu__item.kt-menu__item--active {
+    background-color: #1db1ee;
+}
+.kt-header-menu .kt-menu__nav > .kt-menu__item.kt-menu__item--active > .kt-menu__link .kt-menu__link-text {
+    color: #FFFFFF;
+}
+
+
+.dataTable tbody td {
+    line-height: 2.5;
+}
+
 .daterangepicker .drp-calendar td.in-range.available:not(.active):not(.off):not(.today) {
 	background-color: #d8d8d8;
 }
+

@@ -3,7 +3,7 @@
 <div id="kt_header_mobile" class="kt-header-mobile kt-header-mobile--fixed " >
     <div class="kt-header-mobile__logo">
         <a href="?page=index">
-            <img alt="Logo" src="./assets/media/logos/logo-2-sm.png"/>
+            <img alt="Logo" src="https://shmd.nyc3.cdn.digitaloceanspaces.com/images/logod.png"/>
         </a>
     </div>
     <div class="kt-header-mobile__toolbar">

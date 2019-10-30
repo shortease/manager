@@ -16,8 +16,8 @@
                 </h4>
                 <i class="kt-menu__section-icon flaticon-more-v2"></i> 
             </li>   
-            <li class="kt-menu__item " aria-haspopup="true" >
-                <a href="/" class="kt-menu__link btn disabled">
+            <li class="kt-menu__item dashboard_item" aria-haspopup="true" >
+                <a href="/" class="kt-menu__link btn ">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Dashboard")?></span>
                 </a>
@@ -28,19 +28,19 @@
                 if (Factory::getUser()->isroot()) require_once("_root_menu.inc"); 
                 else require_once("_client_menu.inc");
             ?>
-            <li class="kt-menu__item " aria-haspopup="true" >
+            <li class="kt-menu__item channels_item" aria-haspopup="true" >
                 <a href="/?com=channels" class="kt-menu__link btn  client_req">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Channels")?></span>
                 </a>
             </li>
-            <li class="kt-menu__section kt-menu__section--first">
+            <li class="kt-menu__section kt-menu__section--first ">
                 <h4 class="kt-menu__section-text">
                     Reports
                 </h4>
                 <i class="kt-menu__section-icon flaticon-more-v2"></i> 
             </li>              
-            <li class="kt-menu__item " aria-haspopup="true" >
+            <li class="kt-menu__item reports_item" aria-haspopup="true" >
                 <a href="/?com=reports&action=channels" class="kt-menu__link btn client_req">
                     <i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i>
                     <span class="kt-menu__link-text"><?php et("Channels report")?></span>

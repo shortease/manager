@@ -3,7 +3,7 @@
 <div class="kt-aside__brand kt-grid__item " id="kt_aside_brand">
     <div class="kt-aside__brand-logo">
         <a href="?page=index">
-            <img alt="Logo" src="./assets/media/logos/logo-12.png">
+            <img alt="Logo" src="https://shmd.nyc3.cdn.digitaloceanspaces.com/images/logod.png">
         </a>
     </div>
     <div class="kt-aside__brand-tools">
