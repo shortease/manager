@@ -141,6 +141,7 @@ var Channels = function() {
 	*	Runs on update modal open.
 	*	
 	***/
+	var selectEventExists = false;
 	var prepareSelectChannels  = function(){
 
 		var prepareChannelsDesription = function() {
@@ -185,24 +186,28 @@ var Channels = function() {
 			$('#display_type').val(activeButton.data("dtype"));
 			prepareChannelsDesription();
 		}
-		$(document).on('click','.channel_select_td',function() {
-			var selected_box = $(this).find('.la');
-			var display_channels_list = $('#display_channels_list').val();
-			var channel_id = $(this).closest('tr').data('id');
-			if (selected_box.hasClass('la-square-o')) {
-				selected_box.removeClass('la-square-o');
-				selected_box.addClass('la-square');
-				display_channels_list +=  ','+channel_id;
-				if (display_channels_list.indexOf(',') == 0) display_channels_list = display_channels_list.substring(1);
-			} else {
-				selected_box.removeClass('la-square');
-				selected_box.addClass('la-square-o');
-				display_channels_list = display_channels_list.replace(channel_id, '');
-				if (display_channels_list.indexOf(',,') == 0) display_channels_list = display_channels_list.replace(",,","");
-			}
-			$('#display_channels_list').val(display_channels_list);
-			prepareChannelsDesription();
-		});
+
+		if (!selectEventExists) {
+			$(document).on('click','.channel_select_td',function() {
+				var selected_box = $(this).find('.la');
+				var display_channels_list = $('#display_channels_list').val();
+				var channel_id = $(this).closest('tr').data('id');
+				if (selected_box.hasClass('la-square-o')) {
+					selected_box.removeClass('la-square-o');
+					selected_box.addClass('la-square');
+					display_channels_list +=  ','+channel_id;
+					if (display_channels_list.indexOf(',') == 0) display_channels_list = display_channels_list.substring(1);
+				} else {
+					selected_box.removeClass('la-square');
+					selected_box.addClass('la-square-o');
+					display_channels_list = display_channels_list.replace(channel_id, '');
+					display_channels_list = display_channels_list.replace(/\,+/g, ',');
+				}
+				$('#display_channels_list').val(display_channels_list);
+				prepareChannelsDesription();
+			});
+			selectEventExists = true;
+		}				
 		/// set active button
 		display_typeButtonClicked($('.select_holder .btn[data-dtype="'+$('#display_type').val()+'"]'));
 
@@ -361,7 +366,7 @@ function saveUpdate(){
 				links_template : escape($('#crawl_links_template_upd').val()),
 				article_template : escape($('#crawl_article_template_upd').val()),
 				display_type: $('#display_type').val(),
-				display_channels_list: $('#display_channels_list').val(),
+				display_channels_list: $('#display_type').val() == 5 ? $('#display_channels_list').val() : "",
 				to_crawl : $('#to_crawl').prop("checked") ? 1 : 0
             },
         success: function(response, status, xhr, $form) {
