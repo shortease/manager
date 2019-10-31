@@ -112,7 +112,7 @@
     overflow: hidden;
     padding: 2px;
 	border:2px solid #1e82ab;
-	/*background: url("//m.shortease.com/media/images/circle.png");
+	/*background: url("//shmd.nyc3.cdn.digitaloceanspaces.com/images/circle.png");
 	    background-size: contain;*/
 	width:78px;
 	height:78px;
@@ -307,19 +307,19 @@
 }
 .er_arrow.er_left {
     left: 5px;
-	background: url(//m.shortease.com/media/images/arrl.png?v2) no-repeat;
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/arrl.png) no-repeat;
 	background-size: contain;
 }
 .er_arrow.er_right {
     right: 5px;
 	text-align: right;
-	background: url(//m.shortease.com/media/images/arrr.png) no-repeat;
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/arrr.png) no-repeat;
 	background-size: contain;
 }
 
 .sh_details_up_arrow {
 	position: absolute;
-	background: url(//m.shortease.com/media/images/arrr.png) no-repeat;
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/arrr.png) no-repeat;
 }
 
 /****** RTL *******/
@@ -399,7 +399,7 @@
     color: #ffffff;
     margin: 0 6% 10px 6%;
     float: left;
-    background: url(//m.shortease.com/media/images/shop_btn.png) no-repeat;
+    background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/shop_btn.png) no-repeat;
     width: 181px;
     height: 50px;
     background-size: contain;
@@ -409,7 +409,7 @@
     right: 0;
     bottom: 0px;
     text-align: center;
-	background: url(//m.shortease.com/media/images/infob_btn.png) no-repeat;
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/infob_btn.png) no-repeat;
     width: 50px;
     height: 50px;
     background-size: contain;
@@ -417,13 +417,13 @@
 }
 
 .sh_tmpl_blue .btn_show_descr {
-	background-image:  url(//m.shortease.com/media/images/infob_btn.png);
+	background-image:  url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/infob_btn.png);
 }
 .sh_tmpl_yellow .btn_show_descr {
-	background-image: url(//m.shortease.com/media/images/infoy_btn.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/infoy_btn.png);
 }
 .sh_tmpl_pink .btn_show_descr {
-	background-image: url(//m.shortease.com/media/images/infop_btn.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/infop_btn.png);
 }
 
 .descr_arr_holder {
@@ -449,23 +449,23 @@
     top: -10%;
     left: 15px;
     text-align: center;
-    background: url("//m.shortease.com/media/images/presentb.png") no-repeat;
+    background: url("//shmd.nyc3.cdn.digitaloceanspaces.com/images/presentb.png") no-repeat;
     background-size: contain;
 }
 
 .sh_tmpl_blue .sh_coupon_holder {
-	background-image:  url(//m.shortease.com/media/images/presentb.png);
+	background-image:  url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/presentb.png);
 }
 .sh_tmpl_yellow .sh_coupon_holder {
-	background-image: url(//m.shortease.com/media/images/presenty.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/presenty.png);
 }
 .sh_tmpl_pink .sh_coupon_holder {
-	background-image: url(//m.shortease.com/media/images/presentp.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/presentp.png);
 }
 
 .sh_coupon_holder.show {
     /* background-color: #ffffffd1; */
-    background: url("//m.shortease.com/media/images/coupon_b.png") no-repeat;
+    background: url("//shmd.nyc3.cdn.digitaloceanspaces.com/images/coupon_b.png") no-repeat;
     background-size: contain;
     top: 10%;
     width: 35%;
@@ -474,13 +474,13 @@
 }
 
 .sh_tmpl_blue .sh_coupon_holder.show {
-	background-image:  url(//m.shortease.com/media/images/coupon_b.png);
+	background-image:  url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/coupon_b.png);
 }
 .sh_tmpl_yellow .sh_coupon_holder.show {
-	background-image: url(//m.shortease.com/media/images/coupon_y.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/coupon_y.png);
 }
 .sh_tmpl_pink .sh_coupon_holder.show {
-	background-image: url(//m.shortease.com/media/images/coupon_p.png);
+	background-image: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/coupon_p.png);
 }
 .sh_coupon_name {
 	font-size: 1.1em;
@@ -520,20 +520,29 @@
     left: 0;
 }
 
-.er_prev_holder .er_arrow {
-	position: fixed;
+.prarr {
+	position: absolute;
 	opacity: 1;
 	bottom: 0px;
-    top: unset;
     width: 25px;
     height: 25px;
 }
 
-.er_prev_holder .er_arrow.sh_disabled {
+.prarr.sh_disabled {
 	opacity: 0.2;
 }
 .sh_cards {
 	position: relative;
+}
+.prarr.er_left {
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/arrl.png) no-repeat;
+	background-size: contain;
+	left:0;
+}
+.prarr.er_right {
+	background: url(//shmd.nyc3.cdn.digitaloceanspaces.com/images/arrr.png) no-repeat;
+	background-size: contain;
+	right:0;
 }
 
 .sh_cards.open {
