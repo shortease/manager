@@ -3,8 +3,8 @@ var er_template;
 var MEDIA_PATH = "//shmd.nyc3.cdn.digitaloceanspaces.com/";
 var REP_PATH = "//rep.shortease.com/";
 var CR_PATH = "//m.shortease.com/";
-/*
-var MEDIA_PATH = "//devm.shortease.com/media/";
+
+/*var MEDIA_PATH = "//devm.shortease.com/media/";
 var REP_PATH = "//devrep.shortease.com/";
 var CR_PATH = "//devm.shortease.com/";
 */
@@ -1168,13 +1168,15 @@ var sh_preview = function(){
 			}
 		});
 		*/
-		prevHolder.mouseenter(function( event ) {
-			prevHolder.append('<div class="er_arrow er_left " style="top:'+(shortease.def.target_holder.position().top + scrollHolder.height() - 25)+'px"></div>')
-			prevHolder.append('<div class="er_arrow er_right" style="top:'+(shortease.def.target_holder.position().top+ scrollHolder.height() - 25)+'px;left:'+ (previewHolderWidth - 25) +'px"></div>')
+		shortease.def.target_holder.mouseenter(function( event ) {
+			shortease.def.target_holder.append('<div class="prarr er_left " ></div>')
+//style="top:'+(shortease.def.target_holder.position().top + scrollHolder.height() - 25)+'px"
+			shortease.def.target_holder.append('<div class="prarr er_right" ></div>')
+			//style="top:'+(shortease.def.target_holder.position().top+ scrollHolder.height() - 25)+'px;left:'+ (previewHolderWidth - 25) +'px">
 			setDisabledClass();
 		}); 
-		prevHolder.mouseleave(function( event ) { 
-			//prevHolder.find('.er_arrow').remove();
+		shortease.def.target_holder.mouseleave(function( event ) { 
+			shortease.def.target_holder.find('.prarr').remove();
 		});
 		$(document).on('click','.er_prev_holder .er_left', function() {
 			scrollHolder.animate({scrollLeft:'-='+previewHolderWidth+'px'}, { 
