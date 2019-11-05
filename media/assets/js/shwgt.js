@@ -4,10 +4,10 @@ var MEDIA_PATH = "//shmd.nyc3.cdn.digitaloceanspaces.com/";
 var REP_PATH = "//rep.shortease.com/";
 var CR_PATH = "//m.shortease.com/";
 
-/*var MEDIA_PATH = "//devm.shortease.com/media/";
+var MEDIA_PATH = "//devm.shortease.com/media/";
 var REP_PATH = "//devrep.shortease.com/";
 var CR_PATH = "//devm.shortease.com/";
-*/
+
 var shortease = function(){
 	var status = {
 		preview_show : 0,
@@ -725,21 +725,141 @@ var shortease = function(){
 		return tool_should_be_crawled;
 	}
 
+	var userData = function() {
+		const TOP_TOOLS_STORAGE_NAME = 'sh_tt', TOP_CHANNELS_STORAGE_NAME = 'sh_tc';
+		const NUM_OF_TOP_TOOLS = 10, NUM_OF_TOP_CHANNELS = 3;
+		var topTools = {}, topChannels = {};
+
+		var organizeData = function(user_data){
+			var hasNewData = function(newData, oldData) {
+				/// if no new data or impressions less than 10 use old data
+				actualData =  (!newData.g[0][1] || newData.g[0][1] < 10 )				
+								&& (oldData.g[0][1] && oldData.g[0][1] > 10) ?
+								oldData : newData;
+				return actualData;
+			}
+
+			setInterestRate(hasNewData(user_data.short, user_data.short_old));
+			setInterestRate(hasNewData(user_data.medium, user_data.medium_old));
+			setInterestRate(hasNewData(user_data.long, user_data.long_old));
+
+			saveTops();
+
+		}
+
+		///********
+		///	Saves topTools and topChannels to local storage
+		///********
+		var saveTops = function() {
+			localStorage.setItem(TOP_TOOLS_STORAGE_NAME, topObjToStr(topTools));
+			localStorage.setItem(TOP_CHANNELS_STORAGE_NAME, topObjToStr(topChannels));
+		}
+
+		var topObjToStr = function(topObj){
+			var objStr = "";
+			for (var key in topObj){
+				objStr += key+":"+topObj[key]+";";
+			}
+			return objStr;
+		}
+
+		var setInterestRate = function(user_data){
+			po(user_data);
+			var channels = user_data.c;
+			var tools = user_data.t;
+			if (channels) {
+				channels.forEach(function(channel, key) {
+					var mark = getInteresRate(channel[1], channel[2], channel[3], channel[4], channel[7], channel[5]);
+					channels[key]['ir'] = mark;
+					updateMaximum(topChannels, NUM_OF_TOP_CHANNELS, key, mark);
+				});
+			}
+			if (tools) {
+				tools.forEach(function(tool, key) {
+					var mark = getInteresRate(tool[1], tool[2], tool[3], tool[4], tool[7], tool[5]);
+					tools[key]['ir'] = mark;
+					updateMaximum(topTools, NUM_OF_TOP_TOOLS, key, mark);
+				});
+			}
+		}
+
+		var getInteresRate = function(impressions = 0, purchases = 0, pause_times = 0, view_times = 0, swipes = 0, descriptions = 0) {
+			var MAX_PURCHASE = 0.0001, MAX_PAUSE = 0.7, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
+			var PURCHASE_WEIGHT = 0.5, PAUSE_WEIGHT = 0.2, VIEW_WEIGHT = 0.1, SWIPE_WEIGHT = -0.5, DESCRIPTIONS_WEIGHT =  0.3; 
+			var purchase_mark = Math.min((purchases/impressions)/MAX_PURCHASE*100, 100);
+			var pause_mark = Math.min((pause_times/impressions)/MAX_PAUSE*100, 100);
+			var view_mark = Math.min((view_times/impressions)/MAX_VIEW*100, 100);
+			var swipe_mark = Math.min((swipes/impressions)/MAX_SWIPE*100, 100);
+			var descriptions_mark = Math.min((descriptions/impressions)/MAX_DESCRIPTIONS*100, 100);
+			var mark = ((purchase_mark>0?purchase_mark:50) * PURCHASE_WEIGHT) + 
+						((pause_mark>0?pause_mark:50) * PAUSE_WEIGHT) + 
+						((view_mark>0?view_mark:50) * VIEW_WEIGHT) + 
+						((swipe_mark>0?swipe_mark:50) * SWIPE_WEIGHT) + 
+						((descriptions_mark>0?descriptions_mark:50) * DESCRIPTIONS_WEIGHT) ;
+			mark = mark < 0 ? 0 : mark > 100 ? 100 : mark;
+			return Math.round(mark) ;
+		}
+
+		var updateMaximum = function(topObj, maxLength, topKey, topVal){
+			var topObjKeys = Object.keys(topObj);
+			if (topObjKeys.indexOf(""+topKey) >= 0 ) return; /// key already exists. do not replase - becouse order of top object short -> medium -> long
+			var objLength = topObjKeys.length;
+			if (objLength < maxLength) { 	/// not enough items
+				topObj[topKey] = topVal;
+			} else { 	/// if minimum value less than topVal - opdate minimum
+				var minKey = null, minVal = null;
+				for (var key in topObj){	/// iterate topObj
+				    if (!minVal || topObj[key] < topVal ) {	/// check if cur item less than topVal or less prev found minimum
+				    	minKey = key;
+				    	minVal = topObj[key];
+				    }
+				}
+				if (minVal < topVal) { 	/// if minimum found delete it and insert new top value
+					delete topObj[minKey];
+					topObj[topKey] = topVal;
+				}
+
+			}
+		}
+
+		return {
+			organizeData : organizeData,
+		}
+	}();
+
 	var report = function() {
 		const STORAGE_NAME = 'sh_rep', STORAGE_UNSENDED_NAME = 'sh_rep_uns';
-		var user_data = null, user_data_unsended = null;
+		const STORAGE_SHORT_RANGE = 'sh_sr', STORAGE_MEDIUM_RANGE = 'sh_mr', STORAGE_LONG_RANGE = 'sh_lr';
+		const STORAGE_SHORT_RANGE_OLD = 'sh_sro', STORAGE_MEDIUM_RANGE_OLD = 'sh_mro', STORAGE_LONG_RANGE_OLD = 'sh_lro';
+
+		var user_data_unsended = null;
+		var user_data_short = null, user_data_medium = null, user_data_long = null;
+		var user_data_short_old = null, user_data_medium_old = null, user_data_long_old = null;
+		var user_data = {
+			short 		: user_data_short,
+			medium 		: user_data_medium,
+			long 		: user_data_long,
+			short_old 	: user_data_short_old,
+			medium_old 	: user_data_medium_old,
+			long_old 	: user_data_long_old,
+		}
 		const ITEM_DELIMITER = ";", DATA_DELIMITER = ":", EVENT_ID_DELIMITER = ".";
 		const GENERAL_TYPES = ["g","s","c","t"];
 		/// 1 - impression, 2 - click (buy), 3 - pause timer (interested), 4 - widget open timer, 5 - description opened, 6 - coupon clicked, 
 		/// 7 - quick swipe, 8 - widget loaded, 9 - widget opened
 		const EVENT_TYPES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+		const SHORT_RANGE = 10, MEDIUM_RANGE = 30, LONG_RANGE = 182; /// days range to keep data
 
 		var add = function (site_id, channel_id, tool_id, event_type, event_count) {
-			po(site_id, channel_id, tool_id, event_type, event_count);
 			if (!event_count) event_count = 1;
 			event_count = event_count ? Math.round(event_count) : 1; 	
 			getUserData();
-			saveData(user_data, site_id, channel_id, tool_id, event_type, event_count);
+//			saveData(user_data, site_id, channel_id, tool_id, event_type, event_count);
+
+			saveData(user_data.short, site_id, channel_id, tool_id, event_type, event_count);
+			saveData(user_data.medium, site_id, channel_id, tool_id, event_type, event_count);
+			saveData(user_data.long, site_id, channel_id, tool_id, event_type, event_count);
+
 			saveData(user_data_unsended, site_id, channel_id, tool_id, event_type, event_count);
 			function saveData (data_obj, site_id, channel_id, tool_id, event_type, event_count){
 				if (!EVENT_TYPES.includes(event_type)) return;  /// check permitted event
@@ -773,19 +893,20 @@ var shortease = function(){
 
 		var str_to_data = function(datastr) {
 			/// string structure - g(general):eventIdeventCount;s(sites):eventIdeventCount:eventIdeventCount;c(channels):eventIdeventCount:eventIdeventCount;t(tools):eventIdeventCount:eventIdeventCount;
-			var user_data = {};
+			var tmp_user_data = {};
 			data_arr = datastr.split(ITEM_DELIMITER); 
+
 			for (var i=0;i<data_arr.length;i++){	/// run on data report items 
 				var item = data_arr[i];
 				if (!item.length) continue;
 				var item_arr = item.split(DATA_DELIMITER);
 				var item_description = item_arr[0];	///  first item - is item description
+				if (item_description == "st") tmp_user_data.st = item_arr[1]; /// start date
 				var general_type = item_description[0]; /// first char of description is general type (site, channel ...)
 				var item_id = 1*(item_description.substr(1));
-
 				if (!GENERAL_TYPES.includes(general_type)) continue; /// if first char is not general type check next item
-				if (!user_data[general_type]) user_data[general_type] = []; /// if general type not exists yet create it
-				if (!user_data[general_type][item_id]) user_data[general_type][item_id] = []; /// if item id not exists yet create it
+				if (!tmp_user_data[general_type]) tmp_user_data[general_type] = []; /// if general type not exists yet create it
+				if (!tmp_user_data[general_type][item_id]) tmp_user_data[general_type][item_id] = []; /// if item id not exists yet create it
 				for (var j=1;j<item_arr.length;j++){	/// run on item events
 					var item_data = item_arr[j];
 					var event_id_length = item_data.indexOf(EVENT_ID_DELIMITER); 	/// looking for EVENT_ID_DELIMITER in item_data
@@ -795,14 +916,16 @@ var shortease = function(){
 
 					var event_count = parseInt(item_data.substring(event_id_length, item_data.length));
 					if (!EVENT_TYPES.includes(event_id)) continue; /// if event id not permitted
-					user_data[general_type][item_id][event_id] = event_count;
+					tmp_user_data[general_type][item_id][event_id] = event_count;
 				}
 			}
-			return user_data;
+			return tmp_user_data;
 		};
 
 		var data_to_str = function(dataStructure) {
 			var data_str = "";
+			if (dataStructure.st) data_str = 'st:'+dataStructure.st +';';
+			if (dataStructure.rg) data_str = 'rg:'+dataStructure.rg +';';
 			if (dataStructure.t) data_str += arr2str("t",dataStructure.t); 
 			if (dataStructure.g) data_str += arr2str("g",dataStructure.g); 
 			if (dataStructure.s) data_str += arr2str("s",dataStructure.s); 
@@ -830,7 +953,11 @@ var shortease = function(){
 		*	saves user_data and user_data_unsended to localStorage
 		**/
 		var saveUserData = function() {
-			localStorage.setItem(STORAGE_NAME,		data_to_str(user_data));
+			//localStorage.setItem(STORAGE_NAME,		data_to_str(user_data));
+
+			localStorage.setItem(STORAGE_SHORT_RANGE,		data_to_str(user_data.short));
+			localStorage.setItem(STORAGE_MEDIUM_RANGE,		data_to_str(user_data.medium));
+			localStorage.setItem(STORAGE_LONG_RANGE,		data_to_str(user_data.long));
 			localStorage.setItem(STORAGE_UNSENDED_NAME,	data_to_str(user_data_unsended));
 		};
 
@@ -838,11 +965,48 @@ var shortease = function(){
 		*	Get data from localStorage and set it to the user_data and user_data_unsended
 		**/		
 		var getUserData  = function() {
-			var userStoredData = localStorage.getItem(STORAGE_NAME);
+/*			var userStoredData = localStorage.getItem(STORAGE_NAME);
 			user_data = userStoredData ? str_to_data(userStoredData) : { g:[], s:[], c:[], t:[]};
+
+*/			/// get short range
+			user_data.short_old = localStorage.getItem(STORAGE_SHORT_RANGE_OLD);
+			user_data.short_old = user_data.short_old ? str_to_data(user_data.short_old) : null;
+
+			user_data.short = localStorage.getItem(STORAGE_SHORT_RANGE);
+			user_data.short = user_data.short ? str_to_data(user_data.short) : { st:getDateStr(), g:[], s:[], c:[], t:[]};
+			if (getDateStr() - user_data.short.st > SHORT_RANGE) {	/// short range data is getting old
+				user_data.short_old = user_data.short;
+				user_data.short = { st:getDateStr(), g:[], s:[], c:[], t:[]};
+				localStorage.setItem(STORAGE_SHORT_RANGE_OLD,		data_to_str(user_data.short_old));
+			}
+
+			/// get medium range
+			user_data.medium_old = localStorage.getItem(STORAGE_MEDIUM_RANGE_OLD);
+			user_data.medium_old = user_data.medium_old ? str_to_data(user_data.medium_old) : null;
+
+			user_data.medium = localStorage.getItem(STORAGE_MEDIUM_RANGE);
+			user_data.medium = user_data.medium ? str_to_data(user_data.medium) : { st:getDateStr(), g:[], s:[], c:[], t:[]};
+			if (getDateStr() - user_data.medium.st > MEDIUM_RANGE) {	/// medium range data is getting old
+				user_data.medium_old = user_data.medium;
+				user_data.medium = { st:getDateStr(), g:[], s:[], c:[], t:[]};
+				localStorage.setItem(STORAGE_MEDIUM_RANGE_OLD,		data_to_str(user_data.medium_old));
+			}
+
+			/// get long range
+			user_data.long_old = localStorage.getItem(STORAGE_LONG_RANGE_OLD);
+			user_data.long_old = user_data.long_old ? str_to_data(user_data.long_old) : null;
+
+			user_data.long = localStorage.getItem(STORAGE_LONG_RANGE);
+			user_data.long = user_data.long ? str_to_data(user_data.long) : { st:getDateStr(), g:[], s:[], c:[], t:[]};
+			if (getDateStr() - user_data.long.st > LONG_RANGE) {	/// long range data is getting old
+				user_data.long_old = user_data.long;
+				user_data.long = { st:getDateStr(), g:[], s:[], c:[], t:[]};
+				localStorage.setItem(STORAGE_LONG_RANGE_OLD,		data_to_str(user_data.long_old));
+			}
 
 			var userStoredDataUnsended = localStorage.getItem(STORAGE_UNSENDED_NAME);
 			user_data_unsended = userStoredDataUnsended ? str_to_data(userStoredDataUnsended) : { g:[], s:[], c:[], t:[]};
+
 		}
 
 		/**
@@ -856,6 +1020,7 @@ var shortease = function(){
 		*	send data to server 
 		**/
 		var sendData = function() {
+
 			getUserData();
 			if (user_data_unsended && user_data_unsended.g[0] && user_data_unsended.g[0][9]) { /// there is report for widget open
 				$.ajax({
@@ -864,6 +1029,12 @@ var shortease = function(){
 				});
 			}
 			removeUnsentData();
+		}
+
+		var getDateStr = function(){
+			var curDate = Date.now();
+//			curDate = (new Date('2019 sep 1')).getTime();
+			return Math.floor(curDate/1000/3600/24) ;
 		}
 
 		let i=0;
@@ -890,6 +1061,7 @@ var shortease = function(){
 			sendData : sendData,
 			add : add,
 			timer:timer,
+			user_data : user_data
 		}
 	}();
 
@@ -929,6 +1101,8 @@ var shortease = function(){
 		sh_preview.show();
 		report.sendData();
 		report.add(iSiteId, iChannelId, 0, 8);		
+		userData.organizeData(report.user_data);
+
 		erJq = $;
 		if (checkCrawlTools()) {
 			$.getScript({url : CR_PATH+"components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } });
@@ -1388,3 +1562,11 @@ isPageVisible = function(){
 	}
 	return isVisible;
 }
+
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
