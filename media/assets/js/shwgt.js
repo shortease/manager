@@ -732,10 +732,12 @@ var shortease = function(){
 
 		var organizeData = function(user_data){
 			var hasNewData = function(newData, oldData) {
+				actualData = newData;
 				/// if no new data or impressions less than 10 use old data
-				actualData =  (!newData.g[0][1] || newData.g[0][1] < 10 )				
-								&& (oldData.g[0][1] && oldData.g[0][1] > 10) ?
-								oldData : newData;
+				if ((!newData.g[0][1] || newData.g[0][1] < 10 )				
+					&& (oldData && oldData.g && oldData.g[0] && oldData.g[0][1] && oldData.g[0][1] > 10)){
+						actualData = oldData;
+				}
 				return actualData;
 			}
 
@@ -764,7 +766,6 @@ var shortease = function(){
 		}
 
 		var setInterestRate = function(user_data){
-			po(user_data);
 			var channels = user_data.c;
 			var tools = user_data.t;
 			if (channels) {

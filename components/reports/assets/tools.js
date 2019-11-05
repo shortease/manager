@@ -95,7 +95,8 @@ var Report = function() {
 		var swipe_mark = Math.min((swipes/impressions)/MAX_SWIPE*100, 100);
 		var descriptions_mark = Math.min((descriptions/impressions)/MAX_DESCRIPTIONS*100, 100);
 		var mark = purchase_mark * PURCHASE_WEIGHT + pause_mark * PAUSE_WEIGHT + view_mark * VIEW_WEIGHT + swipe_mark * SWIPE_WEIGHT + descriptions_mark * DESCRIPTIONS_WEIGHT ;
-		return mark;
+		mark = mark < 0 ? 0 : mark > 100 ? 100 : mark;
+		return Math.round(mark) ;
 	}
 
 	var dateRangePicker;
