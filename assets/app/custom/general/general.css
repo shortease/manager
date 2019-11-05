@@ -2,8 +2,11 @@ body {
 	background-color: #eaeaea;
 }
 
-.kt-header,.kt-aside__brand,.kt-aside-menu {
+.kt-header,.kt-aside-menu {
 	background-color: #2f2f2f;
+}
+kt_aside_brand{
+	background-color: #1b1b1b;
 }
 
 .kt-aside-menu .kt-menu__nav > .kt-menu__item:not(.kt-menu__item--parent):not(.kt-menu__item--open):not(.kt-menu__item--here):not(.kt-menu__item--active):hover > .kt-menu__link {
