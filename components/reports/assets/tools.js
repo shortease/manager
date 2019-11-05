@@ -87,9 +87,8 @@ var Report = function() {
 	}
 
 	var getInteresRate = function(impressions, purchases, pause_times, view_times, swipes, descriptions) {
-		var MAX_PURCHASE = 0.1, MAX_PAUSE = 0.5, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
-		var PURCHASE_WEIGHT = 0.6, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.3, DESCRIPTIONS_WEIGHT =  0.2; 
-
+		var MAX_PURCHASE = 0.05, MAX_PAUSE = 0.7, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
+		var PURCHASE_WEIGHT = 0.5, PAUSE_WEIGHT = 0.2, VIEW_WEIGHT = 0.1, SWIPE_WEIGHT = -0.5, DESCRIPTIONS_WEIGHT =  0.3; 
 		var purchase_mark = Math.min((purchases/impressions)/MAX_PURCHASE*100, 100);
 		var pause_mark = Math.min((pause_times/impressions)/MAX_PAUSE*100, 100);
 		var view_mark = Math.min((view_times/impressions)/MAX_VIEW*100, 100);
