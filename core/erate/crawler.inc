@@ -92,6 +92,7 @@ class Crawler
 		$cpid = $channel->get('default_cplacement_id');
 		$cp = new CampaignPlacement($cpid);
 		$tools = $cp->listTools(SHORTIES_TOOL_TYPE);
+		$links = array_unique($links);
 		$tools = $this->findIntersections($tools, $links);  /// prepare tools array with actions (delete, add, none)
 		foreach ($tools as $key => $tool) {	
 			if ($tool['action'] == 'add'){
@@ -109,6 +110,7 @@ class Crawler
 	**/
 	public function findIntersections($tools, $links)
 	{
+		$new_tools = array();
 		foreach ($links as $lkey => $link) {
 			$link_found = 0;
 			foreach ($tools as $tkey => $tool) {
