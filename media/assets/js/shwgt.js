@@ -1212,7 +1212,7 @@ var sh_preview = function(){
 
 		function effect_shift(thumbIx){
 			thumbObj = items[i];
-			if (!thumbObj.pictures.length) return;
+			if (!thumbObj.pictures.length || thumbObj.pictures.length < 2) return;  
 			//thumb_items = thumb.find('li');
 			//thumb_items.css({'top':'-1000px'});
 			$(thumbObj.pictures).each(function() { $(this).css({'top':'-1000px'}); });
