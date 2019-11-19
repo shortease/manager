@@ -29,6 +29,8 @@ class Route {
 		}
 
 		if ($page=="index") $page = "";
+
+		Route::checkRedirect($com, $page, $task);
 		if (!$page) {
 			$langPath = SH_LAYOUT_PATH . DS . LANG_FOLDER_NAME . DS . Factory::getLang()->getLang() . ".ini";
 	 		$lang = Factory::getLang();
@@ -48,5 +50,25 @@ class Route {
 			$target_path = SH_COMPONENT_PATH . $page."/".$task.".inc";
 			require_once($target_path);
 		}
+	}
+
+	public static function checkRedirect($com, $page, $task){
+		/// going to users but can not edit users - redirect to root
+		if ($com == "users" && !Factory::getUser()->canEditUsers()) 
+			Response::redirect("/");
+
+		if ($com == "reports" && !Factory::getUser()->inGroup(Group::REPORTS_GROUP))
+			Response::redirect("/");
+
+		/// going to "reports","channels" - check if site is chosed ? If yes save to session
+		if (in_array($com, array("reports","channels")) ) {
+			$site_id = $_SESSION["site_id"];
+
+			if (!$site_id)
+				Response::redirect("/");
+			else {
+				$_SESSION["site_id"] = $site_id;
+			}
+		}	
 	}
 }

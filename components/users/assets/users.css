@@ -1,0 +1,20 @@
+.groups_holder span {
+	padding: 5px;
+    margin: 0 3px;
+    border: 1px solid #ebedf2;
+}
+
+.dataTables_wrapper .dataTable tr {
+	cursor: pointer;
+}
+.dataTables_wrapper .dataTable .red_row td{
+	color: red;
+}
+
+.dataTables_wrapper .dataTable .red_row td{
+	color: red;
+}
+
+.dataTables_wrapper .dataTable .disabled_user_row td{
+    text-decoration: line-through;
+}

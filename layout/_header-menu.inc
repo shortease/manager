@@ -7,9 +7,11 @@
             <li class="kt-menu__item kt-menu__item--active " aria-haspopup="true">
                 <a href="?page=index" class="kt-menu__link "><span class="kt-menu__link-text"><?php et("Manager")?></span></a>
             </li>
-            <li class="kt-menu__item " aria-haspopup="true">
-                <a href="?page=index" class="kt-menu__link "><span class="kt-menu__link-text"><?php et("Users")?></span></a>
+            <?php if (Factory::getUser()->canEditUsers()) {?>
+            <li class="kt-menu__item users_item" aria-haspopup="true">
+                <a href="?com=users" class="kt-menu__link "><span class="kt-menu__link-text"><?php et("Users")?></span></a>
             </li>
+            <?php } ?>
         </ul>
     </div>
 </div>

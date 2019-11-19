@@ -12,6 +12,8 @@ require (SH_CORE_PATH."/erate/channel.inc");
 require (SH_CORE_PATH."/erate/crawler.inc");
 require (SH_CORE_PATH."/erate/banner.inc");
 require (SH_CORE_PATH."/erate/coupon.inc");
+require (SH_CORE_PATH."/erate/user.inc");
+require (SH_CORE_PATH."/erate/group.inc");
 
 
 
@@ -26,5 +28,16 @@ function main(){
 	session_start();
 	Factory::getLang();
 
+	/// get site 
+	$site_id = Request::getInt("site_id");
+	if ($site_id && !Factory::getUser()->isRoot() &&!Factory::getUser()->canEditSite($site_id)){	/// site var provided but user have no rights to edit it
+		$site_id = 0;
+	}
+	if (!$site_id)
+		$site_id = isset($_SESSION["site_id"]) ? $_SESSION["site_id"] : 0;
+	if (!$site_id)
+		$site_id = Factory::getUser()->getDefaultSite();	
+	if ($site_id) 
+		$_SESSION["site_id"] = $site_id;
 	Route::getLayout();
 }

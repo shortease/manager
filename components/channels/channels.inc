@@ -1,18 +1,7 @@
 <?php
 defined( '_SHM_ENABLED_' ) or die( 'Restricted access' );
 
-$site_id = Request::getInt("site_id");
-
-//// TODO add select site
-if (!$site_id) { 
-	$site_id = $_SESSION["site_id"];
-	if (!$site_id) {  
-		echo ("<script>window.location.replace('/?com=clients');</script>");
-	}
-} else {
-	$_SESSION["site_id"] = $site_id;
-}
-
+$site_id = $_SESSION["site_id"];
 
 $channels = Channel::listChannels($site_id);
 echo ("<script>var site_id = $site_id</script>");

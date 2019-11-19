@@ -8,10 +8,7 @@ if (!isset($site_id))
 <link rel="stylesheet" type="text/css" href="/assets/vendors/custom/datatables/datatables.bundle.css">
 <script src="/assets/vendors/custom/datatables/datatables.bundle.js"></script>
 <script>
-	var site_id1 = <?php echo($site_id); ?>;
-	if (!site_id) {
-		window.location.replace('/?com=clients');
-	}
+	var site_id = <?php echo($site_id); ?>;
 </script>
 
 <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">

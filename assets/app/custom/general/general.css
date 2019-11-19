@@ -37,3 +37,13 @@ kt_aside_brand{
 	background-color: #d8d8d8;
 }
 
+.dropdown-menu i {
+	line-height: 	1.5em;
+}
+.btn_txt {
+	line-height: 	3.5em;
+}
+
+#general_update_alert {
+	display: none;
+}

@@ -26,7 +26,7 @@
 
            <?php 
                 if (Factory::getUser()->isroot()) require_once("_root_menu.inc"); 
-                else require_once("_client_menu.inc");
+               // else require_once("_client_menu.inc");
             ?>
             <li class="kt-menu__item channels_item" aria-haspopup="true" >
                 <a href="/?com=channels" class="kt-menu__link btn  client_req">
@@ -34,6 +34,7 @@
                     <span class="kt-menu__link-text"><?php et("Channels")?></span>
                 </a>
             </li>
+            <?php if (Factory::getUser()->isroot() || Factory::getUser()->inGroup(Group::REPORTS_GROUP)) { ?>
             <li class="kt-menu__section kt-menu__section--first ">
                 <h4 class="kt-menu__section-text">
                     Reports
@@ -46,6 +47,7 @@
                     <span class="kt-menu__link-text"><?php et("Channels report")?></span>
                 </a>
             </li>            
+            <?php } ?>
         </ul>
 <!--         <ul class="kt-menu__nav ">
     <li class="kt-menu__section kt-menu__section--first">
