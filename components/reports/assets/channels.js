@@ -71,8 +71,8 @@ var Report = function() {
 				$(row).data("channel_id", data.channel_id);
 				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
 				var view_time = parseInt($($('td',row).get(VIEW_INDEX)).text());
-				$($('td',row).get(PAUSE_INDEX)).text((pause_time/3600).toFixed(2));
-				$($('td',row).get(VIEW_INDEX)).text((view_time/3600).toFixed(2));
+				$($('td',row).get(PAUSE_INDEX)).text((pause_time/60).toFixed(1));
+				$($('td',row).get(VIEW_INDEX)).text((view_time/60).toFixed(1));
 			},			
 		});
 		Report.datat = datat;
