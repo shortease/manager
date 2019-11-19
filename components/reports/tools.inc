@@ -88,8 +88,8 @@ $channel_id = Request::getInt("channel_id");;
 						<th><?php et("Widget loaded");?></th>
 						<th><?php et("Widget opened");?></th>
 						<th><?php et("Purchase clicked");?></th>
-						<th><?php et("Pause time (hours)");?></th>
-						<th><?php et("View time (hours)");?></th>
+						<th><?php et("Pause time (min)");?></th>
+						<th><?php et("View time (min)");?></th>
 						<th><?php et("Quick swipe");?></th>
 						<th><?php et("Description clicked");?></th>
 						<th><?php et("Products viewed");?></th>
