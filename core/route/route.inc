@@ -57,7 +57,7 @@ class Route {
 		if ($com == "users" && !Factory::getUser()->canEditUsers()) 
 			Response::redirect("/");
 
-		if ($com == "reports" && !Factory::getUser()->inGroup(Group::REPORTS_GROUP))
+		if ($com == "reports" && !Factory::getUser()->isRoot() && !Factory::getUser()->inGroup(Group::REPORTS_GROUP))
 			Response::redirect("/");
 
 		/// going to "reports","channels" - check if site is chosed ? If yes save to session
