@@ -1023,7 +1023,7 @@ var shortease = function(){
 		var sendData = function() {
 
 			getUserData();
-			if (user_data_unsended && user_data_unsended.g[0] && user_data_unsended.g[0][9]) { /// there is report for widget open
+			if (user_data_unsended && user_data_unsended.g[0] /*&& user_data_unsended.g[0][8]*/) { /// there is report for widget loaded
 				$.ajax({
 					url: REP_PATH+"?t=sho&rep=1",
 					data: { rd: data_to_str(user_data_unsended)},
@@ -1100,8 +1100,8 @@ var shortease = function(){
 		addArrows();
 		sh_preview.init();
 		sh_preview.show();
-		report.sendData();
 		report.add(iSiteId, iChannelId, 0, 8);		
+		report.sendData();
 		userData.organizeData(report.user_data);
 
 		erJq = $;
