@@ -95,7 +95,7 @@ class Crawler
 		$links = array_unique($links);
 		$tools = $this->findIntersections($tools, $links);  /// prepare tools array with actions (delete, add, none)
 		foreach ($tools as $key => $tool) {	
-			if ($tool['action'] == 'add'){
+			if ($tool['action'] == 'add' && strlen($tool['url']) > 5){
 				$cp->addLink( $tool['url']);
 			} else if ($tool['action'] == 'delete'){
 				$cp->deleteTool($tool['id']);
