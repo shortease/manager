@@ -1,3 +1,18 @@
+/* Delete channels 8 dec 2019*/
+CREATE TABLE `eratep`.`deleted_channels` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `channel_id` INT NULL,
+  `last_update` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE trigger contacts_after_delete after delete on channels
+for each row
+begin
+   insert into deleted_channels (channel_id,last_update) values (old.id, now());
+end
+
+
 /*** Reports 10 sep 2019 ***/
 CREATE TABLE `sh_day_site_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

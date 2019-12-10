@@ -77,6 +77,25 @@ var Crawler = function() {
 });*/
 
 /*
+tool for create templates
+$('body').append('<div id="shloader"></div>');$('#shloader').load('https://devm.shortease.com/components/shcr/crTemplatePrepare.php');
+
+load ui before :
+$('head').append('<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css" />');
+$.getScript('https://code.jquery.com/ui/1.12.1/jquery-ui.js').done(function( script, textStatus ) {
+  });
+====
+  
+    $( "#dialog" ).dialog({dialogClass: 'fixed-dialog', height:300});
+*/
+/*
+get current page on ajax
+
+var body_DOM;
+$.ajax(location.href).done(function(data) { body_DOM = $(data);})
+*/
+
+/*
 var bodyHtml; $.ajax({url:"http://www.shortease.com/shop/jewelry/"}).done(function(data){bodyHtml = data;});
 
 var jq = document.createElement('script');
@@ -85,7 +104,7 @@ document.getElementsByTagName('head')[0].appendChild(jq);
 
 jq.onload = function() {
 	erJq = jQuery.noConflict();
-	erJq.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :1 } })
+	erJq.getScript({url : "//m.shortease.com/components/shcr/shcr_prepare.php", data : { host:window.location.host.replace('www.',''), action:"getCrawlerItem", repeat :0 } })
 			
 }
 
