@@ -45,12 +45,12 @@ var Report = function() {
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (data["widget_opened"]/data["widget_loaded"]*100).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (perCalc(data["widget_opened"],data["widget_loaded"])).toFixed(1) + "%)" }
 				},
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["click"] + " ("+ (data["click"]/data["widget_opened"]*100).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["click"] + " ("+ (perCalc(data["click"],data["widget_opened"])).toFixed(1) + "%)" }
 				},
 				{ 
 					data:"pause_time",
@@ -188,3 +188,10 @@ $(document).ready(function() {
 	Report.init();
 });
 
+function perCalc(val1, val2){
+	if (val1 == 0 || val2 == 0) {
+		return 0;
+	} else {
+		return val1/val2*100;
+	}
+}
