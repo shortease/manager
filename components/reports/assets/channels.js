@@ -43,10 +43,14 @@ var Report = function() {
 					data:"widget_loaded",
 				},
 				{ 
-					data:"widget_opened",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (data["widget_opened"]/data["widget_loaded"]*100).toFixed(1) + "%)" }
 				},
 				{ 
-					data:"click",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["click"] + " ("+ (data["click"]/data["widget_opened"]*100).toFixed(1) + "%)" }
 				},
 				{ 
 					data:"pause_time",
