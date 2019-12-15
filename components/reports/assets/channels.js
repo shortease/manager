@@ -50,10 +50,12 @@ var Report = function() {
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["click"] + " ("+ (perCalc(data["click"],data["widget_opened"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["click"] + " ("+ (perCalc(data["click"],data["impression"])).toFixed(1) + "%)" }
 				},
 				{ 
-					data:"pause_time",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["pause_time"] + " ("+ (perCalc(data["pause_time"],data["impression"])).toFixed(1) + "%)" }
 				},
 				{ 
 					data:"view_time",
