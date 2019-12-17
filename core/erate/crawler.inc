@@ -162,6 +162,7 @@ class Crawler
 	{
 		$tool = new Banner($article_id);
 		if(!$tool->checkToken($token))	return;		/// check token and it time 
+		if(!$title || strlen($title) < 2) return;   /// check if exists title (the data is not corrupted)
 		$tool->updateArticle($article_data, $title);
 		$c_placement_id = $this->getOneToolPlacement($article_id);
 		$cp = new CampaignPlacement($c_placement_id);
