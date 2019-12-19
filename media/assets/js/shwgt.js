@@ -4,10 +4,10 @@ var MEDIA_PATH = "//shmd.nyc3.cdn.digitaloceanspaces.com/";
 var REP_PATH = "//rep.shortease.com/";
 var CR_PATH = "//m.shortease.com/";
 
-var MEDIA_PATH = "//devm.shortease.com/media/";
+/*var MEDIA_PATH = "//devm.shortease.com/media/";
 var REP_PATH = "//devrep.shortease.com/";
 var CR_PATH = "//devm.shortease.com/";
-
+*/
 var shortease = function(){
 	var status = {
 		preview_show : 0,
@@ -157,7 +157,7 @@ var shortease = function(){
 		if (status.description_open) return;
 		var changeX = shortease.status.changeX;
 		/// if finger stopped - move image
-		if (!status.isImageMoved && status.touching_now  && (Date.now() - status.touchstart_time > 130) && (status.left_card_percent < 0.01 || status.left_card_percent > 0.99))
+		if (!status.isImageMoved && status.touchstart_time > 20  && (Date.now() - status.touchstart_time > 130) && (status.left_card_percent < 0.01 || status.left_card_percent > 0.99))
 			status.isImageMoved = true;
 		if (changeX) { 
 			if(status.isImageMoved) { 
@@ -503,23 +503,23 @@ var shortease = function(){
 			/// check if there touch cool down
 			var prev_touch_passed = (Date.now() - shortease.status.touchend_time);
 			shortease.status.touchCD =( prev_touch_passed < shortease.def.card_move_duration && prev_touch_passed > 20);
+			shortease.status.touching_now = true;
 			if (!status.touchCD) {
 				shortease.status.touchstart_time = Date.now();
 				shortease.status.touchstartX = clientX;
 				shortease.status.touchend_time = 0;
-				shortease.status.touching_now = true;
 				shortease.status.touch_speed = 0;
 				moves(event);
 			}
 			setTimeout( function() { report.timer(3); }, 1000);
 		}
 		function leave(event) {
+			shortease.status.touching_now = false;
 			if (!status.touchCD) {
 				shortease.status.touchend_time = Date.now();
 				shortease.status.touch_length = (Date.now() - shortease.status.touchstart_time) /1000;
 				shortease.status.touchstart_time = 0;
 				shortease.status.changeX = 0;
-				shortease.status.touching_now = false;
 				setTimeout(function() { shortease.status.isImageMoved = false; } , 70); /// release imge move after short time
 				moves(event);
 			}
@@ -720,12 +720,11 @@ var shortease = function(){
 		for (var i = 0;i<st_tools.length;i++){
 			var crawl_frequency = st_tools[i].crawl_frequency ? st_tools[i].crawl_frequency : 24;
 			/// time passed from last crawl more that crawl_frequency
-			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency*.01){
+			if (((new Date(shtime)) - (new Date(st_tools[i].last_crawled)))/3600000 > crawl_frequency){
 				tool_should_be_crawled = true;
 			}
-			if (tool_should_be_crawled) break
+			if (tool_should_be_crawled) break;
 		} 
-	 
 		return tool_should_be_crawled;
 	}
 
@@ -1200,6 +1199,7 @@ var sh_preview = function(){
 		numOfArticles = shortease.def.items_number;
 		setTimeout(function() {
 			itemWidth = $('.er_item_list').outerWidth(true);
+			if (!itemWidth) itemWidth = 85;
 			prevHolder.width(numOfArticles*itemWidth);
 		},1000);
 	};
