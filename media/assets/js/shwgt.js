@@ -31,8 +31,10 @@ var shortease = function(){
 		isImageMoved : false
 	};
 	var def = {
+		d_holder_selector : "body",
+		d_holder_function : "prepend",
 		add_logo : true,
-		target_holder : 'body',
+		target_holder_selector : '#er_str_out_holder',
 		target_holder_prepend : 1,
 		site_css : false,
 		width : 0,
@@ -349,6 +351,7 @@ var shortease = function(){
 		reset();
 		shortease.status.shortease_show = true;
 		def.cards_hollder.addClass('open');
+		def.target_holder.addClass('open');
 		def.holder.width(def.width_open);
 		$('body').css({'overflow': 'hidden'});
 		$('.close_x').show();
@@ -364,6 +367,7 @@ var shortease = function(){
 	var hide = function(){
 		shortease.status.shortease_show = false;
 		def.cards_hollder.removeClass('open');
+		def.target_holder.removeClass('open');
 		def.holder.width(def.preview_width);
 		$('body').css({'overflow': 'unset'});
 		$('.close_x').hide();
@@ -1073,23 +1077,42 @@ var shortease = function(){
 	var init = function(options) {
 		$.extend(def, options);
 		if (!isTouchDevice()) status.desktop = true;
+		if (!def.m_holder_selector) def.m_holder_selector = def.d_holder_selector;
+		if (!def.m_holder_function) def.m_holder_function = def.d_holder_function;
 
-		def.target_holder = $(def.target_holder);
+		if (!$(def.target_holder_selector).length) {	/// holder not exists - add it 
+			def.target_holder = $('<div id="er_str_out_holder"></div>');
+			var holder_selector = status.desktop ? def.d_holder_selector : def.m_holder_selector;
+			var holder_function = status.desktop ? def.d_holder_function : def.m_holder_function;
+			var holderObj = $($(holder_selector)[0]);
+			if (holder_function == "append" ) holderObj.append(def.target_holder);
+			if (holder_function == "prepend" ) holderObj.prepend(def.target_holder);
+			if (holder_function == "before" ) holderObj.before(def.target_holder);
+			if (holder_function == "after" ) holderObj.after(def.target_holder);
+		} else {
+			def.target_holder = $(def.target_holder_selector);
+		}
+		/// after 5 seconds - check if somebody remove it - if yes reinit
+		setTimeout(function(){
+			if ($(def.target_holder_selector).length == 0) {
+				reinit();
+			}
+		}, 10000);
 		def.width = def.target_holder.width();
 		def.preview_width = def.width;
 		if (status.desktop) {
-			def.width = $(document).width()/100*33;
+			def.width = $('body').innerWidth()/3;//$(document).width()/100*33;
 			//def.target_holder.addClass('desk_holder');
 		}
 
-		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.css?v="+Math.ceil(Math.random()*10000)}).appendTo("head");
-		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"sites/"+iSiteId+"/init.css"}).appendTo("head");
-		if (def.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: def.site_css+"?v="+Math.ceil(Math.random()*10000)}).appendTo("head"); }
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"assets/css/shortease.css?v=" /*+Math.ceil(Math.random()*10000) */}).appendTo("head");
+		$("<link/>", { rel: "stylesheet",  type: "text/css",  href: MEDIA_PATH+"sites/"+iSiteId+"/init.css?v"+Math.ceil(Math.random()*10000)}).appendTo("head");
+		if (def.site_css) { $("<link/>", { rel: "stylesheet",  type: "text/css",  href: def.site_css+"?v=" /*+Math.ceil(Math.random()*10000)*/ }).appendTo("head"); }
 
 		touch_events();
 		prepare_tools();
 		if (!st_tools || !st_tools.length) {	/// no tools found
-			def.target_holder.remove();
+			def.target_holder.empty();
 			return;
 		}
 
