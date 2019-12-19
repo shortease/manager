@@ -31,7 +31,8 @@ if ($action == 'getCrawlerItem') {
 	$article_id = Request::getInt("article_id");
 	$token = Request::getString("token");
 	$title = Request::getString("title");
-	upd_article($article_id, $article_data, $token, $title);
+	$pics = Request::getInt("pics");
+	upd_article($article_id, $article_data, $token, $title, $pics);
 } else {
 	die('Action not allowed');
 }
@@ -76,7 +77,7 @@ function shcr(){
 		erJq.ajax({url:templates.url}).done(function(data) { 
 			var article_data = get_article(erJq(data));
 			erJq.ajax({ 'url':'<?php echo(LIVE_PATH)?>/components/shcr/shcr_prepare.php', 
-						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'title':article_data.title,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
+						data:{ article_id:templates.id, 'action':'upd_article', token :templates.token,'title':article_data.title,'pics':article_data.pictures.length,'article_data':JSON.stringify(article_data).replace(/\'/g, '\\\'' ) }})
 			.done(function() {
 				setTimeout( function() { shcrRepeat(templates); }, 2000);
 			});

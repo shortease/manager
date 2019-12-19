@@ -158,11 +158,11 @@ class Crawler
 		return $selected_article;
 	}
 
-	public function upd_article($article_id, $article_data, $token, $title)
+	public function upd_article($article_id, $article_data, $token, $title, $pics)
 	{
 		$tool = new Banner($article_id);
 		if(!$tool->checkToken($token))	return;		/// check token and it time 
-		if(!$title || strlen($title) < 2) return;   /// check if exists title (the data is not corrupted)
+		if(!$title || strlen($title) < 2 || $pics == 0) return;   /// check if exists title or num of pictures > 0 (the data is not corrupted)
 		$tool->updateArticle($article_data, $title);
 		$c_placement_id = $this->getOneToolPlacement($article_id);
 		$cp = new CampaignPlacement($c_placement_id);
