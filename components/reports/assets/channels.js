@@ -45,20 +45,22 @@ var Report = function() {
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (perCalc(data["widget_opened"],data["widget_loaded"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (divCalc(data["widget_opened"],data["widget_loaded"])*100).toFixed(1) + "%)" }
 				},
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["click"] + " ("+ (perCalc(data["click"],data["impression"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["click"] + "<span class='prod_disp'> ("+ (divCalc(data["click"],data["impression"])*100).toFixed(1) + "%)</span>" }
 				},
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["pause_time"] + " ("+ (perCalc(data["pause_time"],data["impression"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return "<span class='min_disp'>"+(data["pause_time"]/60).toFixed(1) +"</span><span class='sec_prod_disp'> ("+(divCalc(data["pause_time"],data["impression"])).toFixed(1) + ")</span>" }
 				},
 				{ 
-					data:"view_time",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return "<span class='min_disp'>"+(data["view_time"]/60).toFixed(1) +"</span><span class='sec_prod_disp'> ("+(divCalc(data["view_time"],data["impression"])).toFixed(1) + ")</span>" }
 				},
 				{ 
 					data:"quick_swipe",
@@ -73,12 +75,18 @@ var Report = function() {
 					data:"coupon",
 				},
 			],
+			"initComplete": function(settings, json) {
+				$('.min_disp').attr('title',et("Total minutes"));
+				$('.sec_prod_disp').attr('title',et("Seconds to product"));
+				$('.prod_disp').attr('title',et("of products view"));
+				
+			},
 			createdRow: function( row, data, dataIndex ) {
 				$(row).data("channel_id", data.channel_id);
-				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
-				var view_time = parseInt($($('td',row).get(VIEW_INDEX)).text());
-				$($('td',row).get(PAUSE_INDEX)).text((pause_time/60).toFixed(1));
-				$($('td',row).get(VIEW_INDEX)).text((view_time/60).toFixed(1));
+//				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
+//				var view_time = parseInt($($('td',row).get(VIEW_INDEX)).text());
+//				$($('td',row).get(PAUSE_INDEX)).text((pause_time/60).toFixed(1));
+//				$($('td',row).get(VIEW_INDEX)).text((view_time/60).toFixed(1));
 			},			
 		});
 		Report.datat = datat;
@@ -184,16 +192,17 @@ var prepareControls = function() {
 		Report.reloadData();
 	});
 
+
 }
 
 $(document).ready(function() {
 	Report.init();
 });
 
-function perCalc(val1, val2){
+function divCalc(val1, val2){
 	if (val1 == 0 || val2 == 0) {
 		return 0;
 	} else {
-		return val1/val2*100;
+		return val1/val2;
 	}
 }
