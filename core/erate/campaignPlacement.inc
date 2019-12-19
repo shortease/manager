@@ -29,8 +29,10 @@ class CampaignPlacement extends ErateCampaignPlacement
 	public function deleteTool($tool_id)
 	{
 		$this->removeTool($tool_id);
-		$tool = new ErateBanner($tool_id);
-		$tool->hide();
+		// $tool = new ErateBanner($tool_id);
+		// $tool->hide();
+		$ok = Factory::getDB()->execute("DELETE FROM tools WHERE id=$toolId");
+
 	}
 
 	public function addLink($link)
