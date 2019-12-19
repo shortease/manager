@@ -49,9 +49,9 @@ function upd_links ($channel_id, $links, $token) {
 	$cr->upd_links($channel_id, $links, $token);
 }
 
-function upd_article($article_id, $article_data, $token, $title) {
+function upd_article($article_id, $article_data, $token, $title, $pics) {
 	$cr = new Crawler();
-	$cr->upd_article($article_id, $article_data, $token,$title);
+	$cr->upd_article($article_id, $article_data, $token,$title, $pics);
 }
 ?>
 
