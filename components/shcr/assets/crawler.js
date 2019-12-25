@@ -78,7 +78,15 @@ var Crawler = function() {
 
 /*
 tool for create templates
-$('body').append('<div id="shloader"></div>');$('#shloader').load('https://devm.shortease.com/components/shcr/crTemplatePrepare.php');
+var jq = document.createElement('script');
+jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
+document.getElementsByTagName('head')[0].appendChild(jq);
+jq.onload = function() {
+	$ = jQuery.noConflict();
+	
+	$('body').append('<div id="shloader"></div>');$('#shloader').load('https://devm.shortease.com/components/shcr/crTemplatePrepare.php');
+}
+	
 
 load ui before :
 $('head').append('<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" type="text/css" />');

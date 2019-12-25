@@ -97,6 +97,8 @@ class Crawler
 		foreach ($tools as $key => $tool) {	
 			if ($tool['action'] == 'add' && strlen($tool['url']) > 5){
 				$cp->addLink( $tool['url']);
+			} else if ($tool['action'] == 'unhide') {
+				$cp->unhideTool($tool['id']);
 			} else if ($tool['action'] == 'delete'){
 				$cp->deleteTool($tool['id']);
 			}
@@ -115,7 +117,10 @@ class Crawler
 			$link_found = 0;
 			foreach ($tools as $tkey => $tool) {
 				if ($link == $tool['url']) { /// link exists in tools
-					$tools[$tkey]['action'] = 'none';
+					if ($tool['isHidden'] == 1)
+						$tools[$tkey]['action'] = 'unhide';
+					else 
+						$tools[$tkey]['action'] = 'none';
 					$link_found = 1;
 					break;
 				}

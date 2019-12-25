@@ -15,7 +15,7 @@ class CampaignPlacement extends ErateCampaignPlacement
 		return $cPlacement->get('id');
 	}
 
-	public function listTools($tool_type = null)
+	public function listTools($tool_type = null, $is_hidden = null)
 	{
 		$query = "select t.id,t.campaignId,t.creativeId,t.name,t.type,t.storage,t.url,t.altText,t.width,t.height,t.isHidden,t.tool_script,t.template_id,t.banner_properties 
 				from tools t
@@ -29,9 +29,17 @@ class CampaignPlacement extends ErateCampaignPlacement
 	public function deleteTool($tool_id)
 	{
 		$this->removeTool($tool_id);
-		// $tool = new ErateBanner($tool_id);
-		// $tool->hide();
-		$ok = Factory::getDB()->execute("DELETE FROM tools WHERE id=$tool_id");
+		$tool = new ErateBanner($tool_id);
+		$tool->hide();
+		//$ok = Factory::getDB()->execute("DELETE FROM tools WHERE id=$tool_id");
+
+	}
+
+	public function unhideTool($tool_id)
+	{
+		$tool = new ErateBanner($tool_id);
+		$tool->hide(0);
+		//$ok = Factory::getDB()->execute("DELETE FROM tools WHERE id=$tool_id");
 
 	}
 

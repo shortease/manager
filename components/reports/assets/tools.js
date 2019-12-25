@@ -43,16 +43,24 @@ var Report = function() {
 					data:"widget_loaded",
 				},
 				{ 
-					data:"widget_opened",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (divCalc(data["widget_opened"],data["widget_loaded"])*100).toFixed(1) + "%)" }
 				},
 				{ 
-					data:"click",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["click"] + "<span class='prod_disp'> ("+ (divCalc(data["click"],data["impression"])*100).toFixed(1) + "%)</span>" }
 				},
 				{ 
-					data:"pause_time",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return "<span class='min_disp'>"+(data["pause_time"]/60).toFixed(1) +"</span><span class='sec_prod_disp'> ("+(divCalc(data["pause_time"],data["impression"])).toFixed(1) + ")</span>" }
 				},
 				{ 
-					data:"view_time",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return "<span class='min_disp'>"+(data["view_time"]/60).toFixed(1) +"</span><span class='sec_prod_disp'> ("+(divCalc(data["view_time"],data["impression"])).toFixed(1) + ")</span>" }
 				},
 				{ 
 					data:"quick_swipe",
@@ -69,14 +77,25 @@ var Report = function() {
 			],
 			createdRow: function( row, data, dataIndex ) {
 				$(row).data("tool_id", data.channel_id);
-				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
+/*				var pause_time =parseInt($($('td',row).get(PAUSE_INDEX)).text());
 				var view_time = parseInt($($('td',row).get(VIEW_INDEX)).text());
 				$($('td',row).get(PAUSE_INDEX)).text((pause_time/60).toFixed(2));
-				$($('td',row).get(VIEW_INDEX)).text((view_time/60).toFixed(2));
+				$($('td',row).get(VIEW_INDEX)).text((view_time/60).toFixed(2));*/
 			},	
 			"initComplete": function(settings, json) {
     			//calculateInteresRate();
-			  }			
+				$('.min_disp').attr('title',et("Total minutes"));
+				$('.sec_prod_disp').attr('title',et("Seconds to product"));
+				$('.prod_disp').attr('title',et("of products view"));
+			  },
+			"footerCallback": function ( row, data, start, end, display ) {
+            	var api = this.api(), data;	
+            	var total_pause_time = api.data().reduce( function (a, b) { return parseInt(a) + parseInt(b.pause_time); }, 0 );
+            	var total_widget_opened = api.data().reduce( function (a, b) { return parseInt(a) + parseInt(b.widget_opened); }, 0 );
+            	$( api.column( 0 ).footer() ).html('Total');
+            	po( api.column( 0 ));
+            	$( api.column( 1 ).footer() ).html(total_widget_opened);
+            }
 		});
 		Report.datat = datat;
 	}
@@ -175,3 +194,10 @@ $(document).ready(function() {
 	prepareControls();
 });
 
+function divCalc(val1, val2){
+	if (val1 == 0 || val2 == 0) {
+		return 0;
+	} else {
+		return val1/val2;
+	}
+}
