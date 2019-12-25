@@ -97,19 +97,6 @@ var Report = function() {
 		setCustomDates();
 	}
 
-	var getInteresRate = function(impressions, purchases, pause_times, view_times, swipes, descriptions) {
-		var MAX_PURCHASE = 0.1, MAX_PAUSE = 0.5, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
-		var PURCHASE_WEIGHT = 0.6, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.3, DESCRIPTIONS_WEIGHT =  0.2; 
-
-		var purchase_mark = Math.min((purchases/impressions)/MAX_PURCHASE*100, 100);
-		var pause_mark = Math.min((pause_times/impressions)/MAX_PAUSE*100, 100);
-		var view_mark = Math.min((view_times/impressions)/MAX_VIEW*100, 100);
-		var swipe_mark = Math.min((swipes/impressions)/MAX_SWIPE*100, 100);
-		var descriptions_mark = Math.min((descriptions/impressions)/MAX_DESCRIPTIONS*100, 100);
-		var mark = purchase_mark * PURCHASE_WEIGHT + pause_mark * PAUSE_WEIGHT + view_mark * VIEW_WEIGHT + swipe_mark * SWIPE_WEIGHT + descriptions_mark * DESCRIPTIONS_WEIGHT ;
-		return mark;
-	}
-
 	var setCustomDates = function(){
 		dateRangePicker.setStartDate(moment(Report.start_date).format("MM/DD/YYYY"));
 		dateRangePicker.setEndDate(moment(Report.end_date).add(-1,"day").format("MM/DD/YYYY"));
@@ -199,10 +186,3 @@ $(document).ready(function() {
 	Report.init();
 });
 
-function divCalc(val1, val2){
-	if (val1 == 0 || val2 == 0) {
-		return 0;
-	} else {
-		return val1/val2;
-	}
-}
