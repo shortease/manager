@@ -49,7 +49,7 @@ function arrayMax(arr) {
 var getInteresRate = function(impressions, purchases, pause_times, view_times, swipes, descriptions) {
    po(impressions, purchases, pause_times, view_times, swipes, descriptions);
    var MAX_PURCHASE = 0.1, MAX_PAUSE = 0.5, MAX_VIEW = 10, MAX_SWIPE = 0.2, MAX_DESCRIPTIONS = 0.5;
-   var PURCHASE_WEIGHT = 0.6, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.3, DESCRIPTIONS_WEIGHT =  0.2; 
+   var PURCHASE_WEIGHT = 0.4, PAUSE_WEIGHT = 0.3, VIEW_WEIGHT = 0.2, SWIPE_WEIGHT = -0.1, DESCRIPTIONS_WEIGHT =  0.2; 
 
    var purchase_mark = Math.min((purchases/impressions)/MAX_PURCHASE*100, 100);
    var pause_mark = Math.min((pause_times/impressions)/MAX_PAUSE*100, 100);
@@ -75,5 +75,5 @@ function divPercCalc(val1, val2){
    var res = divCalc(val1, val2)*100;
    if (res < 0) res = 0;
    if (res > 100) res = 100;
-   return res;
+   return res
 }
