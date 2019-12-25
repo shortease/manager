@@ -70,3 +70,10 @@ function divCalc(val1, val2){
       return val1/val2;
    }
 }
+
+function divPercCalc(val1, val2){
+   var res = divCalc(val1, val2)*100;
+   if (res < 0) res = 0;
+   if (res > 100) res = 100;
+   return res;
+}

@@ -45,12 +45,12 @@ var Report = function() {
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (divCalc(data["widget_opened"],data["widget_loaded"])*100).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["widget_opened"] + " ("+ (divPercCalc(data["widget_opened"],data["widget_loaded"])).toFixed(1) + "%)" }
 				},
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["click"] + "<span class='prod_disp'> ("+ (divCalc(data["click"],data["impression"])*100).toFixed(1) + "%)</span>" }
+					"render": function(data,type,row) { return data["click"] + "<span class='prod_disp'> ("+ (divPercCalc(data["click"],data["impression"])).toFixed(1) + "%)</span>" }
 				},
 				{ 
 					data:null,
