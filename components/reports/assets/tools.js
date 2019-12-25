@@ -63,10 +63,14 @@ var Report = function() {
 					"render": function(data,type,row) { return "<span class='min_disp'>"+(data["view_time"]/60).toFixed(1) +"</span><span class='sec_prod_disp'> ("+(divCalc(data["view_time"],data["impression"])).toFixed(1) + ")</span>" }
 				},
 				{ 
-					data:"quick_swipe",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["quick_swipe"] + " ("+ (divPercCalc(data["quick_swipe"],data["impression"])).toFixed(1) + "%)" }
 				},
 				{ 
-					data:"description_opened",
+					data:null,
+					className: "",
+					"render": function(data,type,row) { return data["description_opened"] + " ("+ (divPercCalc(data["description_opened"],data["impression"])).toFixed(1) + "%)" }
 				},
 				{ 
 					data:"impression",
