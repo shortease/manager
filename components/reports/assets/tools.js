@@ -65,12 +65,12 @@ var Report = function() {
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["quick_swipe"] + " ("+ (divPercCalc(data["quick_swipe"],data["impression"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["quick_swipe"] + "<span class='prod_disp'> ("+ (divPercCalc(data["quick_swipe"],data["impression"])).toFixed(1) + "%)</span>" }
 				},
 				{ 
 					data:null,
 					className: "",
-					"render": function(data,type,row) { return data["description_opened"] + " ("+ (divPercCalc(data["description_opened"],data["impression"])).toFixed(1) + "%)" }
+					"render": function(data,type,row) { return data["description_opened"] + "<span class='prod_disp'> ("+ (divPercCalc(data["description_opened"],data["impression"])).toFixed(1) + "%)</span>" }
 				},
 				{ 
 					data:"impression",
